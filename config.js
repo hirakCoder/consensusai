@@ -64,29 +64,30 @@ module.exports = {
   activeTier: 'budget',
 
   // LLM Configurations (API keys from environment variables)
+  // Keys are trimmed to remove any accidental whitespace/newlines
   llms: {
     openai: {
       enabled: true,
       name: 'GPT',
-      apiKey: process.env.OPENAI_API_KEY || '',
+      apiKey: (process.env.OPENAI_API_KEY || '').trim(),
       endpoint: 'https://api.openai.com/v1/chat/completions'
     },
     gemini: {
       enabled: true,
       name: 'Gemini',
-      apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_API_KEY || '',
+      apiKey: (process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_API_KEY || '').trim(),
       endpoint: 'https://generativelanguage.googleapis.com/v1beta/models'
     },
     grok: {
       enabled: true,
       name: 'Grok',
-      apiKey: process.env.XAI_API_KEY || '',
+      apiKey: (process.env.XAI_API_KEY || '').trim(),
       endpoint: 'https://api.x.ai/v1/chat/completions'
     },
     claude: {
       enabled: true,
       name: 'Claude',
-      apiKey: process.env.ANTHROPIC_API_KEY || '',
+      apiKey: (process.env.ANTHROPIC_API_KEY || '').trim(),
       endpoint: 'https://api.anthropic.com/v1/messages'
     }
   },
