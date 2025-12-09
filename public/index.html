@@ -3720,9 +3720,19 @@
            RESPONSIVE
            ============================================ */
 
+        /* ============================================
+           TABLET RESPONSIVE (768px and below)
+           ============================================ */
         @media (max-width: 768px) {
             .cortex-arena {
                 height: 350px;
+                min-height: 350px;
+                padding: 0 10px;
+            }
+
+            .core-container {
+                width: 280px;
+                height: 280px;
             }
 
             .core-orb {
@@ -3735,34 +3745,509 @@
                 height: 40px;
             }
 
-            .node-gpt, .node-gemini { top: 20px; }
-            .node-claude, .node-grok { bottom: 20px; }
-            .node-gpt, .node-claude { left: 40px; }
-            .node-gemini, .node-grok { right: 40px; }
+            .ai-node svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .core-container .node-gpt { top: 15px; left: 15px; }
+            .core-container .node-gemini { top: 15px; right: 15px; }
+            .core-container .node-claude { bottom: 40px; left: 15px; }
+            .core-container .node-grok { bottom: 40px; right: 15px; }
 
             .thought-card {
-                max-width: 160px;
-                font-size: 0.75rem;
+                max-width: 140px;
+                font-size: 0.7rem;
+                padding: 8px 10px;
             }
 
             .omni-bar {
-                width: calc(100% - 40px);
+                width: calc(100% - 32px);
+                padding: 6px 6px 6px 20px;
             }
 
+            .omni-bar-container {
+                bottom: 40px;
+            }
+
+            .omni-input {
+                font-size: 0.9rem;
+            }
+
+            .omni-submit {
+                width: 44px;
+                height: 44px;
+            }
+
+            /* Top bar right - stack and reorganize */
+            .top-bar-right {
+                top: 12px;
+                right: 12px;
+                gap: 8px;
+                flex-wrap: wrap;
+                max-width: 60%;
+                justify-content: flex-end;
+            }
+
+            .usage-indicator {
+                display: none; /* Hide on tablet, show in menu */
+            }
+
+            .tier-selector {
+                order: -1;
+            }
+
+            .upgrade-btn {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+
+            /* Auth container */
+            .auth-container {
+                top: 12px;
+                left: 12px;
+            }
+
+            .auth-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .user-menu {
+                padding: 6px 10px;
+            }
+
+            .user-name {
+                max-width: 80px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            /* Devil toggle - move to bottom right */
+            .devil-toggle {
+                bottom: 100px;
+                left: 12px;
+            }
+
+            .devil-toggle label span:last-child {
+                display: none; /* Hide text label */
+            }
+
+            /* History drawer - full width on tablet */
+            .history-drawer {
+                width: 320px;
+                right: -320px;
+            }
+
+            .history-drawer.open {
+                right: 0;
+            }
+
+            /* Verdict panel */
             .verdict-panel {
-                padding: 32px 24px;
+                padding: 28px 20px;
+                margin: 20px;
+                max-width: calc(100% - 40px);
+            }
+
+            .verdict-header {
+                flex-direction: column;
+                gap: 16px;
             }
 
             .verdict-decision {
-                font-size: 2.25rem;
+                font-size: 2rem;
             }
 
             .verdict-question {
-                font-size: 0.875rem;
+                font-size: 0.85rem;
+            }
+
+            .verdict-summary {
+                font-size: 0.95rem;
             }
 
             .action-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .action-box {
+                padding: 16px;
+                min-height: auto;
+            }
+
+            .verdict-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .verdict-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Followup questions */
+            .followup-section {
+                margin-top: 24px;
+            }
+
+            .followup-btn {
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            /* Stream entries */
+            .stream-entry {
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+
+            /* Upgrade overlay */
+            .upgrade-modal {
+                width: calc(100% - 32px);
+                max-width: 400px;
+                padding: 28px 20px;
+            }
+
+            .upgrade-feature {
+                padding: 10px 14px;
+            }
+
+            .upgrade-cta {
+                padding: 14px 24px;
+            }
+        }
+
+        /* ============================================
+           MOBILE RESPONSIVE (480px and below)
+           ============================================ */
+        @media (max-width: 480px) {
+            .cortex-arena {
+                height: 300px;
+                min-height: 300px;
+            }
+
+            .core-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .core-orb {
+                width: 80px;
+                height: 80px;
+            }
+
+            .ai-node {
+                width: 34px;
+                height: 34px;
+            }
+
+            .ai-node svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .core-container .node-gpt { top: 10px; left: 10px; }
+            .core-container .node-gemini { top: 10px; right: 10px; }
+            .core-container .node-claude { bottom: 30px; left: 10px; }
+            .core-container .node-grok { bottom: 30px; right: 10px; }
+
+            .thought-card {
+                display: none; /* Hide thought cards on small phones */
+            }
+
+            /* Top bar - minimal layout */
+            .top-bar-right {
+                top: 8px;
+                right: 8px;
+                gap: 6px;
+                max-width: 70%;
+            }
+
+            .tier-selector {
+                display: none; /* Access via menu on small phones */
+            }
+
+            .upgrade-btn {
+                padding: 5px 10px;
+                font-size: 0.65rem;
+            }
+
+            .upgrade-btn svg {
+                display: none;
+            }
+
+            .history-toggle {
+                width: 36px;
+                height: 36px;
+            }
+
+            .ai-settings-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            /* Auth container */
+            .auth-container {
+                top: 8px;
+                left: 8px;
+            }
+
+            .auth-btn {
+                padding: 5px 10px;
+                font-size: 0.7rem;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+
+            .user-name {
+                display: none; /* Hide name on small phones */
+            }
+
+            .user-tier {
+                font-size: 0.55rem;
+                padding: 2px 5px;
+            }
+
+            /* Omni bar */
+            .omni-bar {
+                width: calc(100% - 24px);
+                padding: 4px 4px 4px 16px;
+                border-radius: 24px;
+            }
+
+            .omni-bar-container {
+                bottom: 24px;
+            }
+
+            .omni-input {
+                font-size: 0.85rem;
+            }
+
+            .omni-submit {
+                width: 40px;
+                height: 40px;
+            }
+
+            /* Devil toggle - icon only */
+            .devil-toggle {
+                bottom: 80px;
+                left: 8px;
+            }
+
+            .devil-toggle label {
+                gap: 4px;
+            }
+
+            .devil-switch {
+                width: 36px;
+                height: 20px;
+            }
+
+            .devil-switch::after {
+                width: 14px;
+                height: 14px;
+            }
+
+            .devil-toggle input:checked + .devil-switch::after {
+                left: 19px;
+            }
+
+            /* History drawer - full width */
+            .history-drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .history-drawer.open {
+                right: 0;
+            }
+
+            .history-drawer-header {
+                padding: 16px;
+            }
+
+            .history-item {
+                padding: 12px;
+            }
+
+            /* Verdict panel - full width */
+            .verdict-overlay {
+                padding: 12px;
+            }
+
+            .verdict-panel {
+                padding: 20px 16px;
+                margin: 0;
+                max-width: 100%;
+                border-radius: 16px;
+            }
+
+            .verdict-close {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+            }
+
+            .consensus-badge {
+                font-size: 0.6rem;
+                padding: 4px 10px;
+            }
+
+            .verdict-decision {
+                font-size: 1.5rem;
+                margin-bottom: 12px;
+            }
+
+            .verdict-question {
+                font-size: 0.8rem;
+            }
+
+            .verdict-summary {
+                font-size: 0.875rem;
+                line-height: 1.6;
+            }
+
+            .confidence-score {
+                padding: 12px 16px;
+            }
+
+            .confidence-value {
+                font-size: 1.75rem;
+            }
+
+            .action-box {
+                padding: 14px;
+            }
+
+            .action-box-title {
+                font-size: 0.625rem;
+            }
+
+            .action-list li {
+                font-size: 0.8rem;
+                padding: 6px 0;
+            }
+
+            .verdict-btn {
+                padding: 12px 20px;
+                font-size: 0.8rem;
+            }
+
+            /* Followup */
+            .followup-chips {
+                gap: 6px;
+            }
+
+            .followup-btn {
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+
+            /* Upgrade modal */
+            .upgrade-modal {
+                width: calc(100% - 24px);
+                padding: 24px 16px;
+            }
+
+            .upgrade-title {
+                font-size: 1.25rem;
+            }
+
+            .upgrade-price {
+                font-size: 2rem;
+            }
+
+            .upgrade-feature {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .upgrade-cta {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            /* AI Settings Panel */
+            .ai-settings-panel {
+                width: calc(100% - 24px);
+                max-height: 80vh;
+            }
+
+            .ai-settings-header {
+                padding: 16px;
+            }
+
+            .ai-settings-body {
+                padding: 16px;
+            }
+
+            .model-config-card {
+                padding: 14px;
+            }
+
+            /* Template chips */
+            .template-chips {
+                grid-template-columns: 1fr;
+                width: calc(100vw - 24px);
+            }
+
+            .template-chip {
+                padding: 10px 14px;
+                font-size: 0.8rem;
+            }
+
+            /* Context input */
+            .context-input {
+                width: calc(100vw - 24px);
+            }
+        }
+
+        /* ============================================
+           SMALL MOBILE (360px and below)
+           ============================================ */
+        @media (max-width: 360px) {
+            .core-container {
+                width: 180px;
+                height: 180px;
+            }
+
+            .core-orb {
+                width: 60px;
+                height: 60px;
+            }
+
+            .ai-node {
+                width: 28px;
+                height: 28px;
+            }
+
+            .ai-node svg {
+                width: 12px;
+                height: 12px;
+            }
+
+            .core-container .node-gpt { top: 8px; left: 8px; }
+            .core-container .node-gemini { top: 8px; right: 8px; }
+            .core-container .node-claude { bottom: 24px; left: 8px; }
+            .core-container .node-grok { bottom: 24px; right: 8px; }
+
+            .omni-input {
+                font-size: 0.8rem;
+            }
+
+            .verdict-decision {
+                font-size: 1.25rem;
+            }
+
+            .verdict-summary {
+                font-size: 0.8rem;
             }
         }
     </style>
