@@ -42,11 +42,17 @@ function detectQuestionType(question) {
 
   // Comparison questions: "Who/Which is better", "A vs B", "A or B", "compare"
   if (/\bvs\.?\b|\bversus\b/.test(q) ||
-      /who is (better|greater|more|best)|which is (better|greater|more|best)/.test(q) ||
+      /who is (the )?(better|greater|more|best)|which is (the )?(better|greater|more|best)/.test(q) ||
       /compare\b|comparing\b|comparison\b/.test(q) ||
       /\bor\b.*\bbetter\b|\bbetter\b.*\bor\b/.test(q) ||
       /who would win|which would you (choose|pick|prefer)/.test(q)) {
     return 'comparison';
+  }
+
+  // "Best X" questions - treat as recommendation (e.g., "what is the best headphone")
+  if (/\b(what|which)\b.*(is|are) (the )?best\b/.test(q) ||
+      /\bbest\b.*(for|to use|option|choice|pick)/.test(q)) {
+    return 'recommendation';
   }
 
   // Recommendation questions

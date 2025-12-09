@@ -790,10 +790,10 @@
             position: absolute;
         }
 
-        .core-container .node-gpt { top: 15px; left: 15px; }
-        .core-container .node-gemini { top: 15px; right: 15px; }
-        .core-container .node-claude { bottom: 50px; left: 15px; }
-        .core-container .node-grok { bottom: 50px; right: 15px; }
+        .core-container .node-gpt { top: 20px; left: 20px; }
+        .core-container .node-gemini { top: 20px; right: 20px; }
+        .core-container .node-claude { bottom: 55px; left: 20px; }
+        .core-container .node-grok { bottom: 55px; right: 20px; }
 
         .stream-entry {
             background: rgba(20, 20, 25, 0.9);
@@ -6016,9 +6016,9 @@
                 const authData = await authRes.json();
 
                 if (!authData.authenticated) {
-                    showToast('Please sign in to upgrade to Pro', 'warning');
                     document.getElementById('upgradeOverlay').classList.remove('active');
-                    // Could trigger sign-in modal here
+                    // Open Clerk sign-in modal
+                    handleSignIn();
                     return;
                 }
 
