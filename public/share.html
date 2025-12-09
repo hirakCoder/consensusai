@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConsensusAI Decision | Multi-LLM Intelligence</title>
+
+  <!-- Open Graph meta tags for social sharing -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" id="og-title" content="AI Consensus Decision">
+  <meta property="og:description" id="og-description" content="See what 4 AI models agreed on for this question.">
+  <meta property="og:site_name" content="ConsensusAI">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="tw-title" content="AI Consensus Decision">
+  <meta name="twitter:description" id="tw-description" content="See what 4 AI models agreed on for this question.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #09090b;
+      --bg-secondary: #0f0f11;
+      --bg-tertiary: #18181b;
+      --bg-card: rgba(255, 255, 255, 0.02);
+      --border-color: rgba(255, 255, 255, 0.06);
+      --border-light: rgba(255, 255, 255, 0.1);
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --accent-primary: #6366f1;
+      --accent-secondary: #8b5cf6;
+      --accent-tertiary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --gpt-color: #10a37f;
+      --gemini-color: #4285f4;
+      --grok-color: #f97316;
+      --claude-color: #d97706;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-effects {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.5;
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+      top: -200px;
+      left: -100px;
+    }
+
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
+      bottom: -150px;
+      right: -100px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    .share-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 2rem 0;
+    }
+
+    .share-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .share-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-gradient);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: white;
+    }
+
+    .share-logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .share-badge {
+      display: inline-block;
+      padding: 0.375rem 0.875rem;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Question Card */
+    .question-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .question-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Verdict Card */
+    .verdict-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .verdict-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .verdict-icon.yes { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .verdict-icon.no { background: rgba(239, 68, 68, 0.15); color: var(--error); }
+    .verdict-icon.conditional { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .verdict-icon.wait { background: rgba(99, 102, 241, 0.15); color: var(--accent-primary); }
+
+    .verdict-decision {
+      font-size: 2rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .verdict-consensus {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.875rem;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--success);
+      margin-bottom: 1rem;
+    }
+
+    .verdict-consensus.split {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .verdict-summary {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* AI Positions */
+    .positions-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .positions-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .position-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem;
+    }
+
+    .position-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .position-llm {
+      font-weight: 600;
+      font-size: 0.875rem;
+      min-width: 70px;
+    }
+
+    .position-llm.gpt { color: var(--gpt-color); }
+    .position-llm.gemini { color: var(--gemini-color); }
+    .position-llm.grok { color: var(--grok-color); }
+    .position-llm.claude { color: var(--claude-color); }
+
+    .position-content {
+      flex: 1;
+    }
+
+    .position-text {
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .position-argument {
+      font-size: 0.8125rem;
+      color: var(--text-tertiary);
+      font-style: italic;
+    }
+
+    .position-confidence {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .confidence-bar {
+      width: 60px;
+      height: 4px;
+      background: var(--bg-primary);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      background: var(--accent-gradient);
+      border-radius: 2px;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      text-align: center;
+      padding: 2.5rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-lg);
+      margin-top: 2rem;
+    }
+
+    .cta-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-desc {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.625rem;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border-color);
+      border-top-color: var(--accent-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Error State */
+    .error-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+
+    .error-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .error-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .error-desc {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Footer */
+    .share-footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-tertiary);
+      font-size: 0.8125rem;
+    }
+
+    .share-footer a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+
+    .share-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Hidden content container */
+    #content {
+      display: none;
+    }
+
+    #content.loaded {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-effects">
+    <div class="bg-gradient-orb orb-1"></div>
+    <div class="bg-gradient-orb orb-2"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="share-header">
+      <a href="/" class="share-logo">
+        <div class="share-logo-icon">C</div>
+        <span class="share-logo-text">ConsensusAI</span>
+      </a>
+      <div>
+        <span class="share-badge">Shared Decision</span>
+      </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading decision...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="error-state" style="display: none;">
+      <div class="error-icon">&#x26A0;</div>
+      <h2 class="error-title">Decision Not Found</h2>
+      <p class="error-desc">This decision may have been removed or the link may be invalid.</p>
+      <a href="/" class="cta-button">Try ConsensusAI</a>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+      <!-- Question -->
+      <div class="question-card">
+        <div class="question-label">Question Asked</div>
+        <div class="question-text" id="question"></div>
+      </div>
+
+      <!-- Verdict -->
+      <div class="verdict-card">
+        <div class="verdict-icon" id="verdictIcon">?</div>
+        <div class="verdict-decision" id="verdictDecision">-</div>
+        <div class="verdict-consensus" id="verdictConsensus">
+          <span>&#x2713;</span> Loading...
+        </div>
+        <p class="verdict-summary" id="verdictSummary"></p>
+      </div>
+
+      <!-- AI Positions -->
+      <div class="positions-card">
+        <h3 class="positions-title">
+          <span>&#x1F916;</span> AI Perspectives
+        </h3>
+        <div id="positions"></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <h2 class="cta-title">Make Your Own AI-Powered Decision</h2>
+        <p class="cta-desc">Get consensus from 4 leading AI models on any question.</p>
+        <a href="/" class="cta-button">
+          Try ConsensusAI Free
+          <span>&#x2192;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="share-footer">
+      <p>Powered by <a href="/">ConsensusAI</a> - Multi-LLM Decision Intelligence</p>
+    </footer>
+  </div>
+
+  <script>
+    // Get share ID from URL
+    const pathParts = window.location.pathname.split('/');
+    const shareId = pathParts[pathParts.length - 1];
+
+    async function loadDebate() {
+      const loadingEl = document.getElementById('loading');
+      const errorEl = document.getElementById('error');
+      const contentEl = document.getElementById('content');
+
+      if (!shareId || shareId === 'share') {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/debate/${shareId}`);
+
+        if (!response.ok) {
+          throw new Error('Not found');
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        // Update page title and meta tags
+        document.title = `AI Decision: ${data.question?.substring(0, 50)}... | ConsensusAI`;
+
+        // Update Open Graph tags dynamically (for client-side rendering)
+        const decision = data.finalConsensus?.position || data.finalConsensus?.majority?.position || 'Analysis complete';
+        const description = `${data.llmsUsed?.length || 4} AI models reached ${data.finalConsensus?.reached ? 'consensus' : 'a split decision'}: ${decision.substring(0, 100)}`;
+
+        // Render the debate
+        renderDebate(data);
+
+        loadingEl.style.display = 'none';
+        contentEl.classList.add('loaded');
+
+      } catch (error) {
+        console.error('Error loading debate:', error);
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    function renderDebate(data) {
+      const consensus = data.finalConsensus;
+      const lastRound = data.rounds?.[data.rounds.length - 1];
+      const allResults = lastRound?.results?.filter(r => !r.error) || [];
+
+      // Question
+      document.getElementById('question').textContent = data.question || 'Unknown question';
+
+      // Verdict
+      const decision = consensus?.decision || consensus?.majority?.decision || 'UNKNOWN';
+      const decisionClass = decision.toLowerCase();
+      const decisionIcons = {
+        'yes': '&#x2713;',
+        'no': '&#x2717;',
+        'conditional': '&#x26A1;',
+        'wait': '&#x23F3;',
+        'alternative': '&#x2194;',
+        'unknown': '?'
+      };
+
+      const verdictIcon = document.getElementById('verdictIcon');
+      verdictIcon.className = `verdict-icon ${decisionClass}`;
+      verdictIcon.innerHTML = decisionIcons[decisionClass] || '?';
+
+      document.getElementById('verdictDecision').textContent = decision;
+
+      // Consensus badge
+      const verdictConsensus = document.getElementById('verdictConsensus');
+      const totalAIs = allResults.length || data.llmsUsed?.length || 4;
+
+      if (consensus?.reached) {
+        verdictConsensus.className = 'verdict-consensus';
+        verdictConsensus.innerHTML = `<span>&#x2713;</span> ${consensus.type === 'unanimous' ? `All ${totalAIs} AIs Agree` : `${totalAIs - 1} of ${totalAIs} AIs Agree`}`;
+      } else {
+        verdictConsensus.className = 'verdict-consensus split';
+        verdictConsensus.innerHTML = `<span>&#x26A0;</span> Split Decision (${consensus?.majority?.count || 0} of ${totalAIs})`;
+      }
+
+      // Summary
+      const summary = data.actionPlan?.executive_summary || consensus?.position || consensus?.majority?.position || 'Analysis complete.';
+      document.getElementById('verdictSummary').textContent = summary;
+
+      // AI Positions
+      const positionsEl = document.getElementById('positions');
+      const llmClasses = {
+        'openai': 'gpt',
+        'GPT-4': 'gpt',
+        'gemini': 'gemini',
+        'Gemini': 'gemini',
+        'grok': 'grok',
+        'Grok': 'grok',
+        'claude': 'claude',
+        'Claude': 'claude'
+      };
+
+      positionsEl.innerHTML = allResults.map(r => {
+        const llmClass = llmClasses[r.llmId] || llmClasses[r.llmName] || 'gpt';
+        const confidence = r.confidence || 5;
+
+        return `
+          <div class="position-item">
+            <div class="position-llm ${llmClass}">${r.llmName || r.llmId}</div>
+            <div class="position-content">
+              <div class="position-text">${r.position || 'No position'}</div>
+              ${r.key_argument ? `<div class="position-argument">"${r.key_argument}"</div>` : ''}
+              <div class="position-confidence">
+                <div class="confidence-bar">
+                  <div class="confidence-fill" style="width: ${confidence * 10}%"></div>
+                </div>
+                <span>${confidence}/10</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Load the debate on page load
+    loadDebate();
+  </script>
+</body>
+</html>

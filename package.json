@@ -1,0 +1,19 @@
+{
+  "name": "consensus-platform",
+  "version": "1.0.0",
+  "description": "Multi-LLM Decision Intelligence Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node tests/api.test.js",
+    "setup-stripe": "node scripts/setup-stripe.js"
+  },
+  "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.13.23",
+    "@sentry/node": "^10.29.0",
+    "dotenv": "^17.2.3",
+    "posthog-node": "^5.17.2",
+    "stripe": "^14.25.0"
+  }
+}

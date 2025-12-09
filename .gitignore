@@ -1,0 +1,8 @@
+node_modules/
+.env
+.DS_Store
+decisions/*.json
+decisions/*.md
+*.log
+data/
+.vercel

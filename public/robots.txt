@@ -1,0 +1,12 @@
+# ConsensusAI - robots.txt
+User-agent: *
+Allow: /
+Allow: /cortex.html
+Allow: /share/
+
+# Disallow admin/api routes
+Disallow: /api/
+Disallow: /success.html
+
+# Sitemap
+Sitemap: https://consensusai.app/sitemap.xml
