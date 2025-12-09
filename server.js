@@ -593,7 +593,7 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   const stats = usage.getGlobalStats();
   console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
@@ -601,7 +601,7 @@ server.listen(PORT, () => {
 ║   🧠 Consensus Platform                                       ║
 ║   Multi-LLM Decision Intelligence                             ║
 ║                                                               ║
-║   Server running at: http://localhost:${PORT}                   ║
+║   Server running at: http://0.0.0.0:${PORT}                     ║
 ║   Active Tier: ${config.activeTier.toUpperCase().padEnd(44)}║
 ║   Free Limit: ${usage.FREE_DAILY_LIMIT} debates/day                                  ║
 ║   Total Debates: ${String(stats.totalDebates).padEnd(41)}║
