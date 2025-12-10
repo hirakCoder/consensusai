@@ -3746,21 +3746,33 @@
            TABLET RESPONSIVE (768px and below)
            ============================================ */
         @media (max-width: 768px) {
-            /* Main app container - fit viewport */
+            /* Force no scroll on body */
+            html, body {
+                overflow: hidden !important;
+                height: 100dvh !important;
+            }
+
+            /* Main app container - truly fit viewport */
             .cortex-app {
-                padding-top: 50px; /* Space for fixed header */
-                padding-bottom: 140px; /* Space for omni-bar + footer */
+                height: 100dvh;
+                max-height: 100dvh;
+                overflow: hidden;
+                padding: 0;
+                justify-content: flex-start;
+                padding-top: 45px; /* Space for fixed header */
             }
 
             .cortex-arena {
-                min-height: auto;
-                height: auto;
+                min-height: 0 !important;
+                height: calc(100dvh - 170px); /* viewport - header - omni-bar - footer */
+                max-height: calc(100dvh - 170px);
                 padding: 10px;
+                overflow: hidden;
             }
 
             .core-container {
-                width: 240px;
-                height: 240px;
+                width: min(240px, 60vw);
+                height: min(240px, 60vw);
             }
 
             .core-orb {
@@ -3963,19 +3975,18 @@
         @media (max-width: 480px) {
             /* Main app - tighter viewport fit */
             .cortex-app {
-                padding-top: 45px;
-                padding-bottom: 130px;
+                padding-top: 40px;
             }
 
             .cortex-arena {
-                min-height: auto;
-                height: auto;
+                height: calc(100dvh - 150px);
+                max-height: calc(100dvh - 150px);
                 padding: 5px;
             }
 
             .core-container {
-                width: 180px;
-                height: 180px;
+                width: min(180px, 50vw);
+                height: min(180px, 50vw);
             }
 
             .core-orb {
@@ -4291,13 +4302,17 @@
            ============================================ */
         @media (max-width: 360px) {
             .cortex-app {
-                padding-top: 40px;
-                padding-bottom: 120px;
+                padding-top: 35px;
+            }
+
+            .cortex-arena {
+                height: calc(100dvh - 140px);
+                max-height: calc(100dvh - 140px);
             }
 
             .core-container {
-                width: 150px;
-                height: 150px;
+                width: min(150px, 45vw);
+                height: min(150px, 45vw);
             }
 
             .core-orb {
