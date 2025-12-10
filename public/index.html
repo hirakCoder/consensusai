@@ -1247,12 +1247,35 @@
         }
 
         @media (max-width: 700px) {
+            /* Template chips - horizontal scrollable on mobile */
             .template-chips {
-                display: none !important; /* Hide on mobile - causes overlap */
+                display: flex !important;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                gap: 8px;
+                padding: 4px 0;
+                width: calc(100vw - 32px);
+                max-width: none;
+                /* Hide scrollbar */
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .template-chips::-webkit-scrollbar {
+                display: none;
+            }
+
+            .template-chip {
+                flex-shrink: 0;
+                scroll-snap-align: start;
+                padding: 8px 14px;
+                font-size: 0.7rem;
             }
 
             .context-input {
-                width: calc(100vw - 40px);
+                width: calc(100vw - 32px);
             }
         }
 
@@ -3723,50 +3746,56 @@
            TABLET RESPONSIVE (768px and below)
            ============================================ */
         @media (max-width: 768px) {
+            /* Main app container - fit viewport */
+            .cortex-app {
+                padding-top: 50px; /* Space for fixed header */
+                padding-bottom: 140px; /* Space for omni-bar + footer */
+            }
+
             .cortex-arena {
-                height: 350px;
-                min-height: 350px;
-                padding: 60px 10px 0 10px; /* Add top padding for header */
+                min-height: auto;
+                height: auto;
+                padding: 10px;
             }
 
             .core-container {
-                width: 280px;
-                height: 280px;
+                width: 240px;
+                height: 240px;
             }
 
             .core-orb {
-                width: 100px;
-                height: 100px;
+                width: 90px;
+                height: 90px;
             }
 
             .ai-node {
-                width: 40px;
-                height: 40px;
+                width: 36px;
+                height: 36px;
             }
 
             .ai-node svg {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
             }
 
-            .core-container .node-gpt { top: 15px; left: 15px; }
-            .core-container .node-gemini { top: 15px; right: 15px; }
-            .core-container .node-claude { bottom: 40px; left: 15px; }
-            .core-container .node-grok { bottom: 40px; right: 15px; }
+            .core-container .node-gpt { top: 12px; left: 12px; }
+            .core-container .node-gemini { top: 12px; right: 12px; }
+            .core-container .node-claude { bottom: 35px; left: 12px; }
+            .core-container .node-grok { bottom: 35px; right: 12px; }
 
+            /* Hide thought cards on tablet - they overlap */
             .thought-card {
-                max-width: 140px;
-                font-size: 0.7rem;
-                padding: 8px 10px;
+                display: none;
+            }
+
+            /* Omni bar - positioned above footer */
+            .omni-bar-container {
+                bottom: 45px;
             }
 
             .omni-bar {
-                width: calc(100% - 32px);
-                padding: 6px 6px 6px 20px;
-            }
-
-            .omni-bar-container {
-                bottom: 50px;
+                width: calc(100% - 24px);
+                padding: 6px 6px 6px 16px;
             }
 
             .omni-input {
@@ -3774,8 +3803,8 @@
             }
 
             .omni-submit {
-                width: 44px;
-                height: 44px;
+                width: 42px;
+                height: 42px;
             }
 
             /* Top bar right - simplified */
@@ -3817,7 +3846,7 @@
                 display: none !important;
             }
 
-            /* Devil toggle - hide on mobile, too cluttered */
+            /* Devil toggle - hide on mobile */
             .devil-toggle {
                 display: none !important;
             }
@@ -3829,21 +3858,33 @@
                 font-size: 0.6rem;
             }
 
+            /* Hide stream container on mobile - takes too much space */
+            .stream-container {
+                display: none;
+            }
+
             /* History drawer */
             .history-drawer {
-                width: 300px;
-                right: -300px;
+                width: 85vw;
+                max-width: 320px;
+                right: -85vw;
             }
 
             .history-drawer.open {
                 right: 0;
             }
 
-            /* Verdict panel */
+            /* Verdict panel - scrollable */
+            .verdict-overlay {
+                padding: 10px;
+                overflow-y: auto;
+            }
+
             .verdict-panel {
-                padding: 24px 16px;
-                margin: 16px;
-                max-width: calc(100% - 32px);
+                padding: 20px 16px;
+                margin: 0 auto;
+                max-width: 100%;
+                max-height: none;
             }
 
             .verdict-header {
@@ -3852,7 +3893,7 @@
             }
 
             .verdict-decision {
-                font-size: 1.75rem;
+                font-size: 1.5rem;
             }
 
             .verdict-question {
@@ -3860,7 +3901,7 @@
             }
 
             .verdict-summary {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
             .action-grid {
@@ -3884,27 +3925,27 @@
                 padding: 12px 20px;
             }
 
-            /* Followup questions */
-            .followup-section {
-                margin-top: 20px;
+            /* Followup questions - horizontal scroll */
+            .followup-chips {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 8px;
+                padding-bottom: 8px;
             }
 
             .followup-btn {
+                flex-shrink: 0;
                 padding: 8px 14px;
                 font-size: 0.75rem;
             }
 
-            /* Stream entries */
-            .stream-entry {
-                padding: 10px 14px;
-                font-size: 0.85rem;
-            }
-
             /* Upgrade overlay */
             .upgrade-modal {
-                width: calc(100% - 32px);
-                max-width: 400px;
-                padding: 24px 16px;
+                width: calc(100% - 24px);
+                max-width: 360px;
+                padding: 20px 16px;
             }
 
             .upgrade-feature {
@@ -3920,30 +3961,36 @@
            MOBILE RESPONSIVE (480px and below)
            ============================================ */
         @media (max-width: 480px) {
+            /* Main app - tighter viewport fit */
+            .cortex-app {
+                padding-top: 45px;
+                padding-bottom: 130px;
+            }
+
             .cortex-arena {
+                min-height: auto;
                 height: auto;
-                min-height: 280px;
-                padding: 50px 8px 0 8px;
+                padding: 5px;
             }
 
             .core-container {
-                width: 200px;
-                height: 200px;
+                width: 180px;
+                height: 180px;
             }
 
             .core-orb {
-                width: 70px;
-                height: 70px;
+                width: 65px;
+                height: 65px;
             }
 
             .ai-node {
-                width: 32px;
-                height: 32px;
+                width: 28px;
+                height: 28px;
             }
 
             .ai-node svg {
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
             }
 
             /* Disable the spinning rings on mobile - causes overlap */
@@ -3954,22 +4001,18 @@
 
             .core-container .node-gpt { top: 8px; left: 8px; }
             .core-container .node-gemini { top: 8px; right: 8px; }
-            .core-container .node-claude { bottom: 25px; left: 8px; }
-            .core-container .node-grok { bottom: 25px; right: 8px; }
-
-            .thought-card {
-                display: none !important;
-            }
+            .core-container .node-claude { bottom: 22px; left: 8px; }
+            .core-container .node-grok { bottom: 22px; right: 8px; }
 
             /* Top bar - minimal */
             .top-bar-right {
-                top: 8px;
-                right: 8px;
+                top: 6px;
+                right: 6px;
                 gap: 4px;
             }
 
             .upgrade-btn {
-                padding: 4px 8px;
+                padding: 5px 8px;
                 font-size: 0.6rem;
             }
 
@@ -3978,8 +4021,8 @@
             }
 
             .history-toggle {
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
             }
 
             .history-toggle svg {
@@ -3988,8 +4031,8 @@
             }
 
             .ai-settings-btn {
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
             }
 
             .ai-settings-btn svg {
@@ -3999,12 +4042,12 @@
 
             /* Auth container */
             .auth-container {
-                top: 8px;
-                left: 8px;
+                top: 6px;
+                left: 6px;
             }
 
             .auth-btn {
-                padding: 4px 8px;
+                padding: 5px 8px;
                 font-size: 0.65rem;
             }
 
@@ -4024,14 +4067,14 @@
             }
 
             /* Omni bar */
-            .omni-bar {
-                width: calc(100% - 20px);
-                padding: 4px 4px 4px 14px;
-                border-radius: 20px;
+            .omni-bar-container {
+                bottom: 40px;
             }
 
-            .omni-bar-container {
-                bottom: 45px;
+            .omni-bar {
+                width: calc(100% - 16px);
+                padding: 4px 4px 4px 12px;
+                border-radius: 20px;
             }
 
             .omni-input {
@@ -4039,24 +4082,36 @@
             }
 
             .omni-input::placeholder {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
 
             .omni-submit {
-                width: 36px;
-                height: 36px;
+                width: 34px;
+                height: 34px;
             }
 
             .omni-submit svg {
-                width: 16px;
-                height: 16px;
+                width: 14px;
+                height: 14px;
+            }
+
+            /* Template chips - smaller horizontal scroll */
+            .template-chips {
+                width: calc(100vw - 16px);
+                gap: 6px;
+                margin-top: 10px;
+            }
+
+            .template-chip {
+                padding: 6px 10px;
+                font-size: 0.65rem;
             }
 
             /* Site footer */
             .site-footer {
-                padding: 6px 12px;
-                gap: 12px;
-                font-size: 0.55rem;
+                padding: 5px 10px;
+                gap: 10px;
+                font-size: 0.5rem;
             }
 
             /* History drawer - full width */
@@ -4070,11 +4125,11 @@
             }
 
             .history-drawer-header {
-                padding: 14px;
+                padding: 12px;
             }
 
             .history-drawer-title {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
 
             .history-item {
@@ -4082,165 +4137,152 @@
             }
 
             .history-question {
-                font-size: 0.8rem;
-            }
-
-            /* Verdict panel - full screen */
-            .verdict-overlay {
-                padding: 8px;
-            }
-
-            .verdict-panel {
-                padding: 16px 12px;
-                margin: 0;
-                max-width: 100%;
-                border-radius: 12px;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            .verdict-close {
-                top: 8px;
-                right: 8px;
-                width: 28px;
-                height: 28px;
-            }
-
-            .consensus-badge {
-                font-size: 0.55rem;
-                padding: 3px 8px;
-            }
-
-            .verdict-decision {
-                font-size: 1.25rem;
-                margin-bottom: 8px;
-            }
-
-            .verdict-question {
                 font-size: 0.75rem;
             }
 
+            /* Verdict panel - full screen scrollable */
+            .verdict-overlay {
+                padding: 6px;
+                overflow-y: auto;
+            }
+
+            .verdict-panel {
+                padding: 14px 12px;
+                margin: 0;
+                max-width: 100%;
+                border-radius: 12px;
+            }
+
+            .verdict-close {
+                top: 6px;
+                right: 6px;
+                width: 26px;
+                height: 26px;
+            }
+
+            .consensus-badge {
+                font-size: 0.5rem;
+                padding: 3px 6px;
+            }
+
+            .verdict-decision {
+                font-size: 1.1rem;
+                margin-bottom: 6px;
+            }
+
+            .verdict-question {
+                font-size: 0.7rem;
+            }
+
             .verdict-summary {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 line-height: 1.5;
             }
 
             .confidence-score {
-                padding: 10px 12px;
+                padding: 8px 10px;
             }
 
             .confidence-value {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
             }
 
             .confidence-label {
-                font-size: 0.6rem;
+                font-size: 0.55rem;
             }
 
             .action-box {
-                padding: 12px;
+                padding: 10px;
             }
 
             .action-box-title {
-                font-size: 0.6rem;
+                font-size: 0.55rem;
             }
 
             .action-list li {
-                font-size: 0.75rem;
-                padding: 5px 0;
+                font-size: 0.7rem;
+                padding: 4px 0;
             }
 
             .verdict-btn {
-                padding: 10px 16px;
-                font-size: 0.75rem;
+                padding: 10px 14px;
+                font-size: 0.7rem;
             }
 
-            /* Followup */
+            /* Followup - horizontal scroll */
             .followup-chips {
-                gap: 5px;
-                flex-wrap: wrap;
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                gap: 6px;
             }
 
             .followup-btn {
+                flex-shrink: 0;
                 padding: 6px 10px;
-                font-size: 0.7rem;
+                font-size: 0.65rem;
             }
 
             /* Upgrade modal */
             .upgrade-modal {
-                width: calc(100% - 16px);
-                padding: 20px 12px;
+                width: calc(100% - 12px);
+                padding: 16px 12px;
             }
 
             .upgrade-title {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
 
             .upgrade-subtitle {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
 
             .upgrade-price {
-                font-size: 1.75rem;
+                font-size: 1.5rem;
             }
 
             .upgrade-feature {
-                padding: 8px 10px;
-                font-size: 0.75rem;
+                padding: 6px 8px;
+                font-size: 0.7rem;
             }
 
             .upgrade-cta {
-                padding: 10px 16px;
-                font-size: 0.85rem;
+                padding: 10px 14px;
+                font-size: 0.8rem;
             }
 
             /* AI Settings Panel */
             .ai-settings-panel {
-                width: calc(100% - 16px);
+                width: calc(100% - 12px);
                 max-height: 85vh;
-                padding: 16px;
+                padding: 14px;
             }
 
             .ai-settings-header {
-                padding: 0 0 12px 0;
+                padding: 0 0 10px 0;
             }
 
             .ai-settings-title {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
 
             .ai-settings-body {
-                padding: 12px 0 0 0;
+                padding: 10px 0 0 0;
             }
 
             .model-config-card {
-                padding: 12px;
+                padding: 10px;
             }
 
             .model-config-header {
-                font-size: 0.8rem;
-            }
-
-            /* Template chips - hide on mobile, too many chips cause overlap */
-            .template-chips {
-                display: none !important;
-            }
-
-            .template-chip {
-                padding: 8px 12px;
                 font-size: 0.75rem;
             }
 
             /* Context input */
             .context-input {
-                width: calc(100vw - 20px);
-                font-size: 0.8rem;
-                padding: 10px 14px;
-            }
-
-            /* Stream entries in sidebar */
-            .stream-container {
-                display: none !important;
+                width: calc(100vw - 16px);
+                font-size: 0.75rem;
+                padding: 8px 12px;
             }
         }
 
@@ -4248,9 +4290,14 @@
            SMALL MOBILE (360px and below)
            ============================================ */
         @media (max-width: 360px) {
+            .cortex-app {
+                padding-top: 40px;
+                padding-bottom: 120px;
+            }
+
             .core-container {
-                width: 160px;
-                height: 160px;
+                width: 150px;
+                height: 150px;
             }
 
             .core-orb {
@@ -4259,22 +4306,27 @@
             }
 
             .ai-node {
-                width: 26px;
-                height: 26px;
+                width: 24px;
+                height: 24px;
             }
 
             .ai-node svg {
-                width: 11px;
-                height: 11px;
+                width: 10px;
+                height: 10px;
             }
 
             .core-container .node-gpt { top: 5px; left: 5px; }
             .core-container .node-gemini { top: 5px; right: 5px; }
-            .core-container .node-claude { bottom: 20px; left: 5px; }
-            .core-container .node-grok { bottom: 20px; right: 5px; }
+            .core-container .node-claude { bottom: 18px; left: 5px; }
+            .core-container .node-grok { bottom: 18px; right: 5px; }
+
+            .omni-bar-container {
+                bottom: 35px;
+            }
 
             .omni-bar {
-                width: calc(100% - 16px);
+                width: calc(100% - 12px);
+                padding: 3px 3px 3px 10px;
             }
 
             .omni-input {
@@ -4282,32 +4334,43 @@
             }
 
             .omni-submit {
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
             }
 
-            .verdict-decision {
-                font-size: 1.1rem;
-            }
-
-            .verdict-summary {
-                font-size: 0.75rem;
-            }
-
-            .auth-btn {
-                padding: 3px 6px;
+            /* Smaller template chips */
+            .template-chip {
+                padding: 5px 8px;
                 font-size: 0.6rem;
             }
 
-            .upgrade-btn {
-                padding: 3px 6px;
+            .verdict-decision {
+                font-size: 1rem;
+            }
+
+            .verdict-summary {
+                font-size: 0.7rem;
+            }
+
+            .auth-btn {
+                padding: 4px 6px;
                 font-size: 0.55rem;
+            }
+
+            .upgrade-btn {
+                padding: 4px 6px;
+                font-size: 0.5rem;
             }
 
             .history-toggle,
             .ai-settings-btn {
-                width: 28px;
-                height: 28px;
+                width: 26px;
+                height: 26px;
+            }
+
+            .site-footer {
+                font-size: 0.45rem;
+                gap: 8px;
             }
         }
     </style>
