@@ -3818,6 +3818,12 @@
             .core-container .node-claude { bottom: 35px; left: 12px; }
             .core-container .node-grok { bottom: 35px; right: 12px; }
 
+            /* Hide spinning rings on tablet - causes incomplete appearance */
+            .ai-node.active::before,
+            .ai-node.active::after {
+                display: none !important;
+            }
+
             /* Hide thought cards on tablet - they overlap */
             .thought-card {
                 display: none;
@@ -3850,11 +3856,14 @@
                 height: 42px;
             }
 
-            /* Top bar right - simplified */
+            /* Top bar right - simplified and properly contained */
             .top-bar-right {
-                top: 10px;
-                right: 10px;
-                gap: 6px;
+                top: 8px;
+                right: 8px;
+                gap: 4px;
+                max-width: calc(100vw - 120px); /* Leave space for left auth */
+                overflow: visible;
+                z-index: 1000;
             }
 
             .usage-indicator {
@@ -3866,8 +3875,21 @@
             }
 
             .upgrade-btn {
-                padding: 6px 10px;
-                font-size: 0.7rem;
+                padding: 5px 8px;
+                font-size: 0.65rem;
+            }
+
+            /* AI settings button - ensure visible */
+            .ai-settings-btn {
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
+            }
+
+            .history-toggle {
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
             }
 
             /* Auth container - simplified */
