@@ -50,12 +50,14 @@
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Desktop responsive | DONE | - |
-| Tablet responsive (768px) | DONE | Scaled rings, adjusted layout |
-| Mobile responsive (480px) | DONE | Smaller elements, preserved rings |
-| Small mobile (360px) | DONE | Tiny rings, minimal UI |
+| Tablet responsive (768px) | DONE | 44px touch targets, decluttered |
+| Mobile responsive (480px) | DONE | iOS zoom prevention, proper touch targets |
+| Small mobile (360px) | DONE | Minimal UI, maintained 36px+ touch targets |
+| Tooltips disabled on mobile | DONE | Per NN/g best practices |
 | Cookie consent banner | DONE | Accept/Decline |
 | 404 error page | DONE | Branded |
 | PWA manifest | DONE | Add to home screen ready |
+| Secondary pages mobile | DONE | Terms, privacy, cookies, disclaimer |
 
 ---
 

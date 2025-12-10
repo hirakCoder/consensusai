@@ -221,6 +221,26 @@
         }
 
         /* ============================================
+           MOBILE TOOLTIPS - Best Practice: DISABLE on touch
+           Per NN/g & Smashing Magazine: Tooltips don't work on mobile
+           Use info modals or inline help instead
+           ============================================ */
+        @media (max-width: 768px), (hover: none), (pointer: coarse) {
+            /* Completely disable all tooltip pseudo-elements on mobile/touch */
+            [data-tooltip]::after,
+            [data-tooltip]::before {
+                display: none !important;
+                content: none !important;
+            }
+
+            /* Remove tooltip indicators - they're useless without tooltips */
+            [data-tooltip] {
+                cursor: default;
+                border-bottom: none !important;
+            }
+        }
+
+        /* ============================================
            NEBULA BACKGROUND
            ============================================ */
 
@@ -3761,6 +3781,11 @@
            TABLET RESPONSIVE (768px and below)
            ============================================ */
         @media (max-width: 768px) {
+            /* ============================================
+               MOBILE-FIRST: Clean, Professional SaaS UX
+               Following: Apple HIG, Material Design, NN/g
+               ============================================ */
+
             /* CRITICAL: Prevent ALL scrolling - especially horizontal */
             html, body {
                 overflow: hidden !important;
@@ -3789,44 +3814,45 @@
                 overflow-x: hidden;
                 padding: 0;
                 justify-content: flex-start;
-                padding-top: 45px; /* Space for fixed header */
+                padding-top: 50px; /* Space for fixed header */
             }
 
             .cortex-arena {
                 min-height: 0 !important;
-                height: calc(100dvh - 170px); /* viewport - header - omni-bar - footer */
-                max-height: calc(100dvh - 170px);
+                height: calc(100dvh - 160px); /* viewport - header - omni-bar - footer */
+                max-height: calc(100dvh - 160px);
                 padding: 10px;
                 overflow: hidden;
             }
 
             .core-container {
-                width: min(240px, 60vw);
-                height: min(240px, 60vw);
+                width: min(220px, 55vw);
+                height: min(220px, 55vw);
                 overflow: visible; /* Allow rings to show */
             }
 
             .core-orb {
-                width: 90px;
-                height: 90px;
+                width: 80px;
+                height: 80px;
             }
 
+            /* AI Nodes - 44px minimum touch target (Apple HIG) */
             .ai-node {
-                width: 36px;
-                height: 36px;
-                overflow: visible; /* Allow rings to show */
+                width: 44px;
+                height: 44px;
+                overflow: visible;
             }
 
             .ai-node svg {
-                width: 16px;
-                height: 16px;
+                width: 18px;
+                height: 18px;
             }
 
             /* Position nodes with more spacing for rings */
-            .core-container .node-gpt { top: 15px; left: 15px; }
-            .core-container .node-gemini { top: 15px; right: 15px; }
-            .core-container .node-claude { bottom: 40px; left: 15px; }
-            .core-container .node-grok { bottom: 40px; right: 15px; }
+            .core-container .node-gpt { top: 8px; left: 8px; }
+            .core-container .node-gemini { top: 8px; right: 8px; }
+            .core-container .node-claude { bottom: 35px; left: 8px; }
+            .core-container .node-grok { bottom: 35px; right: 8px; }
 
             /* Scale down spinning rings for tablet - smaller but visible */
             .ai-node.active::before {
@@ -3870,14 +3896,19 @@
                 height: 8px;
             }
 
-            /* Hide thought cards on tablet - they overlap */
-            .thought-card {
-                display: none;
+            /* DECLUTTER: Hide non-essential elements on mobile */
+            .thought-card,
+            .stream-container,
+            .tier-selector,
+            .usage-indicator,
+            .devil-toggle,
+            .upgrade-btn {
+                display: none !important;
             }
 
             /* Omni bar - positioned above footer */
             .omni-bar-container {
-                bottom: 45px;
+                bottom: 40px;
                 left: 0;
                 right: 0;
                 transform: none;
@@ -3890,102 +3921,97 @@
             .omni-bar {
                 width: calc(100% - 24px);
                 max-width: calc(100vw - 24px);
-                padding: 6px 6px 6px 16px;
+                padding: 8px 8px 8px 16px;
+                border-radius: 24px;
             }
 
             .omni-input {
-                font-size: 0.9rem;
+                font-size: 16px; /* Prevent iOS zoom on focus */
+                min-height: 44px;
             }
 
+            /* Submit button - 44px touch target */
             .omni-submit {
-                width: 42px;
-                height: 42px;
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
             }
 
-            /* Top bar right - simplified and properly contained */
+            /* Top bar right - simplified header with 44px touch targets */
             .top-bar-right {
                 position: fixed;
                 top: 8px;
                 right: 8px;
                 left: auto;
-                gap: 6px;
+                gap: 8px;
                 display: flex;
                 align-items: center;
                 z-index: 1000;
                 flex-wrap: nowrap;
             }
 
-            .usage-indicator {
-                display: none !important;
-            }
-
-            .tier-selector {
-                display: none !important;
-            }
-
-            /* Hide upgrade button on small screens to make room */
-            .upgrade-btn {
-                display: none !important;
-            }
-
-            /* AI settings button - ensure visible and clickable */
-            .ai-settings-btn {
-                width: 34px;
-                height: 34px;
-                min-width: 34px;
-                flex-shrink: 0;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-            }
-
+            /* All header buttons - 44px minimum touch target */
+            .ai-settings-btn,
             .history-toggle {
-                width: 34px;
-                height: 34px;
-                min-width: 34px;
+                width: 44px;
+                height: 44px;
+                min-width: 44px;
+                min-height: 44px;
                 flex-shrink: 0;
                 display: flex !important;
                 align-items: center;
                 justify-content: center;
+                border-radius: 12px;
+            }
+
+            .ai-settings-btn svg,
+            .history-toggle svg {
+                width: 20px;
+                height: 20px;
             }
 
             /* Auth container - simplified */
             .auth-container {
-                top: 10px;
-                left: 10px;
+                top: 8px;
+                left: 8px;
             }
 
+            /* Auth button - 44px touch target */
             .auth-btn {
-                padding: 6px 10px;
-                font-size: 0.7rem;
+                padding: 10px 14px;
+                font-size: 0.8rem;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
             }
 
             .user-menu {
-                padding: 5px 8px;
+                padding: 8px 12px;
+                min-height: 44px;
             }
 
             .user-name {
                 display: none !important;
             }
 
-            /* Devil toggle - hide on mobile */
-            .devil-toggle {
-                display: none !important;
+            .user-avatar {
+                width: 32px;
+                height: 32px;
             }
 
-            /* Site footer - smaller */
+            /* Site footer - minimal */
             .site-footer {
-                padding: 8px 16px;
-                gap: 16px;
-                font-size: 0.6rem;
+                padding: 6px 12px;
+                gap: 12px;
+                font-size: 0.55rem;
             }
 
-            /* Hide stream container on mobile - takes too much space */
-            .stream-container {
-                display: none;
+            .site-footer a {
+                padding: 4px 0;
             }
 
-            /* History drawer */
+            /* History drawer - slide from right */
             .history-drawer {
                 width: 85vw;
                 max-width: 320px;
@@ -3996,26 +4022,42 @@
                 right: 0;
             }
 
-            /* Verdict panel - scrollable */
+            /* History items - proper touch targets */
+            .history-item {
+                min-height: 48px;
+                padding: 12px;
+            }
+
+            /* Verdict panel - scrollable, full-width */
             .verdict-overlay {
-                padding: 10px;
+                padding: 8px;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .verdict-panel {
-                padding: 20px 16px;
+                padding: 16px 12px;
                 margin: 0 auto;
                 max-width: 100%;
                 max-height: none;
+                border-radius: 16px;
+            }
+
+            .verdict-close {
+                width: 44px;
+                height: 44px;
+                top: 8px;
+                right: 8px;
             }
 
             .verdict-header {
                 flex-direction: column;
                 gap: 12px;
+                padding-right: 40px; /* Space for close button */
             }
 
             .verdict-decision {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
 
             .verdict-question {
@@ -4024,6 +4066,7 @@
 
             .verdict-summary {
                 font-size: 0.85rem;
+                line-height: 1.6;
             }
 
             .action-grid {
@@ -4036,15 +4079,26 @@
                 min-height: auto;
             }
 
-            .verdict-actions {
-                flex-direction: column;
-                gap: 8px;
+            .action-box-title {
+                font-size: 0.65rem;
             }
 
+            .action-list li {
+                font-size: 0.8rem;
+            }
+
+            .verdict-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            /* Verdict buttons - 48px touch target */
             .verdict-btn {
                 width: 100%;
                 justify-content: center;
-                padding: 12px 20px;
+                padding: 14px 20px;
+                min-height: 48px;
+                font-size: 0.9rem;
             }
 
             /* Followup questions - horizontal scroll */
@@ -4055,65 +4109,114 @@
                 -webkit-overflow-scrolling: touch;
                 gap: 8px;
                 padding-bottom: 8px;
+                scrollbar-width: none;
             }
 
+            .followup-chips::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* Followup buttons - proper touch targets */
             .followup-btn {
                 flex-shrink: 0;
-                padding: 8px 14px;
-                font-size: 0.75rem;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+                min-height: 44px;
             }
 
-            /* Upgrade overlay */
+            /* Upgrade overlay - properly sized */
             .upgrade-modal {
                 width: calc(100% - 24px);
                 max-width: 360px;
                 padding: 20px 16px;
+                max-height: 85vh;
+                overflow-y: auto;
             }
 
             .upgrade-feature {
-                padding: 10px 14px;
+                padding: 12px 14px;
+                min-height: 44px;
             }
 
             .upgrade-cta {
-                padding: 12px 20px;
+                padding: 14px 24px;
+                min-height: 48px;
+                font-size: 1rem;
+            }
+
+            /* AI Settings Panel - full screen on mobile */
+            .ai-settings-panel {
+                width: calc(100% - 16px);
+                max-height: 85vh;
+                overflow-y: auto;
+            }
+
+            /* Template chips - horizontal scroll */
+            .template-chips {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                gap: 8px;
+                padding: 4px 0;
+            }
+
+            .template-chips::-webkit-scrollbar {
+                display: none;
+            }
+
+            .template-chip {
+                flex-shrink: 0;
+                padding: 10px 14px;
+                min-height: 44px;
+                font-size: 0.75rem;
+            }
+
+            /* Context toggle - proper touch target */
+            .context-toggle {
+                min-width: 44px;
+                min-height: 44px;
             }
         }
 
         /* ============================================
            MOBILE RESPONSIVE (480px and below)
+           Smaller screens but MAINTAINING 44px touch targets
            ============================================ */
         @media (max-width: 480px) {
             /* Main app - tighter viewport fit */
             .cortex-app {
-                padding-top: 40px;
+                padding-top: 48px;
             }
 
             .cortex-arena {
-                height: calc(100dvh - 150px);
-                max-height: calc(100dvh - 150px);
+                height: calc(100dvh - 145px);
+                max-height: calc(100dvh - 145px);
                 padding: 5px;
             }
 
             .core-container {
-                width: min(180px, 50vw);
-                height: min(180px, 50vw);
+                width: min(170px, 48vw);
+                height: min(170px, 48vw);
                 overflow: visible;
             }
 
             .core-orb {
-                width: 65px;
-                height: 65px;
+                width: 60px;
+                height: 60px;
             }
 
+            /* AI Nodes - maintain 44px touch target with smaller visual */
             .ai-node {
-                width: 28px;
-                height: 28px;
+                width: 38px;
+                height: 38px;
                 overflow: visible;
             }
 
             .ai-node svg {
-                width: 12px;
-                height: 12px;
+                width: 14px;
+                height: 14px;
             }
 
             /* Smaller spinning rings for mobile */
@@ -4155,63 +4258,52 @@
             }
 
             /* Position nodes with room for rings */
-            .core-container .node-gpt { top: 10px; left: 10px; }
-            .core-container .node-gemini { top: 10px; right: 10px; }
-            .core-container .node-claude { bottom: 28px; left: 10px; }
-            .core-container .node-grok { bottom: 28px; right: 10px; }
+            .core-container .node-gpt { top: 5px; left: 5px; }
+            .core-container .node-gemini { top: 5px; right: 5px; }
+            .core-container .node-claude { bottom: 25px; left: 5px; }
+            .core-container .node-grok { bottom: 25px; right: 5px; }
 
-            /* Top bar - minimal but visible */
+            /* Top bar - minimal but with proper touch targets */
             .top-bar-right {
-                top: 6px;
-                right: 6px;
-                gap: 4px;
+                top: 4px;
+                right: 4px;
+                gap: 6px;
             }
 
-            /* Keep upgrade hidden */
-            .upgrade-btn {
-                display: none !important;
-            }
-
-            .history-toggle {
-                width: 30px;
-                height: 30px;
-                min-width: 30px;
-            }
-
-            .history-toggle svg {
-                width: 14px;
-                height: 14px;
-            }
-
+            /* CRITICAL: Maintain 44px touch targets even on small screens */
+            .history-toggle,
             .ai-settings-btn {
-                width: 30px;
-                height: 30px;
-                min-width: 30px;
-                flex-shrink: 0;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                min-height: 40px;
             }
 
+            .history-toggle svg,
             .ai-settings-btn svg {
-                width: 14px;
-                height: 14px;
+                width: 18px;
+                height: 18px;
             }
 
             /* Auth container */
             .auth-container {
-                top: 6px;
-                left: 6px;
+                top: 4px;
+                left: 4px;
             }
 
             .auth-btn {
-                padding: 5px 8px;
-                font-size: 0.65rem;
+                padding: 8px 12px;
+                font-size: 0.7rem;
+                min-height: 40px;
+            }
+
+            .user-menu {
+                min-height: 40px;
             }
 
             .user-avatar {
-                width: 26px;
-                height: 26px;
+                width: 28px;
+                height: 28px;
                 font-size: 0.65rem;
             }
 
@@ -4224,59 +4316,65 @@
                 min-width: 140px;
             }
 
-            /* Omni bar */
+            /* Omni bar - compact but usable */
             .omni-bar-container {
-                bottom: 40px;
+                bottom: 32px;
                 left: 0;
                 right: 0;
                 transform: none;
             }
 
             .omni-bar {
-                width: calc(100% - 16px);
-                max-width: calc(100vw - 16px);
-                padding: 4px 4px 4px 12px;
+                width: calc(100% - 12px);
+                max-width: calc(100vw - 12px);
+                padding: 6px 6px 6px 12px;
                 border-radius: 20px;
             }
 
+            /* CRITICAL: 16px font prevents iOS zoom */
             .omni-input {
-                font-size: 0.8rem;
+                font-size: 16px;
+                min-height: 40px;
             }
 
             .omni-input::placeholder {
-                font-size: 0.7rem;
+                font-size: 14px;
             }
 
+            /* Submit button - maintain touch target */
             .omni-submit {
-                width: 34px;
-                height: 34px;
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                min-height: 40px;
             }
 
             .omni-submit svg {
-                width: 14px;
-                height: 14px;
+                width: 16px;
+                height: 16px;
             }
 
-            /* Template chips - smaller horizontal scroll */
+            /* Template chips - smaller but tappable */
             .template-chips {
-                width: calc(100vw - 16px);
+                width: calc(100vw - 12px);
                 gap: 6px;
-                margin-top: 10px;
+                margin-top: 8px;
             }
 
             .template-chip {
-                padding: 6px 10px;
-                font-size: 0.65rem;
+                padding: 8px 12px;
+                font-size: 0.7rem;
+                min-height: 36px;
             }
 
-            /* Site footer */
+            /* Site footer - minimal */
             .site-footer {
-                padding: 5px 10px;
-                gap: 10px;
+                padding: 4px 8px;
+                gap: 8px;
                 font-size: 0.5rem;
             }
 
-            /* History drawer - full width */
+            /* History drawer - full width on small screens */
             .history-drawer {
                 width: 100%;
                 right: -100%;
@@ -4294,8 +4392,10 @@
                 font-size: 0.85rem;
             }
 
+            /* History items - maintain touch target */
             .history-item {
                 padding: 10px;
+                min-height: 44px;
             }
 
             .history-question {
@@ -4304,22 +4404,24 @@
 
             /* Verdict panel - full screen scrollable */
             .verdict-overlay {
-                padding: 6px;
+                padding: 4px;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .verdict-panel {
-                padding: 14px 12px;
+                padding: 12px 10px;
                 margin: 0;
                 max-width: 100%;
                 border-radius: 12px;
             }
 
+            /* Close button - maintain touch target */
             .verdict-close {
-                top: 6px;
-                right: 6px;
-                width: 26px;
-                height: 26px;
+                top: 4px;
+                right: 4px;
+                width: 40px;
+                height: 40px;
             }
 
             .consensus-badge {
@@ -4366,23 +4468,32 @@
                 padding: 4px 0;
             }
 
+            /* Verdict buttons - maintain touch target */
             .verdict-btn {
-                padding: 10px 14px;
-                font-size: 0.7rem;
+                padding: 12px 16px;
+                font-size: 0.8rem;
+                min-height: 44px;
             }
 
-            /* Followup - horizontal scroll */
+            /* Followup - horizontal scroll with touch targets */
             .followup-chips {
                 display: flex;
                 flex-wrap: nowrap;
                 overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
                 gap: 6px;
+                scrollbar-width: none;
+            }
+
+            .followup-chips::-webkit-scrollbar {
+                display: none;
             }
 
             .followup-btn {
                 flex-shrink: 0;
-                padding: 6px 10px;
-                font-size: 0.65rem;
+                min-height: 40px;
+                padding: 8px 12px;
+                font-size: 0.75rem;
             }
 
             /* Upgrade modal */
@@ -4450,37 +4561,39 @@
 
         /* ============================================
            SMALL MOBILE (360px and below)
+           Smallest screens - still maintain minimum touch targets
            ============================================ */
         @media (max-width: 360px) {
             .cortex-app {
-                padding-top: 35px;
+                padding-top: 44px;
             }
 
             .cortex-arena {
-                height: calc(100dvh - 140px);
-                max-height: calc(100dvh - 140px);
+                height: calc(100dvh - 130px);
+                max-height: calc(100dvh - 130px);
             }
 
             .core-container {
-                width: min(150px, 45vw);
-                height: min(150px, 45vw);
+                width: min(140px, 42vw);
+                height: min(140px, 42vw);
                 overflow: visible;
             }
 
             .core-orb {
-                width: 55px;
-                height: 55px;
+                width: 50px;
+                height: 50px;
             }
 
+            /* AI nodes - visual only, keep small */
             .ai-node {
-                width: 24px;
-                height: 24px;
+                width: 32px;
+                height: 32px;
                 overflow: visible;
             }
 
             .ai-node svg {
-                width: 10px;
-                height: 10px;
+                width: 12px;
+                height: 12px;
             }
 
             /* Tiny spinning rings for very small screens */
@@ -4520,37 +4633,59 @@
             }
 
             /* Position nodes with room for tiny rings */
-            .core-container .node-gpt { top: 8px; left: 8px; }
-            .core-container .node-gemini { top: 8px; right: 8px; }
-            .core-container .node-claude { bottom: 22px; left: 8px; }
-            .core-container .node-grok { bottom: 22px; right: 8px; }
+            .core-container .node-gpt { top: 3px; left: 3px; }
+            .core-container .node-gemini { top: 3px; right: 3px; }
+            .core-container .node-claude { bottom: 20px; left: 3px; }
+            .core-container .node-grok { bottom: 20px; right: 3px; }
 
             .omni-bar-container {
-                bottom: 35px;
+                bottom: 28px;
                 left: 0;
                 right: 0;
                 transform: none;
             }
 
             .omni-bar {
-                width: calc(100% - 12px);
-                max-width: calc(100vw - 12px);
-                padding: 3px 3px 3px 10px;
+                width: calc(100% - 8px);
+                max-width: calc(100vw - 8px);
+                padding: 4px 4px 4px 10px;
             }
 
+            /* CRITICAL: 16px font prevents iOS zoom */
             .omni-input {
-                font-size: 0.75rem;
+                font-size: 16px;
+                min-height: 36px;
             }
 
+            /* Maintain minimum touch target for submit */
             .omni-submit {
-                width: 30px;
-                height: 30px;
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                min-height: 36px;
             }
 
-            /* Smaller template chips */
+            /* Template chips - maintain touch target */
             .template-chip {
-                padding: 5px 8px;
-                font-size: 0.6rem;
+                padding: 8px 10px;
+                font-size: 0.65rem;
+                min-height: 32px;
+            }
+
+            /* Site footer - minimal */
+            .site-footer {
+                padding: 3px 6px;
+                gap: 6px;
+                font-size: 0.45rem;
+            }
+
+            /* Header buttons - maintain touch targets */
+            .history-toggle,
+            .ai-settings-btn {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                min-height: 36px;
             }
 
             .verdict-decision {
@@ -4559,6 +4694,18 @@
 
             .verdict-summary {
                 font-size: 0.7rem;
+            }
+
+            /* Verdict close - maintain touch target */
+            .verdict-close {
+                width: 36px;
+                height: 36px;
+            }
+
+            /* Verdict buttons - maintain touch target */
+            .verdict-btn {
+                min-height: 40px;
+                padding: 10px 14px;
             }
 
             .auth-btn {
