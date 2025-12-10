@@ -33,7 +33,34 @@ const mimeTypes = {
   '.json': 'application/json',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
-  '.ico': 'image/x-icon'
+  '.ico': 'image/x-icon',
+  '.xml': 'application/xml',
+  '.txt': 'text/plain',
+  '.webmanifest': 'application/manifest+json'
+};
+
+// Security headers - applied to all responses
+const securityHeaders = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
+};
+
+// Cache durations by file type
+const cacheDurations = {
+  '.html': 'no-cache, no-store, must-revalidate', // HTML always fresh
+  '.css': 'public, max-age=31536000, immutable',   // CSS cached 1 year
+  '.js': 'public, max-age=31536000, immutable',    // JS cached 1 year
+  '.png': 'public, max-age=31536000, immutable',   // Images cached 1 year
+  '.svg': 'public, max-age=31536000, immutable',
+  '.ico': 'public, max-age=31536000, immutable',
+  '.json': 'public, max-age=86400',                // JSON cached 1 day
+  '.xml': 'public, max-age=86400',                 // XML cached 1 day
+  '.txt': 'public, max-age=86400',                 // TXT cached 1 day
+  '.webmanifest': 'public, max-age=86400'
 };
 
 // Parse JSON body
@@ -58,11 +85,13 @@ async function getUserId(req) {
   return userId;
 }
 
-// Send JSON response
+// Send JSON response with security headers
 function sendJson(res, data, status = 200) {
   res.writeHead(status, {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
+    'Cache-Control': 'no-store',
+    ...securityHeaders
   });
   res.end(JSON.stringify(data));
 }
@@ -73,18 +102,23 @@ function sendSSE(res, event, data) {
   res.write(`data: ${JSON.stringify(data)}\n\n`);
 }
 
-// Serve static files
+// Serve static files with security and cache headers
 function serveStatic(res, filepath) {
   const ext = path.extname(filepath);
   const mime = mimeTypes[ext] || 'application/octet-stream';
+  const cacheControl = cacheDurations[ext] || 'public, max-age=3600';
 
   fs.readFile(filepath, (err, data) => {
     if (err) {
-      res.writeHead(404);
+      res.writeHead(404, { ...securityHeaders });
       res.end('Not found');
       return;
     }
-    res.writeHead(200, { 'Content-Type': mime });
+    res.writeHead(200, {
+      'Content-Type': mime,
+      'Cache-Control': cacheControl,
+      ...securityHeaders
+    });
     res.end(data);
   });
 }
@@ -588,8 +622,25 @@ const server = http.createServer(async (req, res) => {
   if (fs.existsSync(filepath) && fs.statSync(filepath).isFile()) {
     serveStatic(res, filepath);
   } else {
-    // SPA fallback
-    serveStatic(res, path.join(__dirname, 'public', 'index.html'));
+    // Check if it's a file request (has extension) or a route request
+    const hasExtension = path.extname(pathname).length > 0;
+    if (hasExtension) {
+      // File with extension not found -> 404
+      const notFoundPath = path.join(__dirname, 'public', '404.html');
+      if (fs.existsSync(notFoundPath)) {
+        res.writeHead(404, {
+          'Content-Type': 'text/html',
+          ...securityHeaders
+        });
+        fs.createReadStream(notFoundPath).pipe(res);
+      } else {
+        res.writeHead(404, { ...securityHeaders });
+        res.end('Not found');
+      }
+    } else {
+      // SPA fallback for routes without extension
+      serveStatic(res, path.join(__dirname, 'public', 'index.html'));
+    }
   }
 });
 

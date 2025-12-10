@@ -26,6 +26,13 @@
     <meta name="twitter:description" content="Let 4 AI models debate your decisions and reach consensus.">
     <meta name="twitter:image" content="https://consensusai.app/og-image.png">
 
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ConsensusAI">
+
     <!-- Premium Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -7037,6 +7044,80 @@
 
         // Focus input on load
         setTimeout(() => input.focus(), 500);
+
+        // ============================================
+        // COOKIE CONSENT
+        // ============================================
+        (function() {
+            const CONSENT_KEY = 'consensus_cookie_consent';
+            const consent = localStorage.getItem(CONSENT_KEY);
+
+            if (!consent) {
+                const banner = document.createElement('div');
+                banner.id = 'cookie-consent';
+                banner.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        background: rgba(18, 18, 26, 0.98);
+                        backdrop-filter: blur(20px);
+                        border-top: 1px solid rgba(255,255,255,0.1);
+                        padding: 16px 24px;
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
+                        gap: 12px;
+                    ">
+                        <p style="
+                            color: rgba(255,255,255,0.8);
+                            font-size: 0.85rem;
+                            margin: 0;
+                            flex: 1;
+                            min-width: 200px;
+                        ">
+                            We use cookies to enhance your experience. By continuing, you agree to our
+                            <a href="/cookies.html" style="color: #6366f1; text-decoration: none;">Cookie Policy</a>.
+                        </p>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                            <button id="cookie-decline" style="
+                                padding: 8px 16px;
+                                background: transparent;
+                                border: 1px solid rgba(255,255,255,0.2);
+                                color: rgba(255,255,255,0.7);
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 0.8rem;
+                            ">Decline</button>
+                            <button id="cookie-accept" style="
+                                padding: 8px 16px;
+                                background: #6366f1;
+                                border: none;
+                                color: white;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 0.8rem;
+                                font-weight: 500;
+                            ">Accept All</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(banner);
+
+                document.getElementById('cookie-accept').onclick = function() {
+                    localStorage.setItem(CONSENT_KEY, 'accepted');
+                    banner.remove();
+                };
+
+                document.getElementById('cookie-decline').onclick = function() {
+                    localStorage.setItem(CONSENT_KEY, 'declined');
+                    banner.remove();
+                };
+            }
+        })();
     </script>
 </body>
 </html>
