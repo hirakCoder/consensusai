@@ -3803,6 +3803,7 @@
             .core-container {
                 width: min(240px, 60vw);
                 height: min(240px, 60vw);
+                overflow: visible; /* Allow rings to show */
             }
 
             .core-orb {
@@ -3813,6 +3814,7 @@
             .ai-node {
                 width: 36px;
                 height: 36px;
+                overflow: visible; /* Allow rings to show */
             }
 
             .ai-node svg {
@@ -3820,15 +3822,20 @@
                 height: 16px;
             }
 
-            .core-container .node-gpt { top: 12px; left: 12px; }
-            .core-container .node-gemini { top: 12px; right: 12px; }
-            .core-container .node-claude { bottom: 35px; left: 12px; }
-            .core-container .node-grok { bottom: 35px; right: 12px; }
+            /* Position nodes with more spacing for rings */
+            .core-container .node-gpt { top: 15px; left: 15px; }
+            .core-container .node-gemini { top: 15px; right: 15px; }
+            .core-container .node-claude { bottom: 40px; left: 15px; }
+            .core-container .node-grok { bottom: 40px; right: 15px; }
 
-            /* Hide spinning rings on tablet - causes incomplete appearance */
-            .ai-node.active::before,
+            /* Scale down spinning rings for tablet - smaller but visible */
+            .ai-node.active::before {
+                inset: -4px !important;
+                border-width: 1.5px !important;
+            }
             .ai-node.active::after {
-                display: none !important;
+                inset: -7px !important;
+                border-width: 1px !important;
             }
 
             /* Hide thought cards on tablet - they overlap */
@@ -3865,12 +3872,15 @@
 
             /* Top bar right - simplified and properly contained */
             .top-bar-right {
+                position: fixed;
                 top: 8px;
                 right: 8px;
-                gap: 4px;
-                max-width: calc(100vw - 120px); /* Leave space for left auth */
-                overflow: visible;
+                left: auto;
+                gap: 6px;
+                display: flex;
+                align-items: center;
                 z-index: 1000;
+                flex-wrap: nowrap;
             }
 
             .usage-indicator {
@@ -3881,22 +3891,30 @@
                 display: none !important;
             }
 
+            /* Hide upgrade button on small screens to make room */
             .upgrade-btn {
-                padding: 5px 8px;
-                font-size: 0.65rem;
+                display: none !important;
             }
 
-            /* AI settings button - ensure visible */
+            /* AI settings button - ensure visible and clickable */
             .ai-settings-btn {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
                 flex-shrink: 0;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
             }
 
             .history-toggle {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
+                min-width: 34px;
                 flex-shrink: 0;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
             }
 
             /* Auth container - simplified */
@@ -4047,6 +4065,7 @@
             .core-container {
                 width: min(180px, 50vw);
                 height: min(180px, 50vw);
+                overflow: visible;
             }
 
             .core-orb {
@@ -4057,6 +4076,7 @@
             .ai-node {
                 width: 28px;
                 height: 28px;
+                overflow: visible;
             }
 
             .ai-node svg {
@@ -4064,36 +4084,39 @@
                 height: 12px;
             }
 
-            /* Disable the spinning rings on mobile - causes overlap */
-            .ai-node.active::before,
+            /* Smaller spinning rings for mobile */
+            .ai-node.active::before {
+                inset: -3px !important;
+                border-width: 1px !important;
+            }
             .ai-node.active::after {
-                display: none;
+                inset: -5px !important;
+                border-width: 1px !important;
+                opacity: 0.4 !important;
             }
 
-            .core-container .node-gpt { top: 8px; left: 8px; }
-            .core-container .node-gemini { top: 8px; right: 8px; }
-            .core-container .node-claude { bottom: 22px; left: 8px; }
-            .core-container .node-grok { bottom: 22px; right: 8px; }
+            /* Position nodes with room for rings */
+            .core-container .node-gpt { top: 10px; left: 10px; }
+            .core-container .node-gemini { top: 10px; right: 10px; }
+            .core-container .node-claude { bottom: 28px; left: 10px; }
+            .core-container .node-grok { bottom: 28px; right: 10px; }
 
-            /* Top bar - minimal */
+            /* Top bar - minimal but visible */
             .top-bar-right {
                 top: 6px;
                 right: 6px;
                 gap: 4px;
             }
 
+            /* Keep upgrade hidden */
             .upgrade-btn {
-                padding: 5px 8px;
-                font-size: 0.6rem;
-            }
-
-            .upgrade-btn svg {
-                display: none;
+                display: none !important;
             }
 
             .history-toggle {
                 width: 30px;
                 height: 30px;
+                min-width: 30px;
             }
 
             .history-toggle svg {
@@ -4104,6 +4127,11 @@
             .ai-settings-btn {
                 width: 30px;
                 height: 30px;
+                min-width: 30px;
+                flex-shrink: 0;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
             }
 
             .ai-settings-btn svg {
@@ -4377,6 +4405,7 @@
             .core-container {
                 width: min(150px, 45vw);
                 height: min(150px, 45vw);
+                overflow: visible;
             }
 
             .core-orb {
@@ -4387,6 +4416,7 @@
             .ai-node {
                 width: 24px;
                 height: 24px;
+                overflow: visible;
             }
 
             .ai-node svg {
@@ -4394,10 +4424,22 @@
                 height: 10px;
             }
 
-            .core-container .node-gpt { top: 5px; left: 5px; }
-            .core-container .node-gemini { top: 5px; right: 5px; }
-            .core-container .node-claude { bottom: 18px; left: 5px; }
-            .core-container .node-grok { bottom: 18px; right: 5px; }
+            /* Tiny spinning rings for very small screens */
+            .ai-node.active::before {
+                inset: -2px !important;
+                border-width: 1px !important;
+            }
+            .ai-node.active::after {
+                inset: -4px !important;
+                border-width: 1px !important;
+                opacity: 0.3 !important;
+            }
+
+            /* Position nodes with room for tiny rings */
+            .core-container .node-gpt { top: 8px; left: 8px; }
+            .core-container .node-gemini { top: 8px; right: 8px; }
+            .core-container .node-claude { bottom: 22px; left: 8px; }
+            .core-container .node-grok { bottom: 22px; right: 8px; }
 
             .omni-bar-container {
                 bottom: 35px;
