@@ -447,19 +447,32 @@ class DebateEngine {
 
     // Post-process: Fix decision label for non-yes/no questions
     const questionType = detectQuestionType(question);
-    if (finalConsensus && (questionType === 'planning' || questionType === 'howto' || questionType === 'factual')) {
-      // For planning/howto questions, AIs often return "YES" with the plan
-      // Override to show a more appropriate label
-      const typeLabels = {
-        planning: 'PLAN PROVIDED',
-        howto: 'GUIDE PROVIDED',
-        factual: 'INFO PROVIDED'
-      };
-      if (finalConsensus.decision === 'YES' || finalConsensus.decision === 'yes') {
-        finalConsensus.decision = typeLabels[questionType];
+
+    // Labels for non-decision questions - these should NEVER show YES/NO
+    const typeLabels = {
+      planning: 'PLAN PROVIDED',
+      howto: 'GUIDE PROVIDED',
+      factual: 'INFO PROVIDED',
+      recommendation: 'RECOMMENDED',
+      comparison: 'VERDICT',
+      general: 'ANSWERED'
+    };
+
+    // Only true YES/NO questions should show YES/NO
+    const isYesNoQuestion = questionType === 'decision';
+
+    if (finalConsensus && !isYesNoQuestion) {
+      // For non-yes/no questions, replace generic YES/NO with appropriate labels
+      const currentDecision = (finalConsensus.decision || '').toUpperCase();
+      if (currentDecision === 'YES' || currentDecision === 'NO' ||
+          currentDecision === 'CONDITIONAL' || currentDecision === 'WAIT' ||
+          currentDecision === 'ALTERNATIVE' || currentDecision === 'UNKNOWN') {
+        // Use the appropriate label for this question type
+        finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
         finalConsensus.questionType = questionType;
       }
     }
+
     // Store question type for UI display
     if (finalConsensus) {
       finalConsensus.questionType = questionType;

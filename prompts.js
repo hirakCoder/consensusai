@@ -119,10 +119,26 @@ This is asking for information, NOT a yes/no question.
 - Include facts, data, and sources where available
 - Do NOT use YES/NO - provide the actual information!`;
     decisionFormat = `"decision": "BRIEF ANSWER (the key fact or finding)"`;
+  } else if (questionType === 'recommendation') {
+    decisionGuidance = `RECOMMENDATION QUESTION DETECTED!
+This is asking for recommendations, NOT a yes/no question.
+- Your "decision" should be your TOP RECOMMENDATION (e.g., "Watch Breaking Bad" or "Buy the Sony XM5")
+- Your "position" should list your top 3-5 specific picks with reasons
+- Be SPECIFIC - name exact products, movies, places, etc.
+- Do NOT just say YES - give the actual recommendation!`;
+    decisionFormat = `"decision": "YOUR TOP RECOMMENDATION (specific name/title)"`;
+  } else if (questionType === 'general') {
+    decisionGuidance = `GENERAL QUESTION DETECTED!
+Provide a clear, direct answer to the question.
+- Your "decision" should be a BRIEF ANSWER SUMMARY
+- Your "position" should contain the detailed explanation
+- Be specific and concrete`;
+    decisionFormat = `"decision": "BRIEF ANSWER SUMMARY"`;
   } else {
+    // Only for 'decision' type questions (true yes/no)
     decisionGuidance = `DECISION GUIDANCE:
-- For "Should I watch/buy/try X?" questions → Usually YES or NO
-- For "What should I watch/buy/do?" questions → Always YES with specific recommendations
+This is a yes/no decision question.
+- For "Should I...?" questions → Answer YES or NO with reasons
 - For investment/major life decisions → May be CONDITIONAL if real conditions exist
 - Don't use CONDITIONAL just to hedge - give a real answer`;
     decisionFormat = `"decision": "YES or NO or CONDITIONAL or WAIT or ALTERNATIVE"`;
@@ -144,12 +160,12 @@ CRITICAL INSTRUCTIONS:
 
 ${decisionGuidance}
 
-${(questionType === 'decision' || questionType === 'recommendation' || questionType === 'general') ? `IMPORTANT: Your "decision" must be ONE of these exact values:
-- "YES" - Proceed, do it, approve, recommend, accept. USE THIS for recommendation questions (what to watch, buy, do, etc.)
-- "NO" - Don't do it, reject, decline, avoid. USE THIS when the answer is clearly negative.
-- "CONDITIONAL" - ONLY use this when there are genuine deal-breaker conditions. Don't use as a hedge.
-- "WAIT" - Not now, delay, more info critically needed before any decision
-- "ALTERNATIVE" - Neither option works, suggest something completely different` : ''}
+${questionType === 'decision' ? `IMPORTANT: Your "decision" must be ONE of these exact values:
+- "YES" - Proceed, do it, approve, accept
+- "NO" - Don't do it, reject, decline, avoid
+- "CONDITIONAL" - ONLY use this when there are genuine deal-breaker conditions
+- "WAIT" - Not now, delay, more info critically needed
+- "ALTERNATIVE" - Neither option works, suggest something different` : ''}
 
 Respond ONLY with valid JSON in this exact format (no markdown, no explanation outside JSON):
 {
@@ -189,16 +205,35 @@ Reasoning: ${r.reasoning}`
 If you've been convinced by another AI to change your pick, update your decision to their choice.
 If truly equal, use "BOTH" or "EQUAL".`;
     decisionFormat = `"decision": "NAME OF YOUR CHOICE"`;
-  } else {
-    decisionGuidance = `IMPORTANT: Your "decision" must be ONE of these exact values:
-- "YES" - Proceed, do it, approve, recommend, accept. USE THIS for recommendation questions.
-- "NO" - Don't do it, reject, decline, avoid. USE THIS when the answer is clearly negative.
-- "CONDITIONAL" - ONLY use when there are genuine deal-breaker conditions. Don't hedge.
+  } else if (questionType === 'planning') {
+    decisionGuidance = `PLANNING QUESTION - Your "decision" should be a brief label like "PLAN PROVIDED" or "ITINERARY READY".
+Focus on providing helpful content in your position and reasoning.`;
+    decisionFormat = `"decision": "PLAN PROVIDED or ITINERARY READY"`;
+  } else if (questionType === 'howto') {
+    decisionGuidance = `HOW-TO QUESTION - Your "decision" should be "GUIDE PROVIDED" or similar.
+Focus on clear step-by-step instructions in your position.`;
+    decisionFormat = `"decision": "GUIDE PROVIDED"`;
+  } else if (questionType === 'factual') {
+    decisionGuidance = `FACTUAL QUESTION - Your "decision" should be the key fact or finding.
+Provide detailed information in your reasoning.`;
+    decisionFormat = `"decision": "BRIEF ANSWER (key fact)"`;
+  } else if (questionType === 'recommendation') {
+    decisionGuidance = `RECOMMENDATION QUESTION - Your "decision" should be your TOP PICK (specific name).
+Example: "Watch Breaking Bad" or "Buy the Sony WH-1000XM5"`;
+    decisionFormat = `"decision": "YOUR TOP RECOMMENDATION"`;
+  } else if (questionType === 'decision') {
+    decisionGuidance = `YES/NO DECISION QUESTION:
+- "YES" - Proceed, do it, approve, accept
+- "NO" - Don't do it, reject, decline, avoid
+- "CONDITIONAL" - ONLY use when there are genuine deal-breaker conditions
 - "WAIT" - Not now, delay, more info critically needed
-- "ALTERNATIVE" - Neither option works, suggest something completely different
+- "ALTERNATIVE" - Neither option works, suggest something different
 
 PREFER definitive YES/NO answers over CONDITIONAL hedging.`;
     decisionFormat = `"decision": "YES or NO (prefer these) or CONDITIONAL or WAIT or ALTERNATIVE"`;
+  } else {
+    decisionGuidance = `Provide a clear, direct answer to the question.`;
+    decisionFormat = `"decision": "BRIEF ANSWER SUMMARY"`;
   }
 
   return `You are an expert advisor participating in a multi-AI debate.
@@ -267,15 +302,43 @@ ${r.assumptions?.length ? `- Assumptions: ${r.assumptions.join('; ')}` : ''}
 3. If it's a close call or tie, explain both sides fairly but still pick a winner if possible
 4. Include what makes the winner stand out AND what the runner-up excels at`;
     decisionFormat = `"decision": "NAME OF THE WINNER based on AI consensus"`;
+  } else if (questionType === 'recommendation') {
+    synthesisGuidance = `RECOMMENDATION QUESTION - Synthesize the best recommendations from all AIs.
+1. Your "decision" should be the TOP PICK (specific name of product/show/place)
+2. List your TOP 3-5 PICKS in the executive_summary with brief reasons
+3. Combine insights from all AIs to create a ranked recommendation list
+4. Be SPECIFIC - name exact items, not vague categories`;
+    decisionFormat = `"decision": "TOP RECOMMENDATION (specific name)"`;
+  } else if (questionType === 'planning') {
+    synthesisGuidance = `PLANNING QUESTION - Synthesize the best plan elements from all AIs.
+1. Your "decision" should be "PLAN PROVIDED"
+2. The executive_summary should give a clear overview of the recommended approach
+3. Combine the best ideas from each AI into a cohesive plan`;
+    decisionFormat = `"decision": "PLAN PROVIDED"`;
+  } else if (questionType === 'howto') {
+    synthesisGuidance = `HOW-TO QUESTION - Create clear step-by-step instructions.
+1. Your "decision" should be "GUIDE PROVIDED"
+2. Combine the best steps from all AIs into a complete guide
+3. Be specific and actionable`;
+    decisionFormat = `"decision": "GUIDE PROVIDED"`;
+  } else if (questionType === 'factual') {
+    synthesisGuidance = `FACTUAL QUESTION - Provide accurate, verified information.
+1. Your "decision" should be the key fact or answer
+2. Cross-reference information from all AIs
+3. Note any disagreements on facts`;
+    decisionFormat = `"decision": "THE KEY FACT OR ANSWER"`;
+  } else if (questionType === 'decision') {
+    synthesisGuidance = `YES/NO DECISION QUESTION - Provide a clear recommendation.
+1. Your "decision" should be YES, NO, CONDITIONAL, WAIT, or ALTERNATIVE
+2. The executive_summary should clearly state the recommendation and key reasons
+3. Address concerns raised by dissenting AIs`;
+    decisionFormat = `"decision": "YES or NO based on consensus"`;
   } else {
-    synthesisGuidance = `CRITICAL INSTRUCTIONS:
-1. Be SPECIFIC - extract the concrete recommendations from each AI
-2. If AIs recommended specific items (shows, products, places, etc.), LIST THEM in your summary with rankings
-3. Create a synthesized TOP PICKS list combining the best recommendations across all AIs
-4. The executive_summary should give a DIRECT answer with specifics - no hedging
-5. Choose the most appropriate decision based on consensus: for recommendation questions, it's usually YES
-6. The "before_proceeding" should list critical things to verify BEFORE taking action`;
-    decisionFormat = `"decision": "YES or NO based on consensus - use YES for recommendation questions, NO for things to avoid"`;
+    synthesisGuidance = `GENERAL QUESTION - Provide a comprehensive answer.
+1. Your "decision" should be a brief answer summary
+2. Combine insights from all AIs
+3. Be specific and actionable`;
+    decisionFormat = `"decision": "BRIEF ANSWER SUMMARY"`;
   }
 
   return `You are a strategic advisor synthesizing insights from a multi-AI debate to create an actionable plan.
@@ -295,7 +358,15 @@ Based on ALL perspectives above, create a comprehensive action plan. Consider bo
 
 Respond ONLY with valid JSON in this exact format:
 {
-  "executive_summary": "${questionType === 'comparison' ? 'Clear verdict on who/what wins with explanation. E.g., PELE - While both are legends, Pele edges out because...' : 'Direct answer to the question with SPECIFIC recommendations. Start with a clear verdict, then list TOP PICKS with reasons'}",
+  "executive_summary": "${
+    questionType === 'comparison' ? 'Clear verdict on who/what wins with explanation. E.g., PELE - While both are legends, Pele edges out because...' :
+    questionType === 'recommendation' ? 'TOP PICKS: 1. [Name] - reason, 2. [Name] - reason, 3. [Name] - reason. Start with your #1 recommendation.' :
+    questionType === 'planning' ? 'Brief overview of the recommended plan/itinerary. Key highlights and approach.' :
+    questionType === 'howto' ? 'Quick overview: This guide covers [main steps]. Key tip: [most important thing to know].' :
+    questionType === 'factual' ? 'The answer is [direct answer]. Key supporting facts: [brief explanation].' :
+    questionType === 'decision' ? 'Clear YES/NO recommendation with the top 2-3 reasons why.' :
+    'Direct answer to the question with specific details and recommendations.'
+  }",
   ${decisionFormat},
   "confidence_score": 8,
   "immediate_actions": [
