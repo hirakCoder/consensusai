@@ -3838,6 +3838,38 @@
                 border-width: 1px !important;
             }
 
+            /* Reduce active node scale and glow for mobile during debate */
+            .ai-node.active {
+                transform: scale(1.08) translateZ(5px) !important;
+            }
+
+            .ai-node.active.node-gpt,
+            .ai-node.active.node-gemini,
+            .ai-node.active.node-claude,
+            .ai-node.active.node-grok {
+                box-shadow:
+                    inset 0 2px 6px rgba(255, 255, 255, 0.2),
+                    inset 0 -2px 6px rgba(0, 0, 0, 0.3),
+                    0 0 0 2px currentColor,
+                    0 0 20px currentColor,
+                    0 4px 15px rgba(0, 0, 0, 0.4) !important;
+            }
+
+            /* Ensure debate arena doesn't overflow */
+            .cortex-arena.debating {
+                overflow: visible;
+            }
+
+            /* Progress dots - smaller on mobile */
+            .round-dots {
+                gap: 6px;
+            }
+
+            .round-dot {
+                width: 8px;
+                height: 8px;
+            }
+
             /* Hide thought cards on tablet - they overlap */
             .thought-card {
                 display: none;
@@ -4093,6 +4125,33 @@
                 inset: -5px !important;
                 border-width: 1px !important;
                 opacity: 0.4 !important;
+            }
+
+            /* Reduce active node scale and glow even more for small mobile */
+            .ai-node.active {
+                transform: scale(1.05) translateZ(3px) !important;
+            }
+
+            .ai-node.active.node-gpt,
+            .ai-node.active.node-gemini,
+            .ai-node.active.node-claude,
+            .ai-node.active.node-grok {
+                box-shadow:
+                    inset 0 1px 4px rgba(255, 255, 255, 0.15),
+                    inset 0 -1px 4px rgba(0, 0, 0, 0.2),
+                    0 0 0 1.5px currentColor,
+                    0 0 15px currentColor,
+                    0 3px 10px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            /* Progress dots - even smaller */
+            .round-dots {
+                gap: 4px;
+            }
+
+            .round-dot {
+                width: 6px;
+                height: 6px;
             }
 
             /* Position nodes with room for rings */
@@ -4433,6 +4492,31 @@
                 inset: -4px !important;
                 border-width: 1px !important;
                 opacity: 0.3 !important;
+            }
+
+            /* Minimal active node scale and glow for tiny screens */
+            .ai-node.active {
+                transform: scale(1.03) !important;
+            }
+
+            .ai-node.active.node-gpt,
+            .ai-node.active.node-gemini,
+            .ai-node.active.node-claude,
+            .ai-node.active.node-grok {
+                box-shadow:
+                    inset 0 1px 3px rgba(255, 255, 255, 0.1),
+                    0 0 0 1px currentColor,
+                    0 0 10px currentColor !important;
+            }
+
+            /* Tiny progress dots */
+            .round-dots {
+                gap: 3px;
+            }
+
+            .round-dot {
+                width: 5px;
+                height: 5px;
             }
 
             /* Position nodes with room for tiny rings */
