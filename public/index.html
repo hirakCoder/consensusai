@@ -1248,8 +1248,7 @@
 
         @media (max-width: 700px) {
             .template-chips {
-                width: calc(100vw - 40px);
-                grid-template-columns: repeat(2, 1fr);
+                display: none !important; /* Hide on mobile - causes overlap */
             }
 
             .context-input {
@@ -4222,11 +4221,9 @@
                 font-size: 0.8rem;
             }
 
-            /* Template chips */
+            /* Template chips - hide on mobile, too many chips cause overlap */
             .template-chips {
-                grid-template-columns: 1fr;
-                width: calc(100vw - 20px);
-                gap: 6px;
+                display: none !important;
             }
 
             .template-chip {
