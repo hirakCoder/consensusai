@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy - ConsensusAI</title>
+  <meta name="description" content="ConsensusAI Privacy Policy - Learn how we collect, use, and protect your personal information.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     :root {
       --bg-primary: #0a0a0f;
@@ -11,6 +13,7 @@
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.7);
       --accent-primary: #6366f1;
+      --border: rgba(255, 255, 255, 0.1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +32,7 @@
       padding: 2rem;
       background: var(--bg-secondary);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
     }
 
     h1 {
@@ -52,23 +55,59 @@
       font-size: 1.5rem;
     }
 
+    h3 {
+      color: var(--text-primary);
+      margin: 1.5rem 0 0.75rem;
+      font-size: 1.1rem;
+    }
+
     p, li {
       color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
-    ul {
+    ul, ol {
       padding-left: 1.5rem;
       margin-bottom: 1rem;
     }
 
-    .placeholder-notice {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-box {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
       border-radius: 8px;
       padding: 1rem;
-      margin-bottom: 2rem;
-      color: #f59e0b;
+      margin: 1rem 0;
+    }
+
+    .info-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: #10b981;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    th {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--text-primary);
     }
 
     a {
@@ -95,152 +134,60 @@
       text-decoration: none;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
+    .nav-links {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    th, td {
-      padding: 0.75rem;
-      text-align: left;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text-secondary);
+    .nav-links a {
+      margin-right: 1.5rem;
+      font-size: 0.9rem;
     }
 
-    th {
-      background: rgba(99, 102, 241, 0.1);
-      color: var(--text-primary);
-    }
-
-    /* Mobile Responsive - Professional SaaS Standards */
+    /* Mobile Responsive */
     @media (max-width: 768px) {
-      html, body {
-        overflow-x: hidden;
-        width: 100%;
-        max-width: 100vw;
-      }
-
-      body {
-        padding: 0.75rem;
-      }
-
-      .container {
-        padding: 1.25rem;
-        border-radius: 12px;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      h1 {
-        font-size: 1.75rem;
-        word-wrap: break-word;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-        margin: 1.5rem 0 0.75rem;
-      }
-
-      h3 {
-        font-size: 1rem;
-      }
-
-      p, li {
-        font-size: 0.9rem;
-        line-height: 1.6;
-        word-wrap: break-word;
-      }
-
-      /* Table scrollable on mobile */
-      table {
-        font-size: 0.8rem;
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      th, td {
-        padding: 0.5rem;
-        min-width: 80px;
-      }
-
-      /* Back button - proper touch target */
-      .back-link {
-        padding: 12px 20px;
-        font-size: 0.9rem;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
+      body { padding: 0.75rem; }
+      .container { padding: 1.25rem; border-radius: 12px; }
+      h1 { font-size: 1.75rem; }
+      h2 { font-size: 1.2rem; margin: 1.5rem 0 0.75rem; }
+      p, li { font-size: 0.9rem; line-height: 1.6; }
+      .back-link { padding: 12px 20px; min-height: 44px; display: inline-flex; align-items: center; }
+      table { font-size: 0.85rem; }
+      th, td { padding: 0.5rem; }
     }
 
     @media (max-width: 480px) {
-      body {
-        padding: 0.5rem;
-      }
-
-      .container {
-        padding: 1rem;
-        border-radius: 10px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      h2 {
-        font-size: 1rem;
-        margin: 1.25rem 0 0.5rem;
-      }
-
-      h3 {
-        font-size: 0.9rem;
-      }
-
-      p, li {
-        font-size: 0.85rem;
-        line-height: 1.5;
-      }
-
-      ul {
-        padding-left: 1.25rem;
-      }
-
-      table {
-        font-size: 0.7rem;
-      }
-
-      th, td {
-        padding: 0.35rem;
-        min-width: 70px;
-      }
-
-      .placeholder-notice {
-        padding: 0.6rem;
-        font-size: 0.8rem;
-      }
-
-      .back-link {
-        width: 100%;
-        text-align: center;
-      }
+      body { padding: 0.5rem; }
+      .container { padding: 1rem; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1rem; }
+      p, li { font-size: 0.85rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Privacy Policy</h1>
-    <p class="last-updated">Last Updated: December 2025</p>
-
-    <div class="placeholder-notice">
-      <strong>Notice:</strong> This is a placeholder. Replace with your actual Privacy Policy generated from <a href="https://termly.io" target="_blank">Termly</a> or similar service.
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/contact.html">Contact</a>
     </div>
 
-    <h2>1. Information We Collect</h2>
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last Updated: December 15, 2025</p>
 
-    <h3 style="color: var(--text-primary); margin: 1rem 0;">Personal Information</h3>
+    <div class="info-box">
+      <strong>Your Privacy Matters:</strong> We collect only what's necessary to provide the service. We don't sell your data, and we don't use your queries to train AI models.
+    </div>
+
+    <h2>1. Introduction</h2>
+    <p>ConsensusAI ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI-powered decision intelligence platform.</p>
+    <p>By using ConsensusAI, you agree to the collection and use of information in accordance with this policy.</p>
+
+    <h2>2. Information We Collect</h2>
+
+    <h3>2.1 Information You Provide</h3>
     <table>
       <tr>
         <th>Data Type</th>
@@ -254,74 +201,165 @@
       </tr>
       <tr>
         <td>Name</td>
-        <td>Personalization</td>
+        <td>Account personalization</td>
         <td>Until account deletion</td>
       </tr>
       <tr>
-        <td>Payment info</td>
-        <td>Subscription billing</td>
-        <td>As required by law</td>
+        <td>Payment information</td>
+        <td>Subscription processing</td>
+        <td>Handled by Stripe</td>
+      </tr>
+      <tr>
+        <td>Queries submitted</td>
+        <td>Service delivery</td>
+        <td>Temporary processing only</td>
       </tr>
     </table>
 
-    <h3 style="color: var(--text-primary); margin: 1rem 0;">Usage Data</h3>
+    <h3>2.2 Information Collected Automatically</h3>
     <ul>
-      <li>Questions submitted to the AI debate engine</li>
-      <li>IP address and device information</li>
-      <li>Usage patterns and analytics</li>
+      <li><strong>Usage Data:</strong> Features used, debate history, timestamps</li>
+      <li><strong>Device Information:</strong> Browser type, operating system, device type</li>
+      <li><strong>Log Data:</strong> IP address, access times, pages viewed</li>
+      <li><strong>Cookies:</strong> Session management, preferences (see <a href="/cookies.html">Cookie Policy</a>)</li>
     </ul>
 
-    <h2>2. How We Use Your Information</h2>
+    <h3>2.3 Information We Don't Collect</h3>
     <ul>
-      <li>To provide and improve our Service</li>
-      <li>To process payments and subscriptions</li>
-      <li>To send service-related communications</li>
-      <li>To comply with legal obligations</li>
+      <li>We do not collect sensitive personal information (race, religion, health data)</li>
+      <li>We do not access your contacts, photos, or other device data</li>
+      <li>We do not track your location beyond general IP geolocation</li>
     </ul>
 
-    <h2>3. Third-Party Services</h2>
-    <p>We share data with the following third parties:</p>
+    <h2>3. How We Use Your Information</h2>
+    <p>We use collected information to:</p>
     <ul>
-      <li><strong>OpenAI</strong> - AI processing (questions are sent to their API)</li>
-      <li><strong>Google (Gemini)</strong> - AI processing</li>
-      <li><strong>Anthropic (Claude)</strong> - AI processing</li>
-      <li><strong>xAI (Grok)</strong> - AI processing</li>
-      <li><strong>Clerk</strong> - Authentication services</li>
-      <li><strong>Stripe</strong> - Payment processing</li>
-    </ul>
-    <p>Each third party has their own privacy policy governing their use of data.</p>
-
-    <h2>4. Data Security</h2>
-    <p>We implement industry-standard security measures including encryption, secure servers, and access controls. However, no system is 100% secure.</p>
-
-    <h2>5. Your Rights</h2>
-    <p>Depending on your location, you may have rights to:</p>
-    <ul>
-      <li>Access your personal data</li>
-      <li>Correct inaccurate data</li>
-      <li>Delete your data</li>
-      <li>Export your data</li>
-      <li>Opt-out of marketing communications</li>
+      <li><strong>Provide the Service:</strong> Process your queries through AI systems and deliver responses</li>
+      <li><strong>Manage Your Account:</strong> Create and maintain your account, process subscriptions</li>
+      <li><strong>Improve the Service:</strong> Analyze usage patterns to enhance features and performance</li>
+      <li><strong>Communicate:</strong> Send service updates, respond to inquiries, provide support</li>
+      <li><strong>Ensure Security:</strong> Detect and prevent fraud, abuse, and security threats</li>
+      <li><strong>Legal Compliance:</strong> Comply with legal obligations and enforce our terms</li>
     </ul>
 
-    <h2>6. GDPR (European Users)</h2>
-    <p>If you are in the EU/EEA, we process your data based on: consent, contract performance, and legitimate interests. You have additional rights under GDPR including the right to lodge a complaint with a supervisory authority.</p>
+    <div class="highlight-box">
+      <strong>Important:</strong> Your queries are processed through third-party AI providers (OpenAI, Anthropic, Google, xAI). These providers have their own privacy policies. We send only your query text to these services, not your personal information.
+    </div>
 
-    <h2>7. CCPA (California Users)</h2>
-    <p>California residents have the right to know what personal information we collect, request deletion, and opt-out of data sales. We do not sell personal information.</p>
+    <h2>4. How We Share Your Information</h2>
+    <p>We do not sell your personal information. We may share data with:</p>
 
-    <h2>8. Cookies</h2>
-    <p>We use essential cookies for authentication and preferences. See our <a href="/cookies.html">Cookie Policy</a> for details.</p>
+    <h3>4.1 Service Providers</h3>
+    <table>
+      <tr>
+        <th>Provider</th>
+        <th>Service</th>
+        <th>Data Shared</th>
+      </tr>
+      <tr>
+        <td>Clerk</td>
+        <td>Authentication</td>
+        <td>Email, name, login data</td>
+      </tr>
+      <tr>
+        <td>Stripe</td>
+        <td>Payment processing</td>
+        <td>Payment information</td>
+      </tr>
+      <tr>
+        <td>OpenAI, Anthropic, Google, xAI</td>
+        <td>AI processing</td>
+        <td>Query text only</td>
+      </tr>
+      <tr>
+        <td>Sentry</td>
+        <td>Error tracking</td>
+        <td>Technical error data</td>
+      </tr>
+    </table>
+
+    <h3>4.2 Legal Requirements</h3>
+    <p>We may disclose information if required by law, court order, or government request, or to protect rights, safety, or property.</p>
+
+    <h3>4.3 Business Transfers</h3>
+    <p>In the event of a merger, acquisition, or sale of assets, your information may be transferred. We will notify you of any such change.</p>
+
+    <h2>5. Data Retention</h2>
+    <ul>
+      <li><strong>Account Data:</strong> Retained until you delete your account</li>
+      <li><strong>Query Data:</strong> Processed temporarily, not stored long-term</li>
+      <li><strong>Debate History:</strong> Stored locally in your browser, deleted on clear</li>
+      <li><strong>Usage Analytics:</strong> Aggregated data retained for service improvement</li>
+      <li><strong>Legal Records:</strong> Retained as required by law</li>
+    </ul>
+
+    <h2>6. Your Rights and Choices</h2>
+    <p>Depending on your location, you may have the following rights:</p>
+
+    <h3>6.1 All Users</h3>
+    <ul>
+      <li><strong>Access:</strong> Request a copy of your personal data</li>
+      <li><strong>Correction:</strong> Update inaccurate information</li>
+      <li><strong>Deletion:</strong> Request deletion of your account and data</li>
+      <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
+    </ul>
+
+    <h3>6.2 European Users (GDPR)</h3>
+    <ul>
+      <li>Right to data portability</li>
+      <li>Right to restrict processing</li>
+      <li>Right to object to processing</li>
+      <li>Right to withdraw consent</li>
+      <li>Right to lodge a complaint with a supervisory authority</li>
+    </ul>
+
+    <h3>6.3 California Users (CCPA)</h3>
+    <ul>
+      <li>Right to know what personal information is collected</li>
+      <li>Right to delete personal information</li>
+      <li>Right to opt-out of sale (we do not sell data)</li>
+      <li>Right to non-discrimination for exercising rights</li>
+    </ul>
+
+    <p>To exercise these rights, contact us at <a href="mailto:privacy@consensusai.app">privacy@consensusai.app</a>.</p>
+
+    <h2>7. Data Security</h2>
+    <p>We implement security measures to protect your information:</p>
+    <ul>
+      <li>HTTPS encryption for all data transmission</li>
+      <li>Secure authentication through Clerk</li>
+      <li>Payment data handled by PCI-compliant Stripe</li>
+      <li>Regular security assessments</li>
+      <li>Access controls and monitoring</li>
+    </ul>
+    <p>However, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security.</p>
+
+    <h2>8. International Data Transfers</h2>
+    <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers, including:</p>
+    <ul>
+      <li>Standard Contractual Clauses (SCCs) for EU data transfers</li>
+      <li>Data processing agreements with service providers</li>
+    </ul>
 
     <h2>9. Children's Privacy</h2>
-    <p>Our Service is not intended for users under 18. We do not knowingly collect data from children.</p>
+    <p>ConsensusAI is not intended for users under 18 years of age. We do not knowingly collect information from children. If you believe we have collected data from a child, contact us immediately at <a href="mailto:privacy@consensusai.app">privacy@consensusai.app</a>.</p>
 
-    <h2>10. Changes to This Policy</h2>
-    <p>We may update this policy and will notify you of material changes via email or in-app notice.</p>
+    <h2>10. Third-Party Links</h2>
+    <p>Our Service may contain links to third-party websites. We are not responsible for the privacy practices of these sites. We encourage you to review their privacy policies.</p>
 
-    <h2>11. Contact Us</h2>
-    <p>Data Controller: [Your Company Name]<br>
-    Email: <a href="mailto:privacy@consensus-ai.com">privacy@consensus-ai.com</a></p>
+    <h2>11. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy periodically. Changes will be posted on this page with an updated "Last Updated" date. Significant changes will be notified via email or prominent notice on our Service.</p>
+
+    <h2>12. Contact Us</h2>
+    <p>For privacy-related questions or to exercise your rights:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:privacy@consensusai.app">privacy@consensusai.app</a></li>
+      <li><strong>General Support:</strong> <a href="mailto:support@consensusai.app">support@consensusai.app</a></li>
+      <li><strong>Contact Form:</strong> <a href="/contact.html">Contact Us</a></li>
+    </ul>
+
+    <h2>13. Data Protection Officer</h2>
+    <p>For GDPR-related inquiries, you may contact our data protection representative at <a href="mailto:dpo@consensusai.app">dpo@consensusai.app</a>.</p>
 
     <a href="/" class="back-link">Back to App</a>
   </div>

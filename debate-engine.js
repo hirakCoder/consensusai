@@ -7,6 +7,7 @@ const config = require('./config');
 const { getConfiguredClients } = require('./llm-clients');
 const { getRound1Prompt, getDebateRoundPrompt, getSynthesisPrompt, detectQuestionType } = require('./prompts');
 const reporter = require('./reporter');
+const apiResilience = require('./api-resilience');
 
 class DebateEngine {
   constructor(options = {}) {
@@ -73,9 +74,32 @@ class DebateEngine {
 
   /**
    * Run a single LLM call (for individual tracking)
+   * Now with retry logic and circuit breaker via API resilience
    */
   async callLLM(client, prompt, roundNumber, previousResponse) {
     const startTime = Date.now();
+
+    // Check circuit breaker before starting
+    const circuitCheck = apiResilience.canMakeRequest(client.id);
+    if (!circuitCheck.allowed) {
+      reporter.printError(client.name, `Circuit breaker open: ${circuitCheck.message}`);
+      this.emitProgress('llm_error', {
+        llmId: client.id,
+        llmName: client.name,
+        round: roundNumber,
+        error: circuitCheck.message,
+        circuitOpen: true
+      });
+      return {
+        llmId: client.id,
+        llmName: client.name,
+        position: 'UNAVAILABLE',
+        confidence: 0,
+        reasoning: `${client.name} is temporarily unavailable. ${circuitCheck.message}`,
+        error: true,
+        circuitOpen: true
+      };
+    }
 
     // Emit that this LLM is starting
     this.emitProgress('llm_start', {
@@ -85,7 +109,25 @@ class DebateEngine {
     });
 
     try {
-      const response = await client.call(prompt);
+      // Wrap the API call with resilience (retry + timeout)
+      const response = await apiResilience.executeWithResilience(
+        client.id,
+        () => client.call(prompt),
+        {
+          maxRetries: 2,
+          timeoutMs: 30000,
+          onRetry: (retryInfo) => {
+            this.emitProgress('llm_retry', {
+              llmId: client.id,
+              llmName: client.name,
+              round: roundNumber,
+              attempt: retryInfo.attempt,
+              maxRetries: retryInfo.maxRetries,
+              error: retryInfo.error
+            });
+          }
+        }
+      );
 
       // Extract token info
       const tokens = response._meta?.tokens || {};

@@ -38,6 +38,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Tailwind CSS CDN for responsive mobile design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ai-gpt': '#10a37f',
+                        'ai-gemini': '#4285f4',
+                        'ai-grok': '#f97316',
+                        'ai-claude': '#d97706',
+                        'core-primary': '#6366f1',
+                    }
+                }
+            },
+            // Only apply Tailwind on mobile, don't interfere with desktop
+            corePlugins: {
+                preflight: false, // Don't reset existing styles
+            }
+        }
+    </script>
+
     <style>
         /* ============================================
            THE LIVING CORTEX - Bioluminescent Theme
@@ -424,73 +446,113 @@
         }
 
         /* ============================================
-           AI NODES (Corner Positions)
+           AI NODES - PARTICLE FLOW DESIGN
+           Clean, solid orbs with particle effects
            ============================================ */
+
+        /* Particle Canvas - Full container overlay */
+        .particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Energy Beams Container */
+        .energy-beams-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 6;
+            overflow: visible;
+        }
+
+        .energy-beam {
+            stroke-width: 2;
+            stroke-linecap: round;
+            fill: none;
+            opacity: 0;
+            filter: url(#glow);
+        }
+
+        .energy-beam.active {
+            opacity: 1;
+            animation: beam-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes beam-pulse {
+            0%, 100% { opacity: 0.6; stroke-width: 2; }
+            50% { opacity: 1; stroke-width: 4; }
+        }
+
+        /* Particle effect for energy flow */
+        .energy-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 7;
+        }
 
         .ai-node {
             position: absolute;
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(60, 60, 75, 0.98) 0%, rgba(25, 25, 35, 0.98) 50%, rgba(15, 15, 20, 0.98) 100%);
-            backdrop-filter: blur(10px);
-            border: 3px solid;
-            border-color: var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 15;
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: default;
-            /* Enhanced 3D Effect with complete ring */
+            /* Solid, clean orb - no broken rings */
+            background: radial-gradient(circle at 30% 30%,
+                rgba(80, 80, 95, 1) 0%,
+                rgba(40, 40, 50, 1) 50%,
+                rgba(20, 20, 25, 1) 100%);
+            border: 2px solid;
             box-shadow:
-                /* Inner bevel - top */
-                inset 0 3px 6px rgba(255, 255, 255, 0.2),
-                /* Inner shadow - bottom */
-                inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-                /* Complete outer ring glow */
-                0 0 0 2px rgba(255, 255, 255, 0.05),
-                /* Depth shadow */
-                0 6px 20px rgba(0, 0, 0, 0.5),
-                0 3px 8px rgba(0, 0, 0, 0.4),
-                /* Subtle ambient glow */
-                0 0 20px rgba(99, 102, 241, 0.2);
-            transform-style: preserve-3d;
-            transform: translateZ(0);
+                inset 0 2px 8px rgba(255, 255, 255, 0.15),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.4),
+                0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .ai-node svg {
             width: 24px;
             height: 24px;
             fill: currentColor;
-            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            position: relative;
+            z-index: 2;
         }
 
-        /* 3D Highlight Ring - glossy sphere effect */
+        /* Glossy highlight on orb */
         .ai-node::before {
             content: '';
             position: absolute;
-            top: 4px;
-            left: 15%;
-            width: 70%;
-            height: 40%;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%);
-            border-radius: 50% 50% 50% 50% / 100% 100% 40% 40%;
+            top: 3px;
+            left: 10%;
+            width: 80%;
+            height: 45%;
+            background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.1) 40%,
+                transparent 100%);
+            border-radius: 50% 50% 40% 40%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 3;
         }
 
-        /* Bottom reflection for 3D depth */
+        /* Remove old broken after element */
         .ai-node::after {
-            content: '';
-            position: absolute;
-            bottom: 3px;
-            left: 20%;
-            width: 60%;
-            height: 15%;
-            background: linear-gradient(0deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
-            border-radius: 50%;
-            pointer-events: none;
+            display: none;
         }
 
         .node-label {
@@ -501,72 +563,137 @@
             text-transform: uppercase;
         }
 
+        /* Individual node colors - solid, vibrant */
         .node-gpt {
             border-color: var(--ai-gpt);
             color: var(--ai-gpt);
-            background: linear-gradient(135deg,
-                rgba(16, 163, 127, 0.25) 0%,
-                rgba(16, 163, 127, 0.1) 25%,
-                rgba(15, 15, 20, 0.95) 60%,
-                rgba(8, 8, 12, 0.98) 100%);
+            background: radial-gradient(circle at 30% 30%,
+                rgba(16, 163, 127, 0.4) 0%,
+                rgba(16, 163, 127, 0.2) 30%,
+                rgba(20, 25, 25, 1) 70%,
+                rgba(10, 15, 15, 1) 100%);
             box-shadow:
-                inset 0 3px 6px rgba(16, 163, 127, 0.3),
-                inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-                0 0 0 2px rgba(16, 163, 127, 0.15),
-                0 6px 20px rgba(0, 0, 0, 0.4),
-                0 0 25px rgba(16, 163, 127, 0.3);
+                inset 0 2px 10px rgba(16, 163, 127, 0.4),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(16, 163, 127, 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.4);
         }
+
         .node-gemini {
             border-color: var(--ai-gemini);
             color: var(--ai-gemini);
-            background: linear-gradient(135deg,
-                rgba(66, 133, 244, 0.25) 0%,
-                rgba(66, 133, 244, 0.1) 25%,
-                rgba(15, 15, 20, 0.95) 60%,
-                rgba(8, 8, 12, 0.98) 100%);
+            background: radial-gradient(circle at 30% 30%,
+                rgba(66, 133, 244, 0.4) 0%,
+                rgba(66, 133, 244, 0.2) 30%,
+                rgba(20, 22, 30, 1) 70%,
+                rgba(10, 12, 18, 1) 100%);
             box-shadow:
-                inset 0 3px 6px rgba(66, 133, 244, 0.3),
-                inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-                0 0 0 2px rgba(66, 133, 244, 0.15),
-                0 6px 20px rgba(0, 0, 0, 0.4),
-                0 0 25px rgba(66, 133, 244, 0.3);
+                inset 0 2px 10px rgba(66, 133, 244, 0.4),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(66, 133, 244, 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.4);
         }
+
         .node-claude {
             border-color: var(--ai-claude);
             color: var(--ai-claude);
-            background: linear-gradient(135deg,
-                rgba(217, 119, 6, 0.25) 0%,
-                rgba(217, 119, 6, 0.1) 25%,
-                rgba(15, 15, 20, 0.95) 60%,
-                rgba(8, 8, 12, 0.98) 100%);
+            background: radial-gradient(circle at 30% 30%,
+                rgba(217, 119, 6, 0.4) 0%,
+                rgba(217, 119, 6, 0.2) 30%,
+                rgba(28, 22, 18, 1) 70%,
+                rgba(15, 12, 10, 1) 100%);
             box-shadow:
-                inset 0 3px 6px rgba(217, 119, 6, 0.3),
-                inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-                0 0 0 2px rgba(217, 119, 6, 0.15),
-                0 6px 20px rgba(0, 0, 0, 0.4),
-                0 0 25px rgba(217, 119, 6, 0.3);
+                inset 0 2px 10px rgba(217, 119, 6, 0.4),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(217, 119, 6, 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.4);
         }
+
         .node-grok {
             border-color: var(--ai-grok);
             color: var(--ai-grok);
-            background: linear-gradient(135deg,
-                rgba(249, 115, 22, 0.25) 0%,
-                rgba(249, 115, 22, 0.1) 25%,
-                rgba(15, 15, 20, 0.95) 60%,
-                rgba(8, 8, 12, 0.98) 100%);
+            background: radial-gradient(circle at 30% 30%,
+                rgba(249, 115, 22, 0.4) 0%,
+                rgba(249, 115, 22, 0.2) 30%,
+                rgba(30, 22, 18, 1) 70%,
+                rgba(18, 12, 10, 1) 100%);
             box-shadow:
-                inset 0 3px 6px rgba(249, 115, 22, 0.3),
-                inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-                0 0 0 2px rgba(249, 115, 22, 0.15),
-                0 6px 20px rgba(0, 0, 0, 0.4),
-                0 0 25px rgba(249, 115, 22, 0.3);
+                inset 0 2px 10px rgba(249, 115, 22, 0.4),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(249, 115, 22, 0.3),
+                0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
+        /* Active state - glowing, pulsing, with particle emission */
         .ai-node.active {
-            transform: scale(1.15) translateZ(10px);
-            animation: node-pulse 1.5s ease-in-out infinite;
+            transform: scale(1.1);
+            animation: node-glow 1.2s ease-in-out infinite;
             z-index: 20;
-            border-width: 3px;
+        }
+
+        @keyframes node-glow {
+            0%, 100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.3);
+            }
+        }
+
+        .ai-node.active.node-gpt {
+            box-shadow:
+                inset 0 2px 10px rgba(16, 163, 127, 0.5),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(16, 163, 127, 0.6),
+                0 0 60px rgba(16, 163, 127, 0.4),
+                0 0 90px rgba(16, 163, 127, 0.2),
+                0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .ai-node.active.node-gemini {
+            box-shadow:
+                inset 0 2px 10px rgba(66, 133, 244, 0.5),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(66, 133, 244, 0.6),
+                0 0 60px rgba(66, 133, 244, 0.4),
+                0 0 90px rgba(66, 133, 244, 0.2),
+                0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .ai-node.active.node-claude {
+            box-shadow:
+                inset 0 2px 10px rgba(217, 119, 6, 0.5),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(217, 119, 6, 0.6),
+                0 0 60px rgba(217, 119, 6, 0.4),
+                0 0 90px rgba(217, 119, 6, 0.2),
+                0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .ai-node.active.node-grok {
+            box-shadow:
+                inset 0 2px 10px rgba(249, 115, 22, 0.5),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(249, 115, 22, 0.6),
+                0 0 60px rgba(249, 115, 22, 0.4),
+                0 0 90px rgba(249, 115, 22, 0.2),
+                0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Speaking state - extra intensity */
+        .ai-node.speaking {
+            animation: node-speaking 0.6s ease-in-out infinite;
+        }
+
+        @keyframes node-speaking {
+            0%, 100% {
+                transform: scale(1.1);
+                filter: brightness(1.2);
+            }
+            50% {
+                transform: scale(1.15);
+                filter: brightness(1.5);
+            }
         }
 
         .ai-node.active.node-gpt {
@@ -2113,6 +2240,11 @@
             color: var(--ai-claude);
         }
 
+        /* Desktop: backdrop hidden */
+        .user-dropdown-backdrop {
+            display: none;
+        }
+
         .user-dropdown {
             position: absolute;
             top: calc(100% + 8px);
@@ -2128,9 +2260,10 @@
             transition: all 0.2s ease;
             backdrop-filter: blur(20px);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 100;
         }
 
-        .user-menu.active .user-dropdown {
+        .user-dropdown.active {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
@@ -3774,225 +3907,201 @@
         }
 
         /* ============================================
-           RESPONSIVE
+           MOBILE RESPONSIVE - PROFESSIONAL UX REDESIGN
+           Designed with thumb zones, proper hierarchy, no overlaps
            ============================================ */
 
-        /* ============================================
-           TABLET RESPONSIVE (768px and below)
-           ============================================ */
+        /* Hide desktop-only elements on mobile */
         @media (max-width: 768px) {
-            /* ============================================
-               MOBILE-FIRST: Clean, Professional SaaS UX
-               Following: Apple HIG, Material Design, NN/g
-               ============================================ */
-
-            /* CRITICAL: Prevent ALL scrolling - especially horizontal */
-            html, body {
-                overflow: hidden !important;
-                overflow-x: hidden !important;
-                height: 100dvh !important;
-                width: 100vw !important;
-                max-width: 100vw !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-            }
-
-            /* Universal max-width constraint to prevent overflow */
-            *, *::before, *::after {
-                max-width: 100vw !important;
-                box-sizing: border-box !important;
-            }
-
-            /* Main app container - truly fit viewport */
-            .cortex-app {
-                height: 100dvh;
-                max-height: 100dvh;
-                width: 100vw;
-                max-width: 100vw;
-                overflow: hidden;
-                overflow-x: hidden;
-                padding: 0;
-                justify-content: flex-start;
-                padding-top: 50px; /* Space for fixed header */
-            }
-
-            .cortex-arena {
-                min-height: 0 !important;
-                height: calc(100dvh - 160px); /* viewport - header - omni-bar - footer */
-                max-height: calc(100dvh - 160px);
-                padding: 10px;
-                overflow: hidden;
-            }
-
-            .core-container {
-                width: min(220px, 55vw);
-                height: min(220px, 55vw);
-                overflow: visible; /* Allow rings to show */
-            }
-
-            .core-orb {
-                width: 80px;
-                height: 80px;
-            }
-
-            /* AI Nodes - 44px minimum touch target (Apple HIG) */
-            .ai-node {
-                width: 44px;
-                height: 44px;
-                overflow: visible;
-            }
-
-            .ai-node svg {
-                width: 18px;
-                height: 18px;
-            }
-
-            /* Position nodes with more spacing for rings */
-            .core-container .node-gpt { top: 8px; left: 8px; }
-            .core-container .node-gemini { top: 8px; right: 8px; }
-            .core-container .node-claude { bottom: 35px; left: 8px; }
-            .core-container .node-grok { bottom: 35px; right: 8px; }
-
-            /* Scale down spinning rings for tablet - smaller but visible */
-            .ai-node.active::before {
-                inset: -4px !important;
-                border-width: 1.5px !important;
-            }
-            .ai-node.active::after {
-                inset: -7px !important;
-                border-width: 1px !important;
-            }
-
-            /* Reduce active node scale and glow for mobile during debate */
-            .ai-node.active {
-                transform: scale(1.08) translateZ(5px) !important;
-            }
-
-            .ai-node.active.node-gpt,
-            .ai-node.active.node-gemini,
-            .ai-node.active.node-claude,
-            .ai-node.active.node-grok {
-                box-shadow:
-                    inset 0 2px 6px rgba(255, 255, 255, 0.2),
-                    inset 0 -2px 6px rgba(0, 0, 0, 0.3),
-                    0 0 0 2px currentColor,
-                    0 0 20px currentColor,
-                    0 4px 15px rgba(0, 0, 0, 0.4) !important;
-            }
-
-            /* Ensure debate arena doesn't overflow */
-            .cortex-arena.debating {
-                overflow: visible;
-            }
-
-            /* Progress dots - smaller on mobile */
-            .round-dots {
-                gap: 6px;
-            }
-
-            .round-dot {
-                width: 8px;
-                height: 8px;
-            }
-
-            /* DECLUTTER: Hide non-essential elements on mobile */
             .thought-card,
             .stream-container,
             .tier-selector,
             .usage-indicator,
             .devil-toggle,
-            .upgrade-btn {
+            .upgrade-btn,
+            .user-name,
+            .user-tier {
+                display: none !important;
+            }
+        }
+
+        /* Mobile: 768px and below */
+        @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden;
+                height: 100dvh;
+                width: 100%;
+            }
+
+            .cortex-app {
+                height: 100dvh;
+                width: 100%;
+                padding: 56px 0 0 0;
+                overflow-x: hidden;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .cortex-arena {
+                flex: 1;
+                min-height: 0;
+                padding: 8px 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            /* Central orb area - fixed size, not overlapping */
+            .core-container {
+                width: 160px;
+                height: 160px;
+                flex-shrink: 0;
+                position: relative;
+            }
+
+            .core-orb {
+                width: 70px;
+                height: 70px;
+            }
+
+            /* AI nodes - repositioned to corners, no overlap */
+            .ai-node {
+                width: 36px;
+                height: 36px;
+            }
+
+            .ai-node svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            /* Push AI nodes to corners on mobile to prevent overlap */
+            .core-container .node-gpt { top: -5px; left: -5px; }
+            .core-container .node-gemini { top: -5px; right: -5px; }
+            .core-container .node-claude { bottom: 25px; left: -5px; }
+            .core-container .node-grok { bottom: 25px; right: -5px; }
+
+            /* Hide node names on mobile */
+            .ai-node .node-name {
                 display: none !important;
             }
 
-            /* Omni bar - positioned above footer */
-            .omni-bar-container {
-                bottom: 40px;
-                left: 0;
-                right: 0;
-                transform: none;
-                width: 100%;
-                max-width: 100vw;
+            /* Hide redundant status text on mobile - input placeholder is enough */
+            .arena-status {
+                display: none !important;
+            }
+
+            /* DEBATE STREAM - Mobile optimized */
+            .debate-stream {
+                position: fixed !important;
+                top: 56px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: 50vh !important;
+                border-radius: 0 0 16px 16px !important;
+                z-index: 80;
+                background: rgba(10, 10, 15, 0.95) !important;
+                backdrop-filter: blur(20px);
+            }
+
+            .debate-stream .stream-header-bar {
+                padding: 8px 12px;
+                border-radius: 0;
+            }
+
+            .debate-stream .stream-content {
+                padding: 8px 12px;
+                max-height: 38vh;
+                overflow-y: auto;
+            }
+
+            .debate-stream .stream-entry {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            /* HIDE query box during active debate */
+            .debate-stream.active ~ .omni-bar-container,
+            body.debating .omni-bar-container {
+                display: none !important;
+            }
+
+            /* Also hide template chips and footer during debate */
+            body.debating .template-chips,
+            body.debating .site-footer {
+                display: none !important;
+            }
+
+            /* Disable spinning rings on mobile - use pulse instead */
+            .ai-node.active::before,
+            .ai-node.active::after {
+                display: none;
+            }
+
+            .ai-node.active {
+                transform: scale(1.2);
+                box-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
+                animation: mobilePulse 1.5s ease-in-out infinite;
+            }
+
+            @keyframes mobilePulse {
+                0%, 100% {
+                    transform: scale(1.2);
+                    box-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
+                }
+                50% {
+                    transform: scale(1.35);
+                    box-shadow: 0 0 35px currentColor, 0 0 70px currentColor;
+                }
+            }
+
+            /* Header - compact, no overlap */
+            .auth-container {
+                position: fixed;
+                top: 8px;
+                left: 8px;
+                z-index: 100;
                 display: flex;
-                justify-content: center;
+                gap: 6px;
             }
 
-            .omni-bar {
-                width: calc(100% - 24px);
-                max-width: calc(100vw - 24px);
-                padding: 8px 8px 8px 16px;
-                border-radius: 24px;
+            .auth-btn {
+                min-height: 40px;
+                min-width: auto;
+                padding: 8px 12px;
+                font-size: 12px;
             }
 
-            .omni-input {
-                font-size: 16px; /* Prevent iOS zoom on focus */
-                min-height: 44px;
+            .auth-btn-signin {
+                padding: 8px 10px;
             }
 
-            /* Submit button - 44px touch target */
-            .omni-submit {
-                width: 44px;
-                height: 44px;
-                min-width: 44px;
-                min-height: 44px;
+            .auth-btn-signup {
+                padding: 8px 12px;
             }
 
-            /* Top bar right - simplified header with 44px touch targets */
             .top-bar-right {
                 position: fixed;
                 top: 8px;
                 right: 8px;
-                left: auto;
-                gap: 8px;
+                z-index: 100;
+                gap: 6px;
                 display: flex;
-                align-items: center;
-                z-index: 1000;
-                flex-wrap: nowrap;
             }
 
-            /* All header buttons - 44px minimum touch target */
             .ai-settings-btn,
             .history-toggle {
-                width: 44px;
-                height: 44px;
-                min-width: 44px;
-                min-height: 44px;
-                flex-shrink: 0;
-                display: flex !important;
-                align-items: center;
-                justify-content: center;
-                border-radius: 12px;
-            }
-
-            .ai-settings-btn svg,
-            .history-toggle svg {
-                width: 20px;
-                height: 20px;
-            }
-
-            /* Auth container - simplified */
-            .auth-container {
-                top: 8px;
-                left: 8px;
-            }
-
-            /* Auth button - 44px touch target */
-            .auth-btn {
-                padding: 10px 14px;
-                font-size: 0.8rem;
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-            }
-
-            .user-menu {
-                padding: 8px 12px;
-                min-height: 44px;
-            }
-
-            .user-name {
-                display: none !important;
+                min-height: 40px;
+                min-width: 40px;
+                width: 40px;
+                height: 40px;
+                padding: 8px;
             }
 
             .user-avatar {
@@ -4000,206 +4109,264 @@
                 height: 32px;
             }
 
-            /* Site footer - minimal */
-            .site-footer {
-                padding: 6px 12px;
-                gap: 12px;
-                font-size: 0.55rem;
+            .user-menu {
+                padding: 4px;
             }
 
-            .site-footer a {
-                padding: 4px 0;
+            /* User dropdown - bottom sheet on mobile */
+            .user-dropdown-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                opacity: 0;
+                visibility: hidden;
+                z-index: 999;
+                transition: all 0.3s;
+            }
+            .user-dropdown-backdrop.active {
+                opacity: 1;
+                visibility: visible;
             }
 
-            /* History drawer - slide from right */
-            .history-drawer {
-                width: 85vw;
-                max-width: 320px;
-                right: -85vw;
+            .user-dropdown {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 16px 16px 0 0 !important;
+                padding: 24px 16px 32px !important;
+                transform: translateY(100%);
+                z-index: 1000 !important;
+                background: #1a1a1f !important;
+            }
+            .user-dropdown.active {
+                transform: translateY(0);
+            }
+            .user-dropdown-item {
+                padding: 16px;
+                min-height: 56px;
+                font-size: 16px;
             }
 
-            .history-drawer.open {
-                right: 0;
+            /* Omni bar - in flow, not fixed (better mobile UX) */
+            .omni-bar-container {
+                position: fixed;
+                bottom: 24px;
+                left: 12px;
+                right: 12px;
+                width: auto;
+                max-width: none;
+                transform: none;
+                z-index: 50;
             }
 
-            /* History items - proper touch targets */
-            .history-item {
-                min-height: 48px;
-                padding: 12px;
-            }
-
-            /* Verdict panel - scrollable, full-width */
-            .verdict-overlay {
-                padding: 8px;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .verdict-panel {
-                padding: 16px 12px;
-                margin: 0 auto;
-                max-width: 100%;
-                max-height: none;
-                border-radius: 16px;
-            }
-
-            .verdict-close {
-                width: 44px;
-                height: 44px;
-                top: 8px;
-                right: 8px;
-            }
-
-            .verdict-header {
-                flex-direction: column;
-                gap: 12px;
-                padding-right: 40px; /* Space for close button */
-            }
-
-            .verdict-decision {
-                font-size: 1.4rem;
-            }
-
-            .verdict-question {
-                font-size: 0.8rem;
-            }
-
-            .verdict-summary {
-                font-size: 0.85rem;
-                line-height: 1.6;
-            }
-
-            .action-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .action-box {
-                padding: 14px;
-                min-height: auto;
-            }
-
-            .action-box-title {
-                font-size: 0.65rem;
-            }
-
-            .action-list li {
-                font-size: 0.8rem;
-            }
-
-            .verdict-actions {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            /* Verdict buttons - 48px touch target */
-            .verdict-btn {
+            .omni-bar {
                 width: 100%;
-                justify-content: center;
-                padding: 14px 20px;
-                min-height: 48px;
-                font-size: 0.9rem;
-            }
-
-            /* Followup questions - horizontal scroll */
-            .followup-chips {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+                padding: 6px 10px;
+                border-radius: 24px;
                 gap: 8px;
-                padding-bottom: 8px;
-                scrollbar-width: none;
             }
 
-            .followup-chips::-webkit-scrollbar {
+            .omni-input {
+                font-size: 16px;
+                min-height: 40px;
+                padding: 8px 4px;
+            }
+
+            .omni-submit {
+                width: 40px;
+                height: 40px;
+                flex-shrink: 0;
+            }
+
+            .status-lights {
                 display: none;
             }
 
-            /* Followup buttons - proper touch targets */
-            .followup-btn {
+            /* Template chips - VISIBLE and scrollable */
+            .template-chips {
+                display: flex !important;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                gap: 6px;
+                padding: 8px 0 4px;
+                margin: 0 -4px;
+                scrollbar-width: none;
+            }
+            .template-chips::-webkit-scrollbar {
+                display: none;
+            }
+            .template-chip {
                 flex-shrink: 0;
-                padding: 10px 16px;
-                font-size: 0.8rem;
-                min-height: 44px;
+                min-height: 36px;
+                padding: 6px 12px;
+                font-size: 12px;
+                white-space: nowrap;
             }
 
-            /* Upgrade overlay - properly sized */
-            .upgrade-modal {
-                width: calc(100% - 24px);
-                max-width: 360px;
-                padding: 20px 16px;
-                max-height: 85vh;
+            /* Context toggle */
+            .context-toggle {
+                display: none;
+            }
+
+            /* Footer - minimal */
+            .site-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 4px 12px;
+                font-size: 9px;
+                z-index: 40;
+                background: rgba(0,0,0,0.8);
+            }
+
+            /* History drawer */
+            .history-overlay { z-index: 900; }
+            .history-drawer {
+                width: 100vw;
+                max-width: 100vw;
+                right: -100vw;
+                z-index: 901;
+            }
+            .history-drawer.open { right: 0; }
+            .history-item { min-height: 56px; padding: 16px; }
+
+            /* AI Settings - full screen */
+            .ai-settings-overlay { z-index: 910; }
+            .ai-settings-panel {
+                position: fixed !important;
+                inset: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100dvh !important;
+                border-radius: 0 !important;
+                padding: 16px !important;
+                transform: none !important;
+                z-index: 911 !important;
+            }
+            .ai-settings-close { min-width: 44px; min-height: 44px; }
+
+            /* Verdict panel - bottom sheet */
+            .verdict-overlay {
+                z-index: 920;
+                padding: 0;
+                align-items: flex-end;
+            }
+            .verdict-panel {
+                width: 100%;
+                max-width: 100%;
+                max-height: 90dvh;
+                border-radius: 16px 16px 0 0;
+                padding: 16px 12px 24px;
                 overflow-y: auto;
             }
-
-            .upgrade-feature {
-                padding: 12px 14px;
-                min-height: 44px;
+            .verdict-close { min-width: 44px; min-height: 44px; }
+            .verdict-decision { font-size: 1.1rem; }
+            .verdict-question { font-size: 0.85rem; }
+            .verdict-btn { min-height: 48px; width: 100%; }
+            .action-grid { grid-template-columns: 1fr; gap: 12px; }
+            .verdict-actions { flex-direction: column; gap: 8px; }
+            /* LLM Response Cards - Mobile optimized */
+            .ai-agreement-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin: 12px 0;
             }
+            .ai-response-card {
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+            }
+            .ai-resp-header {
+                margin-bottom: 6px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .ai-resp-name {
+                font-size: 0.7rem;
+            }
+            .ai-resp-verdict {
+                font-size: 0.6rem;
+                padding: 2px 6px;
+            }
+            .ai-resp-summary {
+                font-size: 0.75rem;
+                line-height: 1.4;
+                -webkit-line-clamp: 3;
+                margin: 0;
+            }
+            .insights-grid { grid-template-columns: 1fr; gap: 12px; }
+            .spectrum-container { padding: 12px 8px; }
 
+            /* Upgrade modal - Mobile optimized */
+            .upgrade-overlay {
+                z-index: 930;
+                align-items: flex-end;
+            }
+            .upgrade-modal {
+                width: 100%;
+                max-width: 100%;
+                max-height: 85dvh;
+                border-radius: 16px 16px 0 0;
+                padding: 20px 16px 28px;
+                overflow-y: auto;
+            }
+            .upgrade-modal-header {
+                text-align: center;
+            }
+            .upgrade-modal-title {
+                font-size: 1.3rem;
+            }
+            .upgrade-modal-subtitle {
+                font-size: 0.85rem;
+            }
+            .upgrade-feature {
+                padding: 10px 0;
+            }
+            .upgrade-feature-text {
+                font-size: 0.85rem;
+            }
+            .upgrade-price {
+                font-size: 2rem;
+            }
             .upgrade-cta {
-                padding: 14px 24px;
                 min-height: 48px;
                 font-size: 1rem;
             }
 
-            /* AI Settings Panel - full screen on mobile */
-            .ai-settings-panel {
-                width: calc(100% - 16px);
-                max-height: 85vh;
-                overflow-y: auto;
+            /* Toast - Mobile optimized for error messages */
+            .toast {
+                bottom: 80px;
+                left: 12px;
+                right: 12px;
+                max-width: none;
+                transform: translateY(20px);
+                padding: 12px 16px;
+                font-size: 0.8rem;
+                line-height: 1.4;
+                text-align: center;
+                word-wrap: break-word;
             }
-
-            /* Template chips - horizontal scroll */
-            .template-chips {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                gap: 8px;
-                padding: 4px 0;
-            }
-
-            .template-chips::-webkit-scrollbar {
-                display: none;
-            }
-
-            .template-chip {
-                flex-shrink: 0;
-                padding: 10px 14px;
-                min-height: 44px;
-                font-size: 0.75rem;
-            }
-
-            /* Context toggle - proper touch target */
-            .context-toggle {
-                min-width: 44px;
-                min-height: 44px;
+            .toast.show {
+                transform: translateY(0);
             }
         }
 
-        /* ============================================
-           MOBILE RESPONSIVE (480px and below)
-           Smaller screens but MAINTAINING 44px touch targets
-           ============================================ */
+        /* Small mobile: 480px and below */
         @media (max-width: 480px) {
-            /* Main app - tighter viewport fit */
             .cortex-app {
-                padding-top: 48px;
-            }
-
-            .cortex-arena {
-                height: calc(100dvh - 145px);
-                max-height: calc(100dvh - 145px);
-                padding: 5px;
+                padding-top: 52px;
             }
 
             .core-container {
-                width: min(170px, 48vw);
-                height: min(170px, 48vw);
-                overflow: visible;
+                width: 140px;
+                height: 140px;
             }
 
             .core-orb {
@@ -4207,11 +4374,9 @@
                 height: 60px;
             }
 
-            /* AI Nodes - maintain 44px touch target with smaller visual */
             .ai-node {
-                width: 38px;
-                height: 38px;
-                overflow: visible;
+                width: 32px;
+                height: 32px;
             }
 
             .ai-node svg {
@@ -4219,376 +4384,73 @@
                 height: 14px;
             }
 
-            /* Smaller spinning rings for mobile */
-            .ai-node.active::before {
-                inset: -3px !important;
-                border-width: 1px !important;
-            }
-            .ai-node.active::after {
-                inset: -5px !important;
-                border-width: 1px !important;
-                opacity: 0.4 !important;
-            }
+            /* AI nodes pushed further out on small screens */
+            .core-container .node-gpt { top: -8px; left: -8px; }
+            .core-container .node-gemini { top: -8px; right: -8px; }
+            .core-container .node-claude { bottom: 20px; left: -8px; }
+            .core-container .node-grok { bottom: 20px; right: -8px; }
 
-            /* Reduce active node scale and glow even more for small mobile */
-            .ai-node.active {
-                transform: scale(1.05) translateZ(3px) !important;
-            }
-
-            .ai-node.active.node-gpt,
-            .ai-node.active.node-gemini,
-            .ai-node.active.node-claude,
-            .ai-node.active.node-grok {
-                box-shadow:
-                    inset 0 1px 4px rgba(255, 255, 255, 0.15),
-                    inset 0 -1px 4px rgba(0, 0, 0, 0.2),
-                    0 0 0 1.5px currentColor,
-                    0 0 15px currentColor,
-                    0 3px 10px rgba(0, 0, 0, 0.3) !important;
-            }
-
-            /* Progress dots - even smaller */
-            .round-dots {
-                gap: 4px;
-            }
-
-            .round-dot {
-                width: 6px;
-                height: 6px;
-            }
-
-            /* Position nodes with room for rings */
-            .core-container .node-gpt { top: 5px; left: 5px; }
-            .core-container .node-gemini { top: 5px; right: 5px; }
-            .core-container .node-claude { bottom: 25px; left: 5px; }
-            .core-container .node-grok { bottom: 25px; right: 5px; }
-
-            /* Top bar - minimal but with proper touch targets */
-            .top-bar-right {
-                top: 4px;
-                right: 4px;
-                gap: 6px;
-            }
-
-            /* CRITICAL: Maintain 44px touch targets even on small screens */
-            .history-toggle,
-            .ai-settings-btn {
-                width: 40px;
-                height: 40px;
-                min-width: 40px;
-                min-height: 40px;
-            }
-
-            .history-toggle svg,
-            .ai-settings-btn svg {
-                width: 18px;
-                height: 18px;
-            }
-
-            /* Auth container */
-            .auth-container {
-                top: 4px;
-                left: 4px;
-            }
-
-            .auth-btn {
-                padding: 8px 12px;
-                font-size: 0.7rem;
-                min-height: 40px;
-            }
-
-            .user-menu {
-                min-height: 40px;
-            }
-
-            .user-avatar {
-                width: 28px;
-                height: 28px;
-                font-size: 0.65rem;
-            }
-
-            .user-tier {
-                font-size: 0.5rem;
-                padding: 2px 4px;
-            }
-
-            .user-dropdown {
-                min-width: 140px;
-            }
-
-            /* Omni bar - compact but usable */
             .omni-bar-container {
-                bottom: 32px;
-                left: 0;
-                right: 0;
-                transform: none;
-            }
-
-            .omni-bar {
-                width: calc(100% - 12px);
-                max-width: calc(100vw - 12px);
-                padding: 6px 6px 6px 12px;
-                border-radius: 20px;
-            }
-
-            /* CRITICAL: 16px font prevents iOS zoom */
-            .omni-input {
-                font-size: 16px;
-                min-height: 40px;
-            }
-
-            .omni-input::placeholder {
-                font-size: 14px;
-            }
-
-            /* Submit button - maintain touch target */
-            .omni-submit {
-                width: 40px;
-                height: 40px;
-                min-width: 40px;
-                min-height: 40px;
-            }
-
-            .omni-submit svg {
-                width: 16px;
-                height: 16px;
-            }
-
-            /* Template chips - smaller but tappable */
-            .template-chips {
-                width: calc(100vw - 12px);
-                gap: 6px;
-                margin-top: 8px;
+                bottom: 22px;
+                left: 8px;
+                right: 8px;
             }
 
             .template-chip {
-                padding: 8px 12px;
-                font-size: 0.7rem;
-                min-height: 36px;
+                padding: 5px 10px;
+                font-size: 11px;
             }
 
-            /* Site footer - minimal */
-            .site-footer {
-                padding: 4px 8px;
-                gap: 8px;
-                font-size: 0.5rem;
-            }
-
-            /* History drawer - full width on small screens */
-            .history-drawer {
-                width: 100%;
-                right: -100%;
-            }
-
-            .history-drawer.open {
-                right: 0;
-            }
-
-            .history-drawer-header {
-                padding: 12px;
-            }
-
-            .history-drawer-title {
-                font-size: 0.85rem;
-            }
-
-            /* History items - maintain touch target */
-            .history-item {
-                padding: 10px;
-                min-height: 44px;
-            }
-
-            .history-question {
-                font-size: 0.75rem;
-            }
-
-            /* Verdict panel - full screen scrollable */
-            .verdict-overlay {
-                padding: 4px;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .verdict-panel {
-                padding: 12px 10px;
-                margin: 0;
-                max-width: 100%;
-                border-radius: 12px;
-            }
-
-            /* Close button - maintain touch target */
-            .verdict-close {
-                top: 4px;
-                right: 4px;
-                width: 40px;
-                height: 40px;
-            }
-
-            .consensus-badge {
-                font-size: 0.5rem;
-                padding: 3px 6px;
-            }
-
-            .verdict-decision {
-                font-size: 1.1rem;
-                margin-bottom: 6px;
-            }
-
-            .verdict-question {
-                font-size: 0.7rem;
-            }
-
-            .verdict-summary {
-                font-size: 0.75rem;
-                line-height: 1.5;
-            }
-
-            .confidence-score {
-                padding: 8px 10px;
-            }
-
-            .confidence-value {
-                font-size: 1.25rem;
-            }
-
-            .confidence-label {
-                font-size: 0.55rem;
-            }
-
-            .action-box {
-                padding: 10px;
-            }
-
-            .action-box-title {
-                font-size: 0.55rem;
-            }
-
-            .action-list li {
-                font-size: 0.7rem;
-                padding: 4px 0;
-            }
-
-            /* Verdict buttons - maintain touch target */
-            .verdict-btn {
-                padding: 12px 16px;
-                font-size: 0.8rem;
-                min-height: 44px;
-            }
-
-            /* Followup - horizontal scroll with touch targets */
-            .followup-chips {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                gap: 6px;
-                scrollbar-width: none;
-            }
-
-            .followup-chips::-webkit-scrollbar {
-                display: none;
-            }
-
-            .followup-btn {
-                flex-shrink: 0;
-                min-height: 40px;
-                padding: 8px 12px;
-                font-size: 0.75rem;
-            }
-
-            /* Upgrade modal */
-            .upgrade-modal {
-                width: calc(100% - 12px);
-                padding: 16px 12px;
-            }
-
-            .upgrade-title {
-                font-size: 1rem;
-            }
-
-            .upgrade-subtitle {
-                font-size: 0.7rem;
-            }
-
-            .upgrade-price {
-                font-size: 1.5rem;
-            }
-
-            .upgrade-feature {
-                padding: 6px 8px;
-                font-size: 0.7rem;
-            }
-
-            .upgrade-cta {
-                padding: 10px 14px;
-                font-size: 0.8rem;
-            }
-
-            /* AI Settings Panel */
-            .ai-settings-panel {
-                width: calc(100% - 12px);
-                max-height: 85vh;
-                padding: 14px;
-            }
-
-            .ai-settings-header {
-                padding: 0 0 10px 0;
-            }
-
-            .ai-settings-title {
-                font-size: 0.9rem;
-            }
-
-            .ai-settings-body {
-                padding: 10px 0 0 0;
-            }
-
-            .model-config-card {
-                padding: 10px;
-            }
-
-            .model-config-header {
-                font-size: 0.75rem;
-            }
-
-            /* Context input */
-            .context-input {
-                width: calc(100vw - 16px);
-                font-size: 0.75rem;
-                padding: 8px 12px;
-            }
+            .site-footer { font-size: 8px; padding: 3px 8px; }
         }
 
-        /* ============================================
-           SMALL MOBILE (360px and below)
-           Smallest screens - still maintain minimum touch targets
-           ============================================ */
-        @media (max-width: 360px) {
+        /* Tiny mobile (Galaxy Fold): 320px and below */
+        @media (max-width: 320px) {
             .cortex-app {
                 padding-top: 44px;
             }
 
-            .cortex-arena {
-                height: calc(100dvh - 130px);
-                max-height: calc(100dvh - 130px);
+            /* Compact header for tiny screens - below cookie banner */
+            .auth-container {
+                top: 42px;
+                left: 6px;
+                gap: 3px;
+            }
+
+            .auth-btn {
+                min-height: 32px;
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+
+            .top-bar-right {
+                top: 42px;
+                right: 6px;
+                gap: 3px;
+            }
+
+            .ai-settings-btn,
+            .history-toggle {
+                min-height: 32px;
+                min-width: 32px;
+                width: 32px;
+                height: 32px;
+                padding: 5px;
             }
 
             .core-container {
-                width: min(140px, 42vw);
-                height: min(140px, 42vw);
-                overflow: visible;
+                width: 130px;
+                height: 130px;
             }
 
             .core-orb {
-                width: 50px;
-                height: 50px;
+                width: 55px;
+                height: 55px;
             }
 
-            /* AI nodes - visual only, keep small */
             .ai-node {
-                width: 32px;
-                height: 32px;
-                overflow: visible;
+                width: 28px;
+                height: 28px;
             }
 
             .ai-node svg {
@@ -4596,138 +4458,44 @@
                 height: 12px;
             }
 
-            /* Tiny spinning rings for very small screens */
-            .ai-node.active::before {
-                inset: -2px !important;
-                border-width: 1px !important;
-            }
-            .ai-node.active::after {
-                inset: -4px !important;
-                border-width: 1px !important;
-                opacity: 0.3 !important;
-            }
-
-            /* Minimal active node scale and glow for tiny screens */
-            .ai-node.active {
-                transform: scale(1.03) !important;
-            }
-
-            .ai-node.active.node-gpt,
-            .ai-node.active.node-gemini,
-            .ai-node.active.node-claude,
-            .ai-node.active.node-grok {
-                box-shadow:
-                    inset 0 1px 3px rgba(255, 255, 255, 0.1),
-                    0 0 0 1px currentColor,
-                    0 0 10px currentColor !important;
-            }
-
-            /* Tiny progress dots */
-            .round-dots {
-                gap: 3px;
-            }
-
-            .round-dot {
-                width: 5px;
-                height: 5px;
-            }
-
-            /* Position nodes with room for tiny rings */
-            .core-container .node-gpt { top: 3px; left: 3px; }
-            .core-container .node-gemini { top: 3px; right: 3px; }
-            .core-container .node-claude { bottom: 20px; left: 3px; }
-            .core-container .node-grok { bottom: 20px; right: 3px; }
+            /* AI nodes at corners for tiny screens */
+            .core-container .node-gpt { top: -10px; left: -10px; }
+            .core-container .node-gemini { top: -10px; right: -10px; }
+            .core-container .node-claude { bottom: 15px; left: -10px; }
+            .core-container .node-grok { bottom: 15px; right: -10px; }
 
             .omni-bar-container {
-                bottom: 28px;
-                left: 0;
-                right: 0;
-                transform: none;
+                bottom: 18px;
+                left: 6px;
+                right: 6px;
             }
 
             .omni-bar {
-                width: calc(100% - 8px);
-                max-width: calc(100vw - 8px);
-                padding: 4px 4px 4px 10px;
+                padding: 4px 8px;
+                border-radius: 20px;
             }
 
-            /* CRITICAL: 16px font prevents iOS zoom */
             .omni-input {
-                font-size: 16px;
-                min-height: 36px;
+                font-size: 14px;
+                min-height: 34px;
             }
 
-            /* Maintain minimum touch target for submit */
             .omni-submit {
-                width: 36px;
-                height: 36px;
-                min-width: 36px;
-                min-height: 36px;
+                width: 34px;
+                height: 34px;
             }
 
-            /* Template chips - maintain touch target */
+            .template-chips {
+                padding: 4px 0 2px;
+            }
+
             .template-chip {
-                padding: 8px 10px;
-                font-size: 0.65rem;
-                min-height: 32px;
+                padding: 4px 8px;
+                font-size: 10px;
+                min-height: 28px;
             }
 
-            /* Site footer - minimal */
-            .site-footer {
-                padding: 3px 6px;
-                gap: 6px;
-                font-size: 0.45rem;
-            }
-
-            /* Header buttons - maintain touch targets */
-            .history-toggle,
-            .ai-settings-btn {
-                width: 36px;
-                height: 36px;
-                min-width: 36px;
-                min-height: 36px;
-            }
-
-            .verdict-decision {
-                font-size: 1rem;
-            }
-
-            .verdict-summary {
-                font-size: 0.7rem;
-            }
-
-            /* Verdict close - maintain touch target */
-            .verdict-close {
-                width: 36px;
-                height: 36px;
-            }
-
-            /* Verdict buttons - maintain touch target */
-            .verdict-btn {
-                min-height: 40px;
-                padding: 10px 14px;
-            }
-
-            .auth-btn {
-                padding: 4px 6px;
-                font-size: 0.55rem;
-            }
-
-            .upgrade-btn {
-                padding: 4px 6px;
-                font-size: 0.5rem;
-            }
-
-            .history-toggle,
-            .ai-settings-btn {
-                width: 26px;
-                height: 26px;
-            }
-
-            .site-footer {
-                font-size: 0.45rem;
-                gap: 8px;
-            }
+            .site-footer { font-size: 7px; padding: 2px 6px; }
         }
     </style>
 </head>
@@ -4754,19 +4522,20 @@
 
         <!-- Signed in state -->
         <div id="authSignedIn" style="display: none; position: relative;">
-            <div class="user-menu" id="userMenu" onclick="toggleUserMenu()">
+            <div class="user-menu" id="userMenu" onclick="toggleUserMenu(event)">
                 <div class="user-avatar" id="userAvatar">U</div>
                 <span class="user-name" id="userName">User</span>
                 <span class="user-tier user-tier-free" id="userTier">FREE</span>
-
-                <div class="user-dropdown">
-                    <div class="user-dropdown-item" onclick="handleManageAccount()">
-                        <span>Account Settings</span>
-                    </div>
-                    <div class="user-dropdown-divider"></div>
-                    <div class="user-dropdown-item" onclick="handleSignOut()">
-                        <span>Sign Out</span>
-                    </div>
+            </div>
+            <!-- Mobile Bottom Sheet Dropdown (outside user-menu for proper z-index) -->
+            <div class="user-dropdown-backdrop" id="userDropdownBackdrop" onclick="closeUserMenu()"></div>
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-dropdown-item" onclick="closeUserMenu(); handleManageAccount();">
+                    <span>Account Settings</span>
+                </div>
+                <div class="user-dropdown-divider"></div>
+                <div class="user-dropdown-item" onclick="closeUserMenu(); handleSignOut();">
+                    <span>Sign Out</span>
                 </div>
             </div>
         </div>
@@ -5062,6 +4831,46 @@
 
             <!-- Core Container (orb + nodes) -->
             <div class="core-container">
+                <!-- Particle Canvas for flowing particles -->
+                <canvas class="particle-canvas" id="particleCanvas"></canvas>
+
+                <!-- Energy Beams SVG -->
+                <svg class="energy-beams-svg" id="energyBeamsSvg">
+                    <defs>
+                        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <linearGradient id="beam-gpt" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#10a37f;stop-opacity:0"/>
+                            <stop offset="50%" style="stop-color:#10a37f;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#10a37f;stop-opacity:0"/>
+                        </linearGradient>
+                        <linearGradient id="beam-gemini" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#4285f4;stop-opacity:0"/>
+                            <stop offset="50%" style="stop-color:#4285f4;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#4285f4;stop-opacity:0"/>
+                        </linearGradient>
+                        <linearGradient id="beam-claude" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#d97706;stop-opacity:0"/>
+                            <stop offset="50%" style="stop-color:#d97706;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#d97706;stop-opacity:0"/>
+                        </linearGradient>
+                        <linearGradient id="beam-grok" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#f97316;stop-opacity:0"/>
+                            <stop offset="50%" style="stop-color:#f97316;stop-opacity:1"/>
+                            <stop offset="100%" style="stop-color:#f97316;stop-opacity:0"/>
+                        </linearGradient>
+                    </defs>
+                    <line class="energy-beam" id="beam-gpt" stroke="url(#beam-gpt)"/>
+                    <line class="energy-beam" id="beam-gemini" stroke="url(#beam-gemini)"/>
+                    <line class="energy-beam" id="beam-claude" stroke="url(#beam-claude)"/>
+                    <line class="energy-beam" id="beam-grok" stroke="url(#beam-grok)"/>
+                </svg>
+
                 <!-- Central Core -->
                 <div class="core-orb" id="coreOrb">
                     <span class="core-text" id="coreText">Ready</span>
@@ -5639,11 +5448,13 @@
         function showStream() {
             debateStream.classList.add('active');
             arena.classList.add('debating');
+            document.body.classList.add('debating');
         }
 
         function hideStream() {
             debateStream.classList.remove('active');
             arena.classList.remove('debating');
+            document.body.classList.remove('debating');
         }
 
         function updateStreamRound(round) {
@@ -5728,12 +5539,184 @@
 
         function highlightNode(llmId) {
             const map = { openai: 'nodeGpt', gemini: 'nodeGemini', grok: 'nodeGrok', claude: 'nodeClaude' };
+            const beamMap = { openai: 'beam-gpt', gemini: 'beam-gemini', grok: 'beam-grok', claude: 'beam-claude' };
             const node = document.getElementById(map[llmId]);
+            const beam = document.getElementById(beamMap[llmId]);
+
             if (node) {
                 node.classList.add('active');
-                setTimeout(() => node.classList.remove('active'), 1500);
+                node.classList.add('speaking');
+
+                // Activate energy beam
+                if (beam) {
+                    updateEnergyBeam(llmId);
+                    beam.classList.add('active');
+                }
+
+                // Emit particles toward center
+                emitParticles(llmId);
+
+                setTimeout(() => {
+                    node.classList.remove('active');
+                    node.classList.remove('speaking');
+                    if (beam) beam.classList.remove('active');
+                }, 1500);
             }
         }
+
+        // ============================================
+        // PARTICLE & ENERGY BEAM SYSTEM
+        // ============================================
+
+        const particleCanvas = document.getElementById('particleCanvas');
+        const particleCtx = particleCanvas ? particleCanvas.getContext('2d') : null;
+        let particles = [];
+        let animationId = null;
+
+        const nodeColors = {
+            openai: '#10a37f',
+            gemini: '#4285f4',
+            claude: '#d97706',
+            grok: '#f97316'
+        };
+
+        function initParticleCanvas() {
+            if (!particleCanvas) return;
+            const container = document.querySelector('.core-container');
+            if (!container) return;
+
+            const rect = container.getBoundingClientRect();
+            particleCanvas.width = rect.width;
+            particleCanvas.height = rect.height;
+        }
+
+        function getNodeCenter(llmId) {
+            const map = { openai: 'nodeGpt', gemini: 'nodeGemini', grok: 'nodeGrok', claude: 'nodeClaude' };
+            const node = document.getElementById(map[llmId]);
+            const container = document.querySelector('.core-container');
+
+            if (!node || !container) return { x: 0, y: 0 };
+
+            const nodeRect = node.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            return {
+                x: nodeRect.left - containerRect.left + nodeRect.width / 2,
+                y: nodeRect.top - containerRect.top + nodeRect.height / 2
+            };
+        }
+
+        function getCoreCenter() {
+            const core = document.getElementById('coreOrb');
+            const container = document.querySelector('.core-container');
+
+            if (!core || !container) return { x: 0, y: 0 };
+
+            const coreRect = core.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+
+            return {
+                x: coreRect.left - containerRect.left + coreRect.width / 2,
+                y: coreRect.top - containerRect.top + coreRect.height / 2
+            };
+        }
+
+        function emitParticles(llmId) {
+            if (!particleCtx) return;
+
+            const start = getNodeCenter(llmId);
+            const end = getCoreCenter();
+            const color = nodeColors[llmId] || '#6366f1';
+
+            // Reduce particles on mobile for performance
+            const isMobile = window.innerWidth <= 768;
+            const count = isMobile ? (4 + Math.floor(Math.random() * 3)) : (8 + Math.floor(Math.random() * 5));
+            const particleSize = isMobile ? 2 : 3;
+
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    particles.push({
+                        x: start.x + (Math.random() - 0.5) * 15,
+                        y: start.y + (Math.random() - 0.5) * 15,
+                        targetX: end.x + (Math.random() - 0.5) * 20,
+                        targetY: end.y + (Math.random() - 0.5) * 20,
+                        color: color,
+                        size: particleSize + Math.random() * 3,
+                        speed: 0.025 + Math.random() * 0.02,
+                        progress: 0,
+                        alpha: 1
+                    });
+                }, i * 60);
+            }
+
+            if (!animationId) {
+                animateParticles();
+            }
+        }
+
+        function animateParticles() {
+            if (!particleCtx || !particleCanvas) return;
+
+            particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+            particles = particles.filter(p => {
+                p.progress += p.speed;
+
+                if (p.progress >= 1) return false;
+
+                // Ease out cubic for smooth deceleration
+                const ease = 1 - Math.pow(1 - p.progress, 3);
+
+                const x = p.x + (p.targetX - p.x) * ease;
+                const y = p.y + (p.targetY - p.y) * ease;
+
+                // Fade out near end
+                p.alpha = p.progress < 0.7 ? 1 : 1 - ((p.progress - 0.7) / 0.3);
+
+                // Draw particle with glow
+                particleCtx.save();
+                particleCtx.globalAlpha = p.alpha;
+
+                // Glow
+                particleCtx.shadowColor = p.color;
+                particleCtx.shadowBlur = 10;
+
+                // Particle
+                particleCtx.beginPath();
+                particleCtx.arc(x, y, p.size * (1 - p.progress * 0.5), 0, Math.PI * 2);
+                particleCtx.fillStyle = p.color;
+                particleCtx.fill();
+
+                particleCtx.restore();
+
+                return true;
+            });
+
+            if (particles.length > 0) {
+                animationId = requestAnimationFrame(animateParticles);
+            } else {
+                animationId = null;
+            }
+        }
+
+        function updateEnergyBeam(llmId) {
+            const beamMap = { openai: 'beam-gpt', gemini: 'beam-gemini', grok: 'beam-grok', claude: 'beam-claude' };
+            const beam = document.getElementById(beamMap[llmId]);
+
+            if (!beam) return;
+
+            const start = getNodeCenter(llmId);
+            const end = getCoreCenter();
+
+            beam.setAttribute('x1', start.x);
+            beam.setAttribute('y1', start.y);
+            beam.setAttribute('x2', end.x);
+            beam.setAttribute('y2', end.y);
+        }
+
+        // Initialize on load and resize
+        window.addEventListener('load', initParticleCanvas);
+        window.addEventListener('resize', initParticleCanvas);
 
         function triggerConflict(conflictingLlmId = null) {
             // Fire laser
@@ -6056,6 +6039,14 @@
                 const result = await res.json();
                 closeSSE();
 
+                // Handle rate limit - show upgrade modal
+                if (result.limitReached || result.upgradeRequired) {
+                    hideStream();
+                    setCoreState('ready');
+                    showUpgradeModal();
+                    return;
+                }
+
                 if (result.error) throw new Error(result.error);
 
                 currentResult = result;
@@ -6324,6 +6315,18 @@
             // Show panel
             verdictOverlay.classList.add('active');
 
+            // Auto-scroll to top of verdict on mobile
+            setTimeout(() => {
+                const verdictPanel = verdictOverlay.querySelector('.verdict-panel');
+                if (verdictPanel) {
+                    verdictPanel.scrollTop = 0;
+                }
+                // On mobile, ensure the overlay is visible
+                if (window.innerWidth <= 768) {
+                    verdictOverlay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+
             // Show post-debate UI (drawer handle, scrubber)
             showPostDebateUI(result);
         }
@@ -6332,6 +6335,10 @@
             verdictOverlay.classList.remove('active');
             // Also hide the post-debate UI elements
             hidePostDebateUI();
+            // Remove debating class to show input again
+            hideStream();
+            // Restore template chips
+            templateChips.style.display = 'flex';
         }
 
         function newDebate() {
@@ -6912,16 +6919,39 @@
             }
         }
 
-        function toggleUserMenu() {
+        function toggleUserMenu(event) {
+            if (event) event.stopPropagation();
             const userMenu = document.getElementById('userMenu');
-            userMenu.classList.toggle('active');
+            const dropdown = document.getElementById('userDropdown');
+            const backdrop = document.getElementById('userDropdownBackdrop');
+
+            const isActive = dropdown.classList.contains('active');
+
+            if (isActive) {
+                closeUserMenu();
+            } else {
+                userMenu.classList.add('active');
+                dropdown.classList.add('active');
+                backdrop.classList.add('active');
+            }
         }
 
-        // Close user menu when clicking outside
+        function closeUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            const dropdown = document.getElementById('userDropdown');
+            const backdrop = document.getElementById('userDropdownBackdrop');
+
+            if (userMenu) userMenu.classList.remove('active');
+            if (dropdown) dropdown.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('active');
+        }
+
+        // Close user menu when clicking outside (desktop fallback)
         document.addEventListener('click', (e) => {
             const userMenu = document.getElementById('userMenu');
-            if (userMenu && !userMenu.contains(e.target)) {
-                userMenu.classList.remove('active');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenu && dropdown && !userMenu.contains(e.target) && !dropdown.contains(e.target)) {
+                closeUserMenu();
             }
         });
 
@@ -7319,16 +7349,64 @@
         setTimeout(() => input.focus(), 500);
 
         // ============================================
-        // COOKIE CONSENT
+        // COOKIE CONSENT - Mobile-optimized slim banner
         // ============================================
         (function() {
             const CONSENT_KEY = 'consensus_cookie_consent';
             const consent = localStorage.getItem(CONSENT_KEY);
+            const isMobile = window.innerWidth <= 768;
 
             if (!consent) {
                 const banner = document.createElement('div');
                 banner.id = 'cookie-consent';
-                banner.innerHTML = `
+                banner.innerHTML = isMobile ? `
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        background: rgba(18, 18, 26, 0.95);
+                        backdrop-filter: blur(10px);
+                        border-bottom: 1px solid rgba(99,102,241,0.3);
+                        padding: 8px 12px;
+                        z-index: 10000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+                    ">
+                        <p style="
+                            color: rgba(255,255,255,0.8);
+                            font-size: 11px;
+                            margin: 0;
+                            flex: 1;
+                            line-height: 1.3;
+                        ">
+                            Cookies help us improve. <a href="/cookies.html" style="color: #6366f1;">Learn more</a>
+                        </p>
+                        <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                            <button id="cookie-decline" style="
+                                padding: 6px 10px;
+                                background: transparent;
+                                border: 1px solid rgba(255,255,255,0.2);
+                                color: rgba(255,255,255,0.7);
+                                border-radius: 4px;
+                                cursor: pointer;
+                                font-size: 11px;
+                            ">✕</button>
+                            <button id="cookie-accept" style="
+                                padding: 6px 12px;
+                                background: #6366f1;
+                                border: none;
+                                color: white;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                font-size: 11px;
+                                font-weight: 500;
+                            ">OK</button>
+                        </div>
+                    </div>
+                ` : `
                     <div style="
                         position: fixed;
                         bottom: 0;

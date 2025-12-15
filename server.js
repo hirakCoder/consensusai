@@ -22,6 +22,8 @@ const auth = require('./auth');
 const stripe = require('./stripe');
 const sentry = require('./sentry');
 const analytics = require('./analytics');
+const contentModeration = require('./content-moderation');
+const apiResilience = require('./api-resilience');
 
 const PORT = process.env.PORT || 3000;
 
@@ -358,6 +360,23 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Get API health status
+  if (pathname === '/api/health') {
+    const health = apiResilience.getHealthStatus();
+    const clients = getConfiguredClients();
+    sendJson(res, {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      apis: clients.map(c => ({
+        id: c.id,
+        name: c.name,
+        configured: true,
+        health: health[c.id] || { state: 'unknown', healthy: true }
+      }))
+    });
+    return;
+  }
+
   // Get/Set tier
   if (pathname === '/api/tier') {
     if (req.method === 'GET') {
@@ -458,6 +477,26 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      // Content moderation check
+      const moderationResult = contentModeration.moderateQuery(question);
+      if (moderationResult.result === contentModeration.MODERATION_RESULT.BLOCKED) {
+        console.log(`[Content Moderation] Blocked query from user ${userId}: ${moderationResult.reason}`);
+        sendJson(res, {
+          error: moderationResult.message,
+          blocked: true,
+          reason: moderationResult.reason
+        }, 400);
+        return;
+      }
+
+      // Use sanitized query
+      const sanitizedQuestion = moderationResult.sanitizedQuery || question;
+
+      // Log warning for controversial topics (but allow to proceed)
+      if (moderationResult.result === contentModeration.MODERATION_RESULT.WARNING) {
+        console.log(`[Content Moderation] Warning for user ${userId}: ${moderationResult.topics?.join(', ')}`);
+      }
+
       // Validate selectedAIs (minimum 2, maximum 4)
       const validAIs = ['openai', 'gemini', 'claude', 'grok'];
       let activeAIs = selectedAIs && Array.isArray(selectedAIs)
@@ -502,7 +541,7 @@ const server = http.createServer(async (req, res) => {
 
       // Track debate started
       analytics.trackDebateStarted(userId, {
-        question,
+        question: sanitizedQuestion,
         context,
         tier: effectiveTier,
         devilAdvocate: body.devilAdvocate || false,
@@ -512,7 +551,7 @@ const server = http.createServer(async (req, res) => {
       const sseRes = sseConnections.get(debateId);
 
       // Run debate with progress updates - send specific events via SSE
-      const result = await engine.run(question, context, (progress) => {
+      const result = await engine.run(sanitizedQuestion, context, (progress) => {
         if (sseRes) {
           // Send the specific event type from debate engine
           const eventType = progress.event || 'progress';
@@ -526,7 +565,7 @@ const server = http.createServer(async (req, res) => {
 
       // Record usage
       const usageStats = usage.recordDebate(userId, {
-        question: question.substring(0, 100),
+        question: sanitizedQuestion.substring(0, 100),
         tier: effectiveTier,
         consensus: result.finalConsensus?.reached
       });

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - ConsensusAI</title>
+  <meta name="description" content="Get in touch with the ConsensusAI team. We're here to help with questions, feedback, and support.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    :root {
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #1a1a24;
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --accent-primary: #6366f1;
+      --accent-secondary: #8b5cf6;
+      --success: #10b981;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-title p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .info-content h3 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-content p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .info-content a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+
+    .info-content a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-form {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .form-group textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .form-group select {
+      cursor: pointer;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-message {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: var(--success);
+      text-align: center;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .faq-section {
+      margin-top: 4rem;
+    }
+
+    .faq-section h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.75rem;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .faq-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .faq-item h4 {
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .faq-item p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .copyright {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      .page-title h1 {
+        font-size: 1.75rem;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .contact-form {
+        order: -1;
+      }
+
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title h1 {
+        font-size: 1.5rem;
+      }
+
+      .info-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .info-icon {
+        margin: 0 auto;
+      }
+
+      .contact-form {
+        padding: 1.25rem;
+      }
+
+      .submit-btn {
+        min-height: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <div class="logo-icon">C</div>
+      <span class="logo-text">ConsensusAI</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1>Get in Touch</h1>
+      <p>Have questions or feedback? We'd love to hear from you.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="info-card">
+          <div class="info-icon">&#x2709;</div>
+          <div class="info-content">
+            <h3>Email Support</h3>
+            <p>Get help with your account or technical issues</p>
+            <a href="mailto:support@consensusai.app">support@consensusai.app</a>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">&#x1F4AC;</div>
+          <div class="info-content">
+            <h3>Response Time</h3>
+            <p>We typically respond within 24 hours on business days.</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">&#x1F4E2;</div>
+          <div class="info-content">
+            <h3>Feature Requests</h3>
+            <p>Have an idea to improve ConsensusAI? We're always listening!</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">&#x1F6E1;</div>
+          <div class="info-content">
+            <h3>Security Issues</h3>
+            <p>Report security vulnerabilities responsibly</p>
+            <a href="mailto:security@consensusai.app">security@consensusai.app</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <div class="success-message" id="successMessage">
+          Thank you! Your message has been sent. We'll get back to you soon.
+        </div>
+
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="John Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="john@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject" required>
+              <option value="">Select a topic...</option>
+              <option value="general">General Question</option>
+              <option value="support">Technical Support</option>
+              <option value="billing">Billing & Subscription</option>
+              <option value="feature">Feature Request</option>
+              <option value="bug">Bug Report</option>
+              <option value="partnership">Partnership Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="How can we help you?"></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+        </form>
+      </div>
+    </div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h4>How does ConsensusAI work?</h4>
+          <p>We send your question to 4 leading AI models (GPT-4, Claude, Gemini, Grok) and synthesize their responses to find consensus or highlight where they disagree.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Is my data private?</h4>
+          <p>Yes. We don't store your questions long-term. Each query is processed and then discarded. See our Privacy Policy for details.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What's included in the Free plan?</h4>
+          <p>Free users get 10 debates per day using our budget AI tier. Upgrade to Pro for unlimited debates and premium models.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Can I cancel my subscription?</h4>
+          <p>Yes, you can cancel anytime from your account settings. You'll retain access until the end of your billing period.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/disclaimer.html">AI Disclaimer</a>
+        <a href="/cookies.html">Cookie Policy</a>
+      </div>
+      <p class="copyright">&copy; 2025 ConsensusAI. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submitBtn');
+      const successMsg = document.getElementById('successMessage');
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      // Simulate form submission (replace with actual endpoint)
+      setTimeout(() => {
+        successMsg.classList.add('show');
+        this.reset();
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+
+        // Hide success message after 5 seconds
+        setTimeout(() => {
+          successMsg.classList.remove('show');
+        }, 5000);
+      }, 1000);
+
+      // TODO: Replace with actual form submission
+      // const formData = new FormData(this);
+      // fetch('/api/contact', {
+      //   method: 'POST',
+      //   body: JSON.stringify(Object.fromEntries(formData)),
+      //   headers: { 'Content-Type': 'application/json' }
+      // }).then(...)
+    });
+  </script>
+</body>
+</html>

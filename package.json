@@ -7,6 +7,16 @@
     "start": "node server.js",
     "dev": "node server.js",
     "test": "node tests/api.test.js",
+    "test:moderation": "node tests/moderation.test.js",
+    "test:resilience": "node tests/resilience.test.js",
+    "test:unit": "node tests/moderation.test.js && node tests/resilience.test.js",
+    "test:ci": "node test-ci-runner.js full",
+    "test:smoke": "node test-ci-runner.js smoke",
+    "test:mobile": "node test-ci-runner.js mobile",
+    "test:desktop": "node test-ci-runner.js desktop",
+    "test:security": "node test-ci-runner.js security",
+    "test:uat": "node test-uat-mobile.js && node test-uat-desktop.js",
+    "test:all": "npm run test:unit && npm run test:ci",
     "setup-stripe": "node scripts/setup-stripe.js"
   },
   "dependencies": {
@@ -15,5 +25,11 @@
     "dotenv": "^17.2.3",
     "posthog-node": "^5.17.2",
     "stripe": "^14.25.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "playwright": "^1.57.0",
+    "puppeteer": "^24.33.0",
+    "tailwindcss": "^4.1.18"
   }
 }

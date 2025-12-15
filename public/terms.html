@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Service - ConsensusAI</title>
+  <meta name="description" content="ConsensusAI Terms of Service - Read our terms and conditions for using the platform.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     :root {
       --bg-primary: #0a0a0f;
@@ -11,6 +13,7 @@
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.7);
       --accent-primary: #6366f1;
+      --border: rgba(255, 255, 255, 0.1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +32,7 @@
       padding: 2rem;
       background: var(--bg-secondary);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
     }
 
     h1 {
@@ -52,22 +55,40 @@
       font-size: 1.5rem;
     }
 
+    h3 {
+      color: var(--text-primary);
+      margin: 1.5rem 0 0.75rem;
+      font-size: 1.1rem;
+    }
+
     p, li {
       color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
-    ul {
+    ul, ol {
       padding-left: 1.5rem;
       margin-bottom: 1rem;
     }
 
-    .placeholder-notice {
-      background: rgba(245, 158, 11, 0.15);
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-box {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .warning-box {
+      background: rgba(245, 158, 11, 0.1);
       border: 1px solid rgba(245, 158, 11, 0.3);
       border-radius: 8px;
       padding: 1rem;
-      margin-bottom: 2rem;
+      margin: 1rem 0;
       color: #f59e0b;
     }
 
@@ -95,153 +116,183 @@
       text-decoration: none;
     }
 
-    /* Mobile Responsive - Professional SaaS Standards */
+    .nav-links {
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links a {
+      margin-right: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* Mobile Responsive */
     @media (max-width: 768px) {
-      html, body {
-        overflow-x: hidden;
-        width: 100%;
-        max-width: 100vw;
-      }
-
-      body {
-        padding: 0.75rem;
-      }
-
-      .container {
-        padding: 1.25rem;
-        border-radius: 12px;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-
-      h1 {
-        font-size: 1.75rem;
-        word-wrap: break-word;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-        margin: 1.5rem 0 0.75rem;
-      }
-
-      p, li {
-        font-size: 0.9rem;
-        line-height: 1.6;
-        word-wrap: break-word;
-      }
-
-      .last-updated {
-        font-size: 0.8rem;
-      }
-
-      .placeholder-notice {
-        padding: 0.75rem;
-        font-size: 0.85rem;
-      }
-
-      /* Back button - proper touch target */
-      .back-link {
-        padding: 12px 20px;
-        font-size: 0.9rem;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
+      body { padding: 0.75rem; }
+      .container { padding: 1.25rem; border-radius: 12px; }
+      h1 { font-size: 1.75rem; }
+      h2 { font-size: 1.2rem; margin: 1.5rem 0 0.75rem; }
+      p, li { font-size: 0.9rem; line-height: 1.6; }
+      .back-link { padding: 12px 20px; min-height: 44px; display: inline-flex; align-items: center; }
     }
 
     @media (max-width: 480px) {
-      body {
-        padding: 0.5rem;
-      }
-
-      .container {
-        padding: 1rem;
-        border-radius: 10px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-
-      h2 {
-        font-size: 1rem;
-        margin: 1.25rem 0 0.5rem;
-      }
-
-      p, li {
-        font-size: 0.85rem;
-        line-height: 1.5;
-      }
-
-      ul {
-        padding-left: 1.25rem;
-      }
-
-      .placeholder-notice {
-        padding: 0.6rem;
-        font-size: 0.8rem;
-      }
-
-      .back-link {
-        width: 100%;
-        text-align: center;
-      }
+      body { padding: 0.5rem; }
+      .container { padding: 1rem; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1rem; }
+      p, li { font-size: 0.85rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Terms of Service</h1>
-    <p class="last-updated">Last Updated: December 2025</p>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing.html">Pricing</a>
+      <a href="/contact.html">Contact</a>
+    </div>
 
-    <div class="placeholder-notice">
-      <strong>Notice:</strong> This is a placeholder. Replace with your actual Terms of Service generated from <a href="https://termly.io" target="_blank">Termly</a> or similar service.
+    <h1>Terms of Service</h1>
+    <p class="last-updated">Last Updated: December 15, 2025</p>
+
+    <div class="warning-box">
+      <strong>Note:</strong> This document provides standard terms for the ConsensusAI service. For specific legal requirements in your jurisdiction, consult with a legal professional.
     </div>
 
     <h2>1. Agreement to Terms</h2>
-    <p>By accessing or using ConsensusAI ("Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
+    <p>By accessing or using ConsensusAI ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you may not access or use the Service.</p>
+    <p>These Terms apply to all visitors, users, and others who access or use the Service. We reserve the right to update these Terms at any time. Continued use of the Service after changes constitutes acceptance of the modified Terms.</p>
 
     <h2>2. Description of Service</h2>
-    <p>ConsensusAI is an AI-powered decision-making platform that aggregates recommendations from multiple AI models. The Service is provided "as is" for informational purposes only.</p>
+    <p>ConsensusAI is an AI-powered decision intelligence platform that:</p>
+    <ul>
+      <li>Aggregates responses from multiple AI models (GPT-4, Claude, Gemini, Grok)</li>
+      <li>Analyzes consensus and disagreement between AI perspectives</li>
+      <li>Provides synthesized recommendations for decision-making</li>
+    </ul>
+    <div class="highlight-box">
+      <strong>Important:</strong> The Service is provided for informational purposes only. AI-generated content should not be considered professional advice. See our <a href="/disclaimer.html">AI Disclaimer</a> for details.
+    </div>
 
     <h2>3. User Accounts</h2>
+    <h3>3.1 Account Creation</h3>
+    <p>To access certain features, you may need to create an account. You agree to:</p>
     <ul>
-      <li>You must provide accurate information when creating an account</li>
-      <li>You are responsible for maintaining account security</li>
-      <li>You must be at least 18 years old to use this Service</li>
+      <li>Provide accurate, current, and complete information</li>
+      <li>Maintain and update your information to keep it accurate</li>
+      <li>Maintain the security of your account credentials</li>
+      <li>Accept responsibility for all activities under your account</li>
     </ul>
 
-    <h2>4. Acceptable Use</h2>
-    <p>You agree NOT to:</p>
-    <ul>
-      <li>Use the Service for illegal purposes</li>
-      <li>Attempt to reverse engineer or hack the Service</li>
-      <li>Abuse or overload our systems</li>
-      <li>Share your account credentials</li>
-    </ul>
+    <h3>3.2 Age Requirements</h3>
+    <p>You must be at least 18 years old to use this Service. By using the Service, you represent and warrant that you meet this age requirement.</p>
 
-    <h2>5. Payment Terms</h2>
+    <h2>4. Acceptable Use Policy</h2>
+    <p>You agree NOT to use the Service to:</p>
     <ul>
-      <li>Pro subscriptions are billed monthly or annually</li>
+      <li>Violate any applicable laws or regulations</li>
+      <li>Submit queries related to illegal activities, violence, or harmful content</li>
+      <li>Attempt to reverse engineer, hack, or compromise the Service</li>
+      <li>Abuse, overload, or interfere with our systems</li>
+      <li>Share your account credentials with others</li>
+      <li>Use automated systems to access the Service without permission</li>
+      <li>Circumvent usage limits or access restrictions</li>
+      <li>Submit content that infringes intellectual property rights</li>
+    </ul>
+    <p>We reserve the right to suspend or terminate accounts that violate these policies.</p>
+
+    <h2>5. Subscription and Payment Terms</h2>
+    <h3>5.1 Free Tier</h3>
+    <p>The free tier provides limited access to the Service with daily usage caps. Free tier features may change without notice.</p>
+
+    <h3>5.2 Pro Subscription</h3>
+    <ul>
+      <li>Pro subscriptions are billed monthly at the current rate ($19/month)</li>
+      <li>Payment is processed securely through Stripe</li>
+      <li>Subscriptions automatically renew unless cancelled</li>
       <li>You may cancel at any time; access continues until the end of the billing period</li>
-      <li>Refunds are provided at our discretion</li>
     </ul>
 
-    <h2>6. AI Disclaimer</h2>
-    <p><strong>IMPORTANT:</strong> AI recommendations are for informational purposes only. See our full <a href="/disclaimer.html">AI Disclaimer</a> for details.</p>
+    <h3>5.3 Refunds</h3>
+    <p>Refunds are available within 7 days of your first payment if you're not satisfied. After this period, refunds are provided at our discretion. Contact <a href="mailto:support@consensusai.app">support@consensusai.app</a> for refund requests.</p>
 
-    <h2>7. Limitation of Liability</h2>
-    <p>To the maximum extent permitted by law, ConsensusAI shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.</p>
+    <h3>5.4 Price Changes</h3>
+    <p>We may change subscription prices with 30 days notice. Price changes will apply to new billing periods only.</p>
 
-    <h2>8. Service Changes & Termination</h2>
-    <p>We reserve the right to modify, suspend, or discontinue the Service at any time. If we discontinue the Service, we will provide reasonable notice and refund any prepaid fees for unused periods.</p>
+    <h2>6. Intellectual Property</h2>
+    <h3>6.1 Our Content</h3>
+    <p>The Service, including its design, features, and content, is owned by ConsensusAI and protected by intellectual property laws. You may not copy, modify, or distribute our content without permission.</p>
 
-    <h2>9. Governing Law</h2>
-    <p>These Terms are governed by the laws of [Your Jurisdiction]. Any disputes shall be resolved in [Your Jurisdiction].</p>
+    <h3>6.2 Your Content</h3>
+    <p>You retain ownership of the questions you submit. By using the Service, you grant us a limited license to process your queries through our AI systems. We do not claim ownership of your queries or use them for training purposes.</p>
 
-    <h2>10. Contact</h2>
-    <p>Questions? Contact us at: <a href="mailto:support@consensus-ai.com">support@consensus-ai.com</a></p>
+    <h3>6.3 AI-Generated Content</h3>
+    <p>AI responses generated by the Service are provided for your personal use. You may use these responses for your own decision-making purposes.</p>
+
+    <h2>7. AI Disclaimer and Limitations</h2>
+    <div class="warning-box">
+      <strong>Critical Disclaimer:</strong> AI recommendations are for informational purposes only and should not replace professional advice (legal, medical, financial, etc.). Always consult qualified professionals for important decisions.
+    </div>
+    <p>The Service:</p>
+    <ul>
+      <li>Does not guarantee accuracy, completeness, or suitability of AI responses</li>
+      <li>May produce inconsistent or incorrect information</li>
+      <li>Should not be relied upon for decisions with significant consequences</li>
+      <li>Does not constitute professional advice of any kind</li>
+    </ul>
+    <p>See our full <a href="/disclaimer.html">AI Disclaimer</a> for complete details.</p>
+
+    <h2>8. Limitation of Liability</h2>
+    <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</p>
+    <ul>
+      <li>THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND</li>
+      <li>WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</li>
+      <li>WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES</li>
+      <li>OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT YOU PAID US IN THE PAST 12 MONTHS</li>
+    </ul>
+
+    <h2>9. Indemnification</h2>
+    <p>You agree to indemnify and hold harmless ConsensusAI, its officers, directors, employees, and agents from any claims, damages, or expenses arising from your use of the Service or violation of these Terms.</p>
+
+    <h2>10. Service Modifications and Termination</h2>
+    <h3>10.1 Service Changes</h3>
+    <p>We reserve the right to modify, suspend, or discontinue the Service at any time. We will provide reasonable notice for significant changes when possible.</p>
+
+    <h3>10.2 Account Termination</h3>
+    <p>We may terminate or suspend your account immediately for Terms violations. You may delete your account at any time through account settings or by contacting support.</p>
+
+    <h3>10.3 Effect of Termination</h3>
+    <p>Upon termination, your right to use the Service ceases immediately. Provisions that by their nature should survive termination shall survive.</p>
+
+    <h2>11. Privacy</h2>
+    <p>Your use of the Service is also governed by our <a href="/privacy.html">Privacy Policy</a>, which describes how we collect, use, and protect your information.</p>
+
+    <h2>12. Dispute Resolution</h2>
+    <p>Any disputes arising from these Terms or the Service shall be resolved through:</p>
+    <ol>
+      <li>Good faith negotiation between the parties</li>
+      <li>Binding arbitration if negotiation fails</li>
+    </ol>
+    <p>Class action lawsuits and class-wide arbitration are not permitted.</p>
+
+    <h2>13. Governing Law</h2>
+    <p>These Terms are governed by the laws of the State of Delaware, United States, without regard to conflict of law principles.</p>
+
+    <h2>14. Severability</h2>
+    <p>If any provision of these Terms is found unenforceable, the remaining provisions will continue in effect.</p>
+
+    <h2>15. Entire Agreement</h2>
+    <p>These Terms, together with our Privacy Policy, Cookie Policy, and AI Disclaimer, constitute the entire agreement between you and ConsensusAI.</p>
+
+    <h2>16. Contact Information</h2>
+    <p>For questions about these Terms, contact us at:</p>
+    <ul>
+      <li>Email: <a href="mailto:legal@consensusai.app">legal@consensusai.app</a></li>
+      <li>Support: <a href="mailto:support@consensusai.app">support@consensusai.app</a></li>
+      <li>Contact Form: <a href="/contact.html">Contact Us</a></li>
+    </ul>
 
     <a href="/" class="back-link">Back to App</a>
   </div>

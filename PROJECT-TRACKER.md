@@ -1,6 +1,6 @@
 # ConsensusAI - Project Tracker
 
-> Last Updated: December 10, 2025
+> Last Updated: December 15, 2025
 >
 > This file tracks all features, bugs, and improvements for the ConsensusAI platform.
 > Use this as a single source of truth for project status.
@@ -67,11 +67,23 @@
 
 | Task | Status | Notes |
 |------|--------|-------|
+| **Content Moderation** | DONE | Banned topics, NSFW, controversial warnings |
+| **API Resilience** | DONE | 30s timeout, 3x retry, circuit breaker pattern |
+| **Security Hardening** | PARTIAL | CSP headers still TODO, rate limiting done |
 | Add app icons (all sizes) | TODO | Need 72-512px PNGs for PWA |
 | Add favicon.ico | TODO | Brand favicon |
 | Create real OG image | TODO | Replace placeholder og-image.png |
 | Replace legal placeholders | TODO | Terms & Privacy from Termly |
-| Test mobile during active debate | TODO | May need additional fixes |
+| Test mobile during active debate | DONE | Completed Dec 15 |
+
+### CRITICAL - Before Launch
+
+| Task | Status | Priority | Details |
+|------|--------|----------|---------|
+| Content Moderation | DONE | P0 | Banned topics, NSFW detection, warning system |
+| API Resilience | DONE | P0 | 30s timeouts, 3x retry, circuit breaker |
+| Security (CSP) | TODO | P1 | Content-Security-Policy header |
+| Rate Limiting | DONE | P1 | Already implemented in usage.js |
 
 ### MEDIUM PRIORITY
 
@@ -107,6 +119,39 @@
 
 | Date | Task | Commit |
 |------|------|--------|
+| Dec 15, 2025 | **Content Moderation System** | - |
+| Dec 15, 2025 | - Banned topic detection (violence, illegal, etc.) | content-moderation.js |
+| Dec 15, 2025 | - NSFW content filtering | content-moderation.js |
+| Dec 15, 2025 | - Controversial topic warnings | content-moderation.js |
+| Dec 15, 2025 | - Input sanitization (XSS prevention) | content-moderation.js |
+| Dec 15, 2025 | **API Resilience System** | - |
+| Dec 15, 2025 | - 30s timeout for all API calls | api-resilience.js |
+| Dec 15, 2025 | - Retry with exponential backoff (3x) | api-resilience.js |
+| Dec 15, 2025 | - Circuit breaker pattern | api-resilience.js |
+| Dec 15, 2025 | - /api/health endpoint for monitoring | server.js |
+| Dec 15, 2025 | **Unit Tests** | - |
+| Dec 15, 2025 | - Content moderation tests (18/18 pass) | tests/moderation.test.js |
+| Dec 15, 2025 | - API resilience tests (15/15 pass) | tests/resilience.test.js |
+| Dec 15, 2025 | - npm test:unit, test:all scripts | package.json |
+| Dec 15, 2025 | **Mobile UI Complete Overhaul** | - |
+| Dec 15, 2025 | Cookie banner mobile optimization (slim top bar) | - |
+| Dec 15, 2025 | Header overlap fix for Galaxy Fold (280px) | - |
+| Dec 15, 2025 | AI nodes repositioned to prevent overlap | - |
+| Dec 15, 2025 | Template chips visible on mobile | - |
+| Dec 15, 2025 | Debate stream full-width fixed panel | - |
+| Dec 15, 2025 | Query box hidden during active debate | - |
+| Dec 15, 2025 | Verdict panel bottom sheet optimization | - |
+| Dec 15, 2025 | LLM card alignment/font consistency | - |
+| Dec 15, 2025 | Auto-scroll to verdict on completion | - |
+| Dec 15, 2025 | Follow-up question flow fixed | - |
+| Dec 15, 2025 | Error/toast mobile display improvements | - |
+| Dec 15, 2025 | Rate limit → upgrade modal flow | - |
+| Dec 15, 2025 | **Testing Infrastructure** | - |
+| Dec 15, 2025 | UAT test cases documented | UAT-TEST-CASES.md |
+| Dec 15, 2025 | Automated mobile UAT tests (100% pass) | test-uat-mobile.js |
+| Dec 15, 2025 | Automated desktop UAT tests (100% pass) | test-uat-desktop.js |
+| Dec 15, 2025 | CI/CD test runner | test-ci-runner.js |
+| Dec 15, 2025 | npm test scripts added | package.json |
 | Dec 10, 2025 | Security headers (HSTS, X-Frame-Options, etc.) | 8337157 |
 | Dec 10, 2025 | Cache headers for static assets | 8337157 |
 | Dec 10, 2025 | Cookie consent banner | 8337157 |
