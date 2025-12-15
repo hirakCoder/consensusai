@@ -1629,52 +1629,6 @@
            TOP BAR RIGHT (Unified Container)
            ============================================ */
 
-        /* App Logo - Top Left */
-        .app-logo {
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 1000;
-            height: 28px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .app-logo:hover {
-            transform: scale(1.05);
-        }
-
-        .app-logo img {
-            height: 100%;
-            width: auto;
-            max-width: 160px;
-            object-fit: contain;
-        }
-
-        /* Smaller logo on tablet */
-        @media (max-width: 1024px) {
-            .app-logo {
-                top: 12px;
-                left: 12px;
-                height: 22px;
-            }
-            .app-logo img {
-                max-width: 120px;
-            }
-        }
-
-        /* Even smaller on mobile */
-        @media (max-width: 480px) {
-            .app-logo {
-                top: 10px;
-                left: 10px;
-                height: 18px;
-            }
-            .app-logo img {
-                max-width: 100px;
-            }
-        }
-
         .top-bar-right {
             position: fixed;
             top: 20px;
@@ -4726,11 +4680,6 @@
             </div>
         </div>
     </div>
-
-    <!-- App Logo -->
-    <a href="/" class="app-logo" title="ConsensusAI">
-        <img src="/logo.png" alt="ConsensusAI">
-    </a>
 
     <!-- Top Bar Right (Unified Container) -->
     <div class="top-bar-right">
