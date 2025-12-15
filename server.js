@@ -561,7 +561,9 @@ const server = http.createServer(async (req, res) => {
       const debateId = clientDebateId || Date.now().toString();
       const engine = new DebateEngine({
         selectedAIs: activeAIs,
-        personas: personas || {}
+        personas: personas || {},
+        devilAdvocate: body.devilAdvocate || false,
+        devilAdvocateAI: body.devilAdvocateAI || null
       });
       const startTime = Date.now();
 

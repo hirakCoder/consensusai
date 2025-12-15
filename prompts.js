@@ -13,10 +13,49 @@ const PERSONAS = {
 };
 
 /**
- * Get persona-specific system prompt for an LLM
+ * Devil's Advocate persona - used to challenge consensus and find weaknesses
  */
-function getPersonaPrompt(llmId) {
+const DEVILS_ADVOCATE_PERSONA = `You are playing DEVIL'S ADVOCATE in this debate. Your critical role is to:
+1. Challenge the popular or obvious answer - even if you might normally agree with it
+2. Find weaknesses, blind spots, and flaws in arguments
+3. Present the strongest possible counterargument
+4. Identify risks others might overlook
+5. Force the other AIs (and the user) to truly defend their position
+
+You are NOT being contrarian for its own sake - you are stress-testing ideas to ensure the final decision is robust.
+Always respond with valid JSON as instructed.`;
+
+/**
+ * Get persona-specific system prompt for an LLM
+ * @param {string} llmId - The LLM identifier
+ * @param {boolean} isDevilsAdvocate - Whether this LLM is playing devil's advocate
+ */
+function getPersonaPrompt(llmId, isDevilsAdvocate = false) {
+  if (isDevilsAdvocate) {
+    return DEVILS_ADVOCATE_PERSONA;
+  }
   return PERSONAS[llmId] || PERSONAS.openai;
+}
+
+/**
+ * Get the devil's advocate instruction to prepend to prompts
+ */
+function getDevilsAdvocateInstruction() {
+  return `
+🔴 DEVIL'S ADVOCATE MODE ACTIVE 🔴
+You MUST argue AGAINST the most obvious or popular answer to this question.
+Your job is to:
+- Take the OPPOSITE stance from what seems like the "right" answer
+- Find every weakness, risk, and flaw in the popular position
+- Present the strongest possible case for the contrarian view
+- Challenge assumptions that others take for granted
+- Identify what could go wrong if the obvious choice is made
+
+Remember: You're not being difficult - you're stress-testing the decision to make it stronger.
+If everyone says YES, you argue NO (and vice versa).
+If everyone likes Option A, you make the case for Option B.
+
+`;
 }
 
 /**
@@ -422,6 +461,8 @@ module.exports = {
   getSynthesisPrompt,
   getFinalSummaryPrompt,
   getPersonaPrompt,
+  getDevilsAdvocateInstruction,
   detectQuestionType,
-  PERSONAS
+  PERSONAS,
+  DEVILS_ADVOCATE_PERSONA
 };

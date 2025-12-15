@@ -1512,6 +1512,114 @@
             filter: drop-shadow(0 0 8px var(--error));
         }
 
+        /* Devil's Advocate AI Selector Popup */
+        .devil-selector {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            margin-bottom: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 200px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            animation: fadeSlideUp 0.2s ease;
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .devil-selector.active {
+            display: flex;
+        }
+
+        .devil-selector-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .devil-selector-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .devil-selector-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .devil-selector-option.selected {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .devil-selector-option .ai-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .devil-selector-option .ai-dot.random { background: linear-gradient(135deg, #10b981, #6366f1, #f59e0b, #ef4444); }
+        .devil-selector-option .ai-dot.openai { background: #10b981; }
+        .devil-selector-option .ai-dot.gemini { background: #6366f1; }
+        .devil-selector-option .ai-dot.claude { background: #f59e0b; }
+        .devil-selector-option .ai-dot.grok { background: #ef4444; }
+
+        .devil-selected-indicator {
+            font-size: 0.7rem;
+            color: var(--error);
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .devil-toggle input:checked ~ .devil-selected-indicator {
+            opacity: 1;
+        }
+
+        /* Devil's Advocate Badge on AI Cards */
+        .devil-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--error);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            gap: 3px;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.5);
+            z-index: 10;
+        }
+
+        .devil-badge.active {
+            display: flex;
+        }
+
+        .ai-response-card {
+            position: relative;
+        }
+
         /* ============================================
            TOP BAR RIGHT (Unified Container)
            ============================================ */
@@ -4962,7 +5070,32 @@
                 <span class="devil-switch"></span>
                 <span class="devil-icon">&#128520;</span>
                 <span>Devil's Advocate</span>
+                <span class="devil-selected-indicator" id="devilSelectedIndicator"></span>
             </label>
+            <!-- AI Selector Popup -->
+            <div class="devil-selector" id="devilSelector">
+                <div class="devil-selector-title">Choose Devil's Advocate</div>
+                <div class="devil-selector-option selected" data-ai="random" onclick="selectDevilAI('random', this)">
+                    <span class="ai-dot random"></span>
+                    <span>Random (Recommended)</span>
+                </div>
+                <div class="devil-selector-option" data-ai="openai" onclick="selectDevilAI('openai', this)">
+                    <span class="ai-dot openai"></span>
+                    <span>GPT-4</span>
+                </div>
+                <div class="devil-selector-option" data-ai="gemini" onclick="selectDevilAI('gemini', this)">
+                    <span class="ai-dot gemini"></span>
+                    <span>Gemini</span>
+                </div>
+                <div class="devil-selector-option" data-ai="claude" onclick="selectDevilAI('claude', this)">
+                    <span class="ai-dot claude"></span>
+                    <span>Claude</span>
+                </div>
+                <div class="devil-selector-option" data-ai="grok" onclick="selectDevilAI('grok', this)">
+                    <span class="ai-dot grok"></span>
+                    <span>Grok</span>
+                </div>
+            </div>
         </div>
 
         <!-- Omni-Bar Input -->
@@ -5090,6 +5223,7 @@
             <!-- AI Agreement Grid - shows all 4 AI responses -->
             <div class="ai-agreement-grid" id="aiAgreementGrid">
                 <div class="ai-response-card gpt" id="aiRespGpt" onclick="openInspector('openai')">
+                    <div class="devil-badge" id="devilBadgeGpt">&#128520; Devil's Advocate</div>
                     <div class="ai-resp-header">
                         <span class="ai-resp-name">GPT-4o</span>
                         <span class="ai-resp-verdict" id="respVerdictGpt">-</span>
@@ -5097,6 +5231,7 @@
                     <p class="ai-resp-summary" id="respSummaryGpt">Loading...</p>
                 </div>
                 <div class="ai-response-card gemini" id="aiRespGemini" onclick="openInspector('gemini')">
+                    <div class="devil-badge" id="devilBadgeGemini">&#128520; Devil's Advocate</div>
                     <div class="ai-resp-header">
                         <span class="ai-resp-name">Gemini</span>
                         <span class="ai-resp-verdict" id="respVerdictGemini">-</span>
@@ -5104,6 +5239,7 @@
                     <p class="ai-resp-summary" id="respSummaryGemini">Loading...</p>
                 </div>
                 <div class="ai-response-card claude" id="aiRespClaude" onclick="openInspector('claude')">
+                    <div class="devil-badge" id="devilBadgeClaude">&#128520; Devil's Advocate</div>
                     <div class="ai-resp-header">
                         <span class="ai-resp-name">Claude</span>
                         <span class="ai-resp-verdict" id="respVerdictClaude">-</span>
@@ -5111,6 +5247,7 @@
                     <p class="ai-resp-summary" id="respSummaryClaude">Loading...</p>
                 </div>
                 <div class="ai-response-card grok" id="aiRespGrok" onclick="openInspector('grok')">
+                    <div class="devil-badge" id="devilBadgeGrok">&#128520; Devil's Advocate</div>
                     <div class="ai-resp-header">
                         <span class="ai-resp-name">Grok</span>
                         <span class="ai-resp-verdict" id="respVerdictGrok">-</span>
@@ -5389,7 +5526,67 @@
         const verdictOverlay = document.getElementById('verdictOverlay');
         const toast = document.getElementById('toast');
         const devilAdvocate = document.getElementById('devilAdvocate');
+        const devilSelector = document.getElementById('devilSelector');
+        const devilSelectedIndicator = document.getElementById('devilSelectedIndicator');
         const templateChips = document.getElementById('templateChips');
+
+        // ============================================
+        // DEVIL'S ADVOCATE SELECTOR
+        // ============================================
+
+        let selectedDevilAI = 'random'; // Default to random
+
+        // Show/hide selector when toggle is clicked
+        devilAdvocate.addEventListener('change', function() {
+            if (this.checked) {
+                devilSelector.classList.add('active');
+                updateDevilIndicator();
+            } else {
+                devilSelector.classList.remove('active');
+                devilSelectedIndicator.textContent = '';
+            }
+        });
+
+        // Close selector when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.devil-toggle')) {
+                devilSelector.classList.remove('active');
+            }
+        });
+
+        // Select devil AI
+        function selectDevilAI(aiId, element) {
+            selectedDevilAI = aiId;
+
+            // Update selected state
+            document.querySelectorAll('.devil-selector-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            // Update indicator
+            updateDevilIndicator();
+
+            // Close selector after selection
+            setTimeout(() => {
+                devilSelector.classList.remove('active');
+            }, 200);
+        }
+
+        function updateDevilIndicator() {
+            const aiNames = {
+                'random': 'Random',
+                'openai': 'GPT-4',
+                'gemini': 'Gemini',
+                'claude': 'Claude',
+                'grok': 'Grok'
+            };
+            devilSelectedIndicator.textContent = `(${aiNames[selectedDevilAI]})`;
+        }
+
+        function getSelectedDevilAI() {
+            return devilAdvocate.checked ? selectedDevilAI : null;
+        }
 
         // ============================================
         // QUICK TEMPLATE CHIPS
@@ -5945,10 +6142,20 @@
 
                 sseConnection.addEventListener('connected', () => resolve(true));
 
-                sseConnection.addEventListener('debate_start', () => {
+                sseConnection.addEventListener('debate_start', (e) => {
                     statusText.textContent = 'Council Convened';
                     statusPhase.textContent = 'All models initializing...';
                     setCoreState('thinking');
+
+                    // Show devil's advocate badge if enabled
+                    try {
+                        const data = JSON.parse(e.data);
+                        if (data.devilAdvocate && data.devilAdvocate.enabled) {
+                            showDevilBadge(data.devilAdvocate.aiId);
+                        }
+                    } catch (err) {
+                        // Ignore parse errors for backward compatibility
+                    }
                 });
 
                 sseConnection.addEventListener('round_start', (e) => {
@@ -6063,6 +6270,7 @@
                         tier: selectedTier,
                         debateId,
                         devilAdvocate: devilMode,
+                        devilAdvocateAI: devilMode ? selectedDevilAI : null,
                         selectedAIs: getSelectedAIModels(),
                         personas: getAIPersonas()
                     })
@@ -6122,6 +6330,38 @@
         // ============================================
 
         // Reset verdict panel to clean state before populating new results
+        // Show devil's advocate badge on the specified AI card
+        function showDevilBadge(aiId) {
+            // Clear all devil badges first
+            clearDevilBadges();
+
+            // Map AI IDs to badge element suffixes
+            const badgeMap = {
+                'openai': 'Gpt',
+                'gemini': 'Gemini',
+                'claude': 'Claude',
+                'grok': 'Grok'
+            };
+
+            const suffix = badgeMap[aiId];
+            if (suffix) {
+                const badge = document.getElementById(`devilBadge${suffix}`);
+                if (badge) {
+                    badge.classList.add('active');
+                }
+            }
+        }
+
+        // Clear all devil badges
+        function clearDevilBadges() {
+            ['Gpt', 'Gemini', 'Claude', 'Grok'].forEach(suffix => {
+                const badge = document.getElementById(`devilBadge${suffix}`);
+                if (badge) {
+                    badge.classList.remove('active');
+                }
+            });
+        }
+
         function resetVerdictPanel() {
             // Reset hero section
             document.getElementById('verdictQuestion').textContent = '';
@@ -6136,6 +6376,9 @@
             if (failureNotice) {
                 failureNotice.style.display = 'none';
             }
+
+            // Clear devil badges
+            clearDevilBadges();
 
             // Reset AI Agreement cards (including error states)
             ['Gpt', 'Gemini', 'Grok', 'Claude'].forEach(suffix => {
@@ -6223,6 +6466,11 @@
                     }
                 }
             });
+
+            // Show devil's advocate badge if enabled
+            if (result.devilAdvocate && result.devilAdvocate.enabled) {
+                showDevilBadge(result.devilAdvocate.aiId);
+            }
 
             // Question (smaller, below the hero)
             document.getElementById('verdictQuestion').textContent = result.question;

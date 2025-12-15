@@ -5,7 +5,7 @@
 
 const config = require('./config');
 const { getConfiguredClients } = require('./llm-clients');
-const { getRound1Prompt, getDebateRoundPrompt, getSynthesisPrompt, detectQuestionType } = require('./prompts');
+const { getRound1Prompt, getDebateRoundPrompt, getSynthesisPrompt, detectQuestionType, getDevilsAdvocateInstruction } = require('./prompts');
 const reporter = require('./reporter');
 const apiResilience = require('./api-resilience');
 
@@ -29,6 +29,27 @@ class DebateEngine {
     // Store custom personas
     this.personas = options.personas || {};
 
+    // Devil's Advocate mode
+    this.devilAdvocateEnabled = options.devilAdvocate || false;
+    this.devilAdvocateAI = null;
+
+    if (this.devilAdvocateEnabled) {
+      // Select which AI plays devil's advocate
+      if (options.devilAdvocateAI && options.devilAdvocateAI !== 'random') {
+        // User selected a specific AI
+        const selectedClient = this.clients.find(c => c.id === options.devilAdvocateAI);
+        if (selectedClient) {
+          this.devilAdvocateAI = selectedClient.id;
+        } else {
+          // Fallback to random if selected AI not available
+          this.devilAdvocateAI = this.clients[Math.floor(Math.random() * this.clients.length)].id;
+        }
+      } else {
+        // Random selection
+        this.devilAdvocateAI = this.clients[Math.floor(Math.random() * this.clients.length)].id;
+      }
+    }
+
     this.totalCost = 0;
     this.rounds = [];
     this.question = '';
@@ -42,6 +63,13 @@ class DebateEngine {
       byLLM: {},
       byRound: []
     };
+  }
+
+  /**
+   * Check if a given LLM is the devil's advocate
+   */
+  isDevilsAdvocate(llmId) {
+    return this.devilAdvocateEnabled && this.devilAdvocateAI === llmId;
   }
 
   /**
@@ -228,6 +256,7 @@ class DebateEngine {
     const clientPrompts = this.clients.map(client => {
       let prompt;
       let previousResponse = null;
+      const isDevil = this.isDevilsAdvocate(client.id);
 
       if (roundNumber === 1) {
         prompt = getRound1Prompt(this.question, this.context);
@@ -252,12 +281,20 @@ class DebateEngine {
         );
       }
 
-      return { client, prompt, previousResponse };
+      // Prepend devil's advocate instructions if this AI is playing that role
+      if (isDevil) {
+        prompt = getDevilsAdvocateInstruction() + prompt;
+      }
+
+      return { client, prompt, previousResponse, isDevilsAdvocate: isDevil };
     });
 
     // Run all LLM calls in parallel but emit updates as each completes
-    const promises = clientPrompts.map(({ client, prompt, previousResponse }) =>
-      this.callLLM(client, prompt, roundNumber, previousResponse)
+    const promises = clientPrompts.map(({ client, prompt, previousResponse, isDevilsAdvocate }) =>
+      this.callLLM(client, prompt, roundNumber, previousResponse).then(result => ({
+        ...result,
+        isDevilsAdvocate
+      }))
     );
 
     const results = await Promise.all(promises);
@@ -434,11 +471,16 @@ class DebateEngine {
       reporter.printWarning(`Only ${this.clients.length} LLM configured. For meaningful debate, configure at least 2 LLMs.`);
     }
 
-    // Emit debate start
+    // Emit debate start (include devil's advocate info)
     this.emitProgress('debate_start', {
       question: question.substring(0, 100),
       llms: this.clients.map(c => ({ id: c.id, name: c.name })),
-      maxRounds: this.maxRounds
+      maxRounds: this.maxRounds,
+      devilAdvocate: this.devilAdvocateEnabled ? {
+        enabled: true,
+        aiId: this.devilAdvocateAI,
+        aiName: this.clients.find(c => c.id === this.devilAdvocateAI)?.name || 'Unknown'
+      } : { enabled: false }
     });
 
     reporter.printDebateStart(question, context, this.clients, this.maxRounds);
@@ -536,6 +578,12 @@ class DebateEngine {
       totalCost: this.totalCost,
       tokenUsage: this.tokenUsage,
       llmsUsed: this.clients.map(c => c.name),
+      // Devil's Advocate info
+      devilAdvocate: this.devilAdvocateEnabled ? {
+        enabled: true,
+        aiId: this.devilAdvocateAI,
+        aiName: this.clients.find(c => c.id === this.devilAdvocateAI)?.name || 'Unknown'
+      } : { enabled: false },
       // Add failure tracking
       llmStatus: {
         total: this.clients.length,
