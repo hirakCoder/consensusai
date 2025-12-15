@@ -2727,6 +2727,33 @@
         .ai-resp-verdict.yes { background: rgba(16, 185, 129, 0.2); color: var(--success); }
         .ai-resp-verdict.no { background: rgba(239, 68, 68, 0.2); color: var(--error); }
         .ai-resp-verdict.conditional { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .ai-resp-verdict.error { background: rgba(239, 68, 68, 0.15); color: #888; }
+
+        /* LLM Failure Notice */
+        .llm-failure-notice {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin: 16px 0;
+            font-size: 0.85rem;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .llm-failure-notice .failure-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Error state for LLM cards */
+        .ai-response-card.error-state {
+            opacity: 0.6;
+            border-left-color: #666 !important;
+        }
+        .ai-response-card.error-state .ai-resp-name {
+            color: #888 !important;
+        }
 
         .ai-resp-summary {
             font-size: 0.8rem;
@@ -5037,6 +5064,11 @@
             <div class="verdict-decision" id="verdictDecision">YES, with conditions.</div>
             <div class="verdict-question" id="verdictQuestion">Should I invest in Bitcoin now?</div>
 
+            <!-- LLM Failure Notice (hidden by default) -->
+            <div class="llm-failure-notice" id="llmFailureNotice" style="display: none;">
+                <span class="failure-icon">&#9888;</span> Some AI models were unavailable.
+            </div>
+
             <!-- Spectrum Slider -->
             <div class="spectrum-container">
                 <div class="spectrum-label">AI Position Spectrum <span style="opacity:0.5">(click to inspect)</span></div>
@@ -6099,10 +6131,20 @@
             document.getElementById('confidenceValue').textContent = '-/-';
             document.getElementById('confidenceLabel').textContent = '';
 
-            // Reset AI Agreement cards
+            // Reset failure notice
+            const failureNotice = document.getElementById('llmFailureNotice');
+            if (failureNotice) {
+                failureNotice.style.display = 'none';
+            }
+
+            // Reset AI Agreement cards (including error states)
             ['Gpt', 'Gemini', 'Grok', 'Claude'].forEach(suffix => {
+                const card = document.getElementById(`aiResp${suffix}`);
                 const verdictEl = document.getElementById(`respVerdict${suffix}`);
                 const summaryEl = document.getElementById(`respSummary${suffix}`);
+                if (card) {
+                    card.classList.remove('error-state');
+                }
                 if (verdictEl) {
                     verdictEl.textContent = '-';
                     verdictEl.className = 'ai-resp-verdict';
@@ -6146,6 +6188,41 @@
             const consensus = result.finalConsensus;
             const lastRound = result.rounds[result.rounds.length - 1];
             const allResults = lastRound?.results?.filter(r => !r.error) || [];
+            const failedResults = lastRound?.results?.filter(r => r.error) || [];
+
+            // Show failure notice if any LLMs failed
+            const failureNotice = document.getElementById('llmFailureNotice');
+            if (failureNotice) {
+                if (failedResults.length > 0) {
+                    const failedNames = failedResults.map(r => r.llmName).join(', ');
+                    const creditMsg = result.creditCharged === false
+                        ? ' No credit was charged.'
+                        : '';
+                    failureNotice.innerHTML = `<span class="failure-icon">&#9888;</span> ${failedResults.length} AI${failedResults.length > 1 ? 's' : ''} unavailable: ${failedNames}.${creditMsg}`;
+                    failureNotice.style.display = 'block';
+                } else {
+                    failureNotice.style.display = 'none';
+                }
+            }
+
+            // Mark failed LLM cards
+            const cardIdMap = { openai: 'aiRespGpt', gemini: 'aiRespGemini', grok: 'aiRespGrok', claude: 'aiRespClaude' };
+            failedResults.forEach(r => {
+                const cardId = cardIdMap[r.llmId];
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.classList.add('error-state');
+                    const verdictEl = card.querySelector('.ai-resp-verdict');
+                    const summaryEl = card.querySelector('.ai-resp-summary');
+                    if (verdictEl) {
+                        verdictEl.textContent = 'UNAVAILABLE';
+                        verdictEl.className = 'ai-resp-verdict error';
+                    }
+                    if (summaryEl) {
+                        summaryEl.textContent = r.reasoning || 'Service temporarily unavailable';
+                    }
+                }
+            });
 
             // Question (smaller, below the hero)
             document.getElementById('verdictQuestion').textContent = result.question;

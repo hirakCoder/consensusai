@@ -520,6 +520,11 @@ class DebateEngine {
       finalConsensus.questionType = questionType;
     }
 
+    // Calculate success/failure stats from final round
+    const finalRound = this.rounds[this.rounds.length - 1];
+    const successfulLLMs = finalRound?.results?.filter(r => !r.error) || [];
+    const failedLLMs = finalRound?.results?.filter(r => r.error) || [];
+
     const report = {
       question,
       context,
@@ -530,7 +535,21 @@ class DebateEngine {
       actionPlan,
       totalCost: this.totalCost,
       tokenUsage: this.tokenUsage,
-      llmsUsed: this.clients.map(c => c.name)
+      llmsUsed: this.clients.map(c => c.name),
+      // Add failure tracking
+      llmStatus: {
+        total: this.clients.length,
+        successful: successfulLLMs.length,
+        failed: failedLLMs.length,
+        successRate: this.clients.length > 0
+          ? Math.round((successfulLLMs.length / this.clients.length) * 100)
+          : 0,
+        failedLLMs: failedLLMs.map(r => ({
+          id: r.llmId,
+          name: r.llmName,
+          reason: r.reasoning || 'Unknown error'
+        }))
+      }
     };
 
     // Emit debate complete

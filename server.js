@@ -563,14 +563,29 @@ const server = http.createServer(async (req, res) => {
       result.tier = config.activeTier;
       result.debateId = debateId;
 
-      // Record usage
-      const usageStats = usage.recordDebate(userId, {
-        question: sanitizedQuestion.substring(0, 100),
-        tier: effectiveTier,
-        consensus: result.finalConsensus?.reached
-      });
+      // Check if we should charge the user based on success rate
+      // Only charge if at least 50% of LLMs succeeded (2 out of 4)
+      const llmStatus = result.llmStatus || { successful: 4, total: 4, successRate: 100 };
+      const shouldChargeCredit = llmStatus.successRate >= 50;
+
+      let usageStats;
+      if (shouldChargeCredit) {
+        // Record usage - full credit
+        usageStats = usage.recordDebate(userId, {
+          question: sanitizedQuestion.substring(0, 100),
+          tier: effectiveTier,
+          consensus: result.finalConsensus?.reached
+        });
+      } else {
+        // Don't charge - too many failures
+        console.log(`[Usage] Not charging user ${userId} - only ${llmStatus.successful}/${llmStatus.total} LLMs succeeded`);
+        usageStats = usage.getUserStats(userId);
+        usageStats.creditCharged = false;
+        usageStats.reason = `Only ${llmStatus.successful}/${llmStatus.total} AI models responded. No credit charged.`;
+      }
 
       result.usage = usageStats;
+      result.creditCharged = shouldChargeCredit;
 
       // Track debate completed
       analytics.trackDebateCompleted(userId, {
