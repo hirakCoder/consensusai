@@ -1629,33 +1629,49 @@
            TOP BAR RIGHT (Unified Container)
            ============================================ */
 
-        /* App Logo - Top Left (Desktop only) */
+        /* App Logo - Top Left */
         .app-logo {
             position: fixed;
             top: 16px;
             left: 16px;
-            z-index: 50;
-            height: 24px;
+            z-index: 1000;
+            height: 28px;
             cursor: pointer;
-            transition: opacity 0.2s ease;
-            opacity: 0.7;
+            transition: transform 0.2s ease;
         }
 
         .app-logo:hover {
-            opacity: 1;
+            transform: scale(1.05);
         }
 
         .app-logo img {
             height: 100%;
             width: auto;
-            max-width: 140px;
+            max-width: 160px;
             object-fit: contain;
         }
 
-        /* Hide logo on tablet and mobile */
+        /* Smaller logo on tablet */
         @media (max-width: 1024px) {
             .app-logo {
-                display: none !important;
+                top: 12px;
+                left: 12px;
+                height: 22px;
+            }
+            .app-logo img {
+                max-width: 120px;
+            }
+        }
+
+        /* Even smaller on mobile */
+        @media (max-width: 480px) {
+            .app-logo {
+                top: 10px;
+                left: 10px;
+                height: 18px;
+            }
+            .app-logo img {
+                max-width: 100px;
             }
         }
 
