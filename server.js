@@ -41,8 +41,34 @@ const mimeTypes = {
   '.webmanifest': 'application/manifest+json'
 };
 
+// Content Security Policy - controls which resources can be loaded
+const cspDirectives = [
+  "default-src 'self'",
+  // Scripts: self, inline (needed for app), Tailwind CDN, Clerk JS
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://*.clerk.accounts.dev",
+  // Styles: self, inline (heavily used), Google Fonts
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  // Fonts: self and Google Fonts
+  "font-src 'self' https://fonts.gstatic.com",
+  // Images: self, data URIs (inline SVGs), and HTTPS sources
+  "img-src 'self' data: https:",
+  // API connections: self, AI providers, Clerk auth
+  "connect-src 'self' https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.x.ai https://*.clerk.accounts.dev https://api.clerk.com https://api.clerk.dev wss://*.clerk.accounts.dev",
+  // Forms can only submit to self
+  "form-action 'self'",
+  // Frames: Clerk uses iframes for auth
+  "frame-src 'self' https://*.clerk.accounts.dev",
+  // Block all plugins
+  "object-src 'none'",
+  // Base URI restriction
+  "base-uri 'self'",
+  // Upgrade HTTP to HTTPS
+  "upgrade-insecure-requests"
+].join('; ');
+
 // Security headers - applied to all responses
 const securityHeaders = {
+  'Content-Security-Policy': cspDirectives,
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'X-XSS-Protection': '1; mode=block',
