@@ -6514,7 +6514,7 @@
             }
 
             // Spectrum positions + AI Agreement cards
-            const cardIdMap = { openai: 'Gpt', gemini: 'Gemini', grok: 'Grok', claude: 'Claude' };
+            const cardSuffixMap = { openai: 'Gpt', gemini: 'Gemini', grok: 'Grok', claude: 'Claude' };
             allResults.forEach(r => {
                 // Spectrum avatar positioning
                 const avatarMap = { openai: 'specGpt', gemini: 'specGemini', grok: 'specGrok', claude: 'specClaude' };
@@ -6529,7 +6529,7 @@
                 }
 
                 // AI Agreement card
-                const cardSuffix = cardIdMap[r.llmId];
+                const cardSuffix = cardSuffixMap[r.llmId];
                 if (cardSuffix) {
                     const verdictEl = document.getElementById(`respVerdict${cardSuffix}`);
                     const summaryEl = document.getElementById(`respSummary${cardSuffix}`);
