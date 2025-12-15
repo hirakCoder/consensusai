@@ -45,19 +45,21 @@ const mimeTypes = {
 const cspDirectives = [
   "default-src 'self'",
   // Scripts: self, inline (needed for app), Tailwind CDN, Clerk JS
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://*.clerk.accounts.dev",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://*.clerk.accounts.dev https://*.clerk.com",
   // Styles: self, inline (heavily used), Google Fonts
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   // Fonts: self and Google Fonts
   "font-src 'self' https://fonts.gstatic.com",
   // Images: self, data URIs (inline SVGs), and HTTPS sources
-  "img-src 'self' data: https:",
+  "img-src 'self' data: https: blob:",
   // API connections: self, AI providers, Clerk auth
-  "connect-src 'self' https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.x.ai https://*.clerk.accounts.dev https://api.clerk.com https://api.clerk.dev wss://*.clerk.accounts.dev",
+  "connect-src 'self' https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.x.ai https://*.clerk.accounts.dev https://*.clerk.com https://api.clerk.com https://api.clerk.dev wss://*.clerk.accounts.dev wss://*.clerk.com",
+  // Workers: Clerk uses web workers
+  "worker-src 'self' blob:",
   // Forms can only submit to self
   "form-action 'self'",
   // Frames: Clerk uses iframes for auth
-  "frame-src 'self' https://*.clerk.accounts.dev",
+  "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com",
   // Block all plugins
   "object-src 'none'",
   // Base URI restriction
