@@ -7869,8 +7869,12 @@
             // Decision Hero - ONLY the verdict, not the full analysis
             const decision = consensus.decision || consensus.majority?.decision || 'ANALYSIS COMPLETE';
             // Short qualifier only (first sentence or 60 chars max)
-            const position = consensus.position || consensus.majority?.position || '';
-            const shortPosition = position.split('.')[0] || '';
+            let position = consensus.position || consensus.majority?.position || '';
+            // Ensure position is a string (might be an object in some responses)
+            if (typeof position !== 'string') {
+                position = position?.position || position?.text || '';
+            }
+            const shortPosition = (typeof position === 'string' ? position.split('.')[0] : '') || '';
             const heroText = shortPosition.length > 60
                 ? decision
                 : (shortPosition ? `${decision}. ${shortPosition}.` : decision);
