@@ -1060,6 +1060,28 @@
             animation: screenShake 0.4s ease-out;
         }
 
+        /* Conflict Flash Overlay - visual feedback for mobile */
+        .conflict-flash {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.1));
+            pointer-events: none;
+            opacity: 0;
+            z-index: 9999;
+            transition: opacity 0.1s ease-out;
+        }
+
+        .conflict-flash.active {
+            opacity: 1;
+            animation: conflictFlashPulse 0.3s ease-out;
+        }
+
+        @keyframes conflictFlashPulse {
+            0% { opacity: 0; }
+            30% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
         /* Empty state */
         .stream-empty {
             text-align: center;
@@ -4719,9 +4741,34 @@
                 display: none !important;
             }
 
-            /* Hide redundant status text on mobile - input placeholder is enough */
+            /* Show arena status on mobile - it provides important feedback during debate */
             .arena-status {
-                display: none !important;
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 16px;
+                background: rgba(0, 0, 0, 0.4);
+                border-radius: 12px;
+                margin-top: 12px;
+            }
+
+            .status-text {
+                font-size: 1rem !important;
+                font-weight: 600;
+            }
+
+            .status-phase {
+                font-size: 0.8rem !important;
+            }
+
+            .round-dots {
+                gap: 6px;
+            }
+
+            .round-dot {
+                width: 8px;
+                height: 8px;
             }
 
             /* DEBATE STREAM - Mobile optimized */
@@ -4836,8 +4883,8 @@
             .devil-toggle label {
                 gap: 4px;
             }
-            .devil-toggle span:not(.devil-switch):not(.devil-icon):not(.devil-selected-indicator) {
-                display: none; /* Hide "Devil's Advocate" text */
+            .devil-toggle > label > span:not(.devil-switch):not(.devil-icon):not(.devil-selected-indicator) {
+                display: none; /* Hide "Devil's Advocate" text - only in label, not in selector */
             }
             .devil-switch {
                 width: 28px;
@@ -5359,6 +5406,9 @@
     </style>
 </head>
 <body>
+    <!-- Conflict Flash Overlay (for mobile visual feedback) -->
+    <div class="conflict-flash" id="conflictFlash"></div>
+
     <!-- Nebula Background -->
     <div class="nebula-bg">
         <div class="nebula-cloud cloud-1"></div>
@@ -7058,9 +7108,16 @@
         window.addEventListener('resize', initParticleCanvas);
 
         function triggerConflict(conflictingLlmId = null) {
-            // Haptic feedback on mobile (vibration)
+            // Haptic feedback on mobile (vibration) - Android only
             if ('vibrate' in navigator) {
                 navigator.vibrate([50, 30, 100]); // Short double-pulse for conflict
+            }
+
+            // Visual flash for all mobile devices (since vibration doesn't work on iOS)
+            const flashOverlay = document.getElementById('conflictFlash');
+            if (flashOverlay) {
+                flashOverlay.classList.add('active');
+                setTimeout(() => flashOverlay.classList.remove('active'), 300);
             }
 
             // Fire laser
