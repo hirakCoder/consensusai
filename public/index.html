@@ -4057,8 +4057,6 @@
             .stream-container,
             .tier-selector,
             .usage-indicator,
-            .devil-toggle,
-            .upgrade-btn,
             .user-name,
             .user-tier {
                 display: none !important;
@@ -4233,6 +4231,61 @@
                 z-index: 100;
                 gap: 6px;
                 display: flex;
+            }
+
+            /* Devil toggle - compact mobile version */
+            .devil-toggle {
+                display: flex !important;
+                padding: 4px 8px;
+                gap: 4px;
+                border-radius: 8px;
+                font-size: 11px;
+            }
+            .devil-toggle label {
+                gap: 4px;
+            }
+            .devil-toggle span:not(.devil-switch):not(.devil-icon):not(.devil-selected-indicator) {
+                display: none; /* Hide "Devil's Advocate" text */
+            }
+            .devil-switch {
+                width: 28px;
+                height: 16px;
+            }
+            .devil-switch::after {
+                width: 12px;
+                height: 12px;
+                top: 2px;
+                left: 2px;
+            }
+            .devil-toggle input:checked + .devil-switch::after {
+                left: 14px;
+            }
+            .devil-icon {
+                font-size: 14px;
+            }
+            .devil-selected-indicator {
+                display: none;
+            }
+            .devil-selector {
+                right: 0;
+                left: auto;
+                min-width: 160px;
+            }
+
+            /* Upgrade button - compact mobile */
+            .upgrade-btn {
+                display: flex !important;
+                min-height: 36px;
+                padding: 6px 10px;
+                font-size: 11px;
+                gap: 4px;
+            }
+            .upgrade-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+            .upgrade-btn span {
+                display: none; /* Hide "Upgrade" text, show only icon */
             }
 
             .ai-settings-btn,
@@ -4672,6 +4725,9 @@
             <div class="user-dropdown" id="userDropdown">
                 <div class="user-dropdown-item" onclick="closeUserMenu(); handleManageAccount();">
                     <span>Account Settings</span>
+                </div>
+                <div class="user-dropdown-item" id="manageSubscriptionItem" style="display: none;" onclick="closeUserMenu(); handleManageSubscription();">
+                    <span>Manage Subscription</span>
                 </div>
                 <div class="user-dropdown-divider"></div>
                 <div class="user-dropdown-item" onclick="closeUserMenu(); handleSignOut();">
@@ -5484,19 +5540,19 @@
                     <svg class="upgrade-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span class="upgrade-feature-text">Premium AI models (GPT-4o, Claude 3.5, Gemini Pro)</span>
+                    <span class="upgrade-feature-text">Premium AI models (GPT-4.1, Claude Opus 4, Gemini 2.5 Pro, Grok-3)</span>
                 </div>
                 <div class="upgrade-feature">
                     <svg class="upgrade-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span class="upgrade-feature-text">Priority processing & faster responses</span>
+                    <span class="upgrade-feature-text">Full debate history</span>
                 </div>
                 <div class="upgrade-feature">
                     <svg class="upgrade-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span class="upgrade-feature-text">Export debates as PDF reports</span>
+                    <span class="upgrade-feature-text">Priority support</span>
                 </div>
             </div>
             <div class="upgrade-pricing">
@@ -7210,6 +7266,12 @@
                 userTier.textContent = tier.toUpperCase();
                 userTier.className = `user-tier user-tier-${tier}`;
 
+                // Show/hide subscription management for Pro users
+                const manageSubItem = document.getElementById('manageSubscriptionItem');
+                if (manageSubItem) {
+                    manageSubItem.style.display = (tier === 'pro' || tier === 'enterprise') ? 'block' : 'none';
+                }
+
                 // Refresh usage stats when logged in
                 fetchUsageStats();
             } else {
@@ -7246,6 +7308,28 @@
         function handleManageAccount() {
             if (clerkInstance) {
                 clerkInstance.openUserProfile();
+            }
+        }
+
+        async function handleManageSubscription() {
+            try {
+                const token = await clerkInstance.session.getToken();
+                const response = await fetch('/api/stripe/portal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    showToast('Unable to open subscription portal', 'error');
+                }
+            } catch (error) {
+                console.error('Portal error:', error);
+                showToast('Unable to open subscription portal', 'error');
             }
         }
 
