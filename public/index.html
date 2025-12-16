@@ -7376,6 +7376,10 @@
             await connectSSE(debateId);
 
             try {
+                // Create AbortController for timeout (90 seconds for mobile)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 90000);
+
                 const res = await fetch('/api/debate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -7388,8 +7392,15 @@
                         devilAdvocateAI: devilMode ? selectedDevilAI : null,
                         selectedAIs: getSelectedAIModels(),
                         personas: getAIPersonas()
-                    })
+                    }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
+
+                if (!res.ok) {
+                    throw new Error(`Server error: ${res.status}`);
+                }
 
                 const result = await res.json();
                 closeSSE();
@@ -7418,7 +7429,17 @@
             } catch (err) {
                 closeSSE();
                 setCoreState('ready');
-                showToast(err.message || 'Debate failed', 'error');
+                // Better error messages for different failure types
+                let errorMsg = 'Debate failed';
+                if (err.name === 'AbortError') {
+                    errorMsg = 'Request timed out. Please try again.';
+                } else if (err.message === 'Load failed' || err.message === 'Failed to fetch') {
+                    errorMsg = 'Network error. Check your connection and try again.';
+                } else if (err.message) {
+                    errorMsg = err.message;
+                }
+                showToast(errorMsg, 'error');
+                console.error('Debate error:', err);
             } finally {
                 submitBtn.disabled = false;
                 setLightsActive(false);
