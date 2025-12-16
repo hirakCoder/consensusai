@@ -1,5 +1,5 @@
 /**
- * Configuration for Multi-LLM Consensus Debate Platform
+ * Configuration for Multi-AI Consensus Debate Platform
  * Supports Budget (testing/free) and Premium (pro) model tiers
  */
 
@@ -42,14 +42,14 @@ module.exports = {
           costPer1kOutputTokens: 0.008
         },
         gemini: {
-          model: 'gemini-2.5-pro-preview-06-05',
+          model: 'gemini-2.5-pro',
           costPer1kInputTokens: 0.00125,
           costPer1kOutputTokens: 0.01
         },
         grok: {
-          model: 'grok-3',
-          costPer1kInputTokens: 0.003,
-          costPer1kOutputTokens: 0.015
+          model: 'grok-4',
+          costPer1kInputTokens: 0.005,
+          costPer1kOutputTokens: 0.025
         },
         claude: {
           model: 'claude-opus-4-20250514',
@@ -63,7 +63,7 @@ module.exports = {
   // Current active tier (can be changed via UI or API)
   activeTier: 'budget',
 
-  // LLM Configurations (API keys from environment variables)
+  // AI Provider Configurations (API keys from environment variables)
   // Keys are trimmed to remove any accidental whitespace/newlines
   llms: {
     openai: {

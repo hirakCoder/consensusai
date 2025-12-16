@@ -2,7 +2,7 @@
 
 /**
  * Consensus Platform - Web Server
- * Multi-LLM Debate Platform with Freemium Model
+ * Multi-AI Debate Platform with Freemium Model
  */
 
 // Load environment variables first
