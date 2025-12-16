@@ -4968,21 +4968,9 @@
                 display: flex;
             }
 
-            /* Devil toggle - compact mobile version, positioned above query box */
+            /* Devil toggle - hide on mobile, it's too cramped */
             .devil-toggle {
-                display: flex !important;
-                position: fixed !important;
-                bottom: 100px !important; /* Above the query box */
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                padding: 6px 12px !important;
-                gap: 6px;
-                border-radius: 20px !important;
-                font-size: 11px;
-                background: rgba(20, 20, 25, 0.9) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                backdrop-filter: blur(10px);
-                z-index: 60 !important;
+                display: none !important;
             }
             .devil-toggle label {
                 gap: 4px;
