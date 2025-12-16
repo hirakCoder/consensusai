@@ -2015,6 +2015,80 @@
             border-top: 1px solid var(--glass-border);
         }
 
+        /* Setting Toggle Row */
+        .setting-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .setting-toggle-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .setting-toggle-label {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .setting-toggle-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .setting-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .setting-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .setting-switch-slider {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .setting-switch-slider::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            top: 2px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .setting-switch input:checked + .setting-switch-slider {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: var(--core-primary);
+        }
+
+        .setting-switch input:checked + .setting-switch-slider::after {
+            left: 23px;
+            background: var(--core-primary);
+            box-shadow: 0 0 10px var(--core-primary);
+        }
+
         /* ============================================
            CONTEXT INPUT (Expandable)
            ============================================ */
@@ -5918,6 +5992,27 @@
             </div>
         </div>
 
+        <!-- Sound & Feedback Section -->
+        <div class="ai-settings-section">
+            <div class="ai-settings-section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+                Sound & Feedback
+            </div>
+            <div class="setting-toggle-row">
+                <div class="setting-toggle-info">
+                    <span class="setting-toggle-label">Conflict Sounds</span>
+                    <span class="setting-toggle-desc">Play sound when AIs disagree</span>
+                </div>
+                <label class="setting-switch">
+                    <input type="checkbox" id="conflictSoundToggle" onchange="toggleConflictSound(this.checked)">
+                    <span class="setting-switch-slider"></span>
+                </label>
+            </div>
+        </div>
+
         <div class="ai-settings-note">
             Changes apply to your next debate. Select at least 2 AIs.
         </div>
@@ -6517,6 +6612,78 @@
         let sseConnection = null;
         let selectedTier = 'budget';
         let currentRound = 1;
+
+        // Sound settings
+        let conflictSoundEnabled = localStorage.getItem('conflictSoundEnabled') === 'true';
+        let audioContext = null;
+
+        // Initialize sound setting toggle on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('conflictSoundToggle');
+            if (toggle) {
+                toggle.checked = conflictSoundEnabled;
+            }
+        });
+
+        // Toggle conflict sound setting
+        function toggleConflictSound(enabled) {
+            conflictSoundEnabled = enabled;
+            localStorage.setItem('conflictSoundEnabled', enabled);
+
+            // Play a test sound when enabling
+            if (enabled) {
+                playConflictSound();
+            }
+        }
+
+        // Play conflict sound using Web Audio API
+        function playConflictSound() {
+            if (!conflictSoundEnabled) return;
+
+            try {
+                // Create audio context on first use (requires user interaction)
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                // Resume context if suspended (iOS requirement)
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+
+                const now = audioContext.currentTime;
+
+                // Create a short "buzz/clash" sound
+                const oscillator1 = audioContext.createOscillator();
+                const oscillator2 = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                // Two frequencies for a dissonant "clash" effect
+                oscillator1.frequency.setValueAtTime(220, now); // A3
+                oscillator1.frequency.exponentialRampToValueAtTime(110, now + 0.15);
+                oscillator2.frequency.setValueAtTime(233, now); // Slightly detuned
+                oscillator2.frequency.exponentialRampToValueAtTime(117, now + 0.15);
+
+                oscillator1.type = 'sawtooth';
+                oscillator2.type = 'square';
+
+                // Quick attack, fast decay
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.02);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+                oscillator1.connect(gainNode);
+                oscillator2.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator1.start(now);
+                oscillator2.start(now);
+                oscillator1.stop(now + 0.2);
+                oscillator2.stop(now + 0.2);
+            } catch (e) {
+                console.log('Audio playback not available:', e);
+            }
+        }
 
         // DOM Elements
         const form = document.getElementById('debateForm');
@@ -7119,6 +7286,9 @@
                 flashOverlay.classList.add('active');
                 setTimeout(() => flashOverlay.classList.remove('active'), 300);
             }
+
+            // Sound effect (if enabled in settings)
+            playConflictSound();
 
             // Fire laser
             conflictLaser.classList.add('active');
