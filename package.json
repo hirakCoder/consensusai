@@ -23,6 +23,8 @@
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@sentry/node": "^10.29.0",
     "dotenv": "^17.2.3",
+    "pdfkit": "^0.17.2",
+    "pg": "^8.16.3",
     "posthog-node": "^5.17.2",
     "stripe": "^14.25.0"
   },

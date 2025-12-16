@@ -410,6 +410,47 @@
       text-decoration: underline;
     }
 
+    /* PDF Download Button */
+    .pdf-download-section {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .pdf-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .pdf-btn:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    .pdf-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pdf-icon {
+      font-size: 1.1rem;
+    }
+
     /* Hidden content container */
     #content {
       display: none;
@@ -468,6 +509,14 @@
           <span>&#x2713;</span> Loading...
         </div>
         <p class="verdict-summary" id="verdictSummary"></p>
+
+        <!-- PDF Download -->
+        <div class="pdf-download-section">
+          <button class="pdf-btn" id="downloadPdfBtn" onclick="downloadPDF()">
+            <span class="pdf-icon">&#x1F4C4;</span>
+            Download Report (PDF)
+          </button>
+        </div>
       </div>
 
       <!-- AI Positions -->
@@ -619,6 +668,56 @@
           </div>
         `;
       }).join('');
+    }
+
+    // Download PDF
+    async function downloadPDF() {
+      const btn = document.getElementById('downloadPdfBtn');
+      const originalText = btn.innerHTML;
+
+      try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="pdf-icon">&#x23F3;</span> Generating...';
+
+        const response = await fetch(`/api/debate/${shareId}/pdf`);
+
+        if (!response.ok) {
+          throw new Error('Failed to generate PDF');
+        }
+
+        // Get the blob and create download link
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Get filename from Content-Disposition header or generate one
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'consensus-report.pdf';
+        if (contentDisposition) {
+          const match = contentDisposition.match(/filename="(.+)"/);
+          if (match) filename = match[1];
+        }
+
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+
+        btn.innerHTML = '<span class="pdf-icon">&#x2713;</span> Downloaded!';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 2000);
+      } catch (error) {
+        console.error('PDF download error:', error);
+        btn.innerHTML = '<span class="pdf-icon">&#x26A0;</span> Error';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 2000);
+      }
     }
 
     // Load the debate on page load

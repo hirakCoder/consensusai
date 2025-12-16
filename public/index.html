@@ -517,16 +517,15 @@
             z-index: 15;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: default;
-            /* Solid, clean orb - no broken rings */
-            background: radial-gradient(circle at 30% 30%,
-                rgba(80, 80, 95, 1) 0%,
-                rgba(40, 40, 50, 1) 50%,
-                rgba(20, 20, 25, 1) 100%);
-            border: 2px solid;
+            overflow: visible;
+            /* Flat, solid background */
+            background: #1a1a22;
+            /* No border - use box-shadow for the ring instead */
+            border: none;
+            /* Ring effect using box-shadow inset */
             box-shadow:
-                inset 0 2px 8px rgba(255, 255, 255, 0.15),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.4),
-                0 4px 20px rgba(0, 0, 0, 0.5);
+                inset 0 0 0 2px currentColor,
+                0 0 20px currentColor;
         }
 
         .ai-node svg {
@@ -538,24 +537,11 @@
             z-index: 2;
         }
 
-        /* Glossy highlight on orb */
+        /* Clean orb - no glossy highlight that looks like broken ring */
         .ai-node::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 10%;
-            width: 80%;
-            height: 45%;
-            background: linear-gradient(180deg,
-                rgba(255, 255, 255, 0.3) 0%,
-                rgba(255, 255, 255, 0.1) 40%,
-                transparent 100%);
-            border-radius: 50% 50% 40% 40%;
-            pointer-events: none;
-            z-index: 3;
+            display: none;
         }
 
-        /* Remove old broken after element */
         .ai-node::after {
             display: none;
         }
@@ -568,65 +554,37 @@
             text-transform: uppercase;
         }
 
-        /* Individual node colors - solid, vibrant */
+        /* Individual node colors - clean solid circles */
         .node-gpt {
-            border-color: var(--ai-gpt);
             color: var(--ai-gpt);
-            background: radial-gradient(circle at 30% 30%,
-                rgba(16, 163, 127, 0.4) 0%,
-                rgba(16, 163, 127, 0.2) 30%,
-                rgba(20, 25, 25, 1) 70%,
-                rgba(10, 15, 15, 1) 100%);
+            background: #1a1a22;
             box-shadow:
-                inset 0 2px 10px rgba(16, 163, 127, 0.4),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(16, 163, 127, 0.3),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                inset 0 0 0 2px var(--ai-gpt),
+                0 0 25px rgba(16, 163, 127, 0.5);
         }
 
         .node-gemini {
-            border-color: var(--ai-gemini);
             color: var(--ai-gemini);
-            background: radial-gradient(circle at 30% 30%,
-                rgba(66, 133, 244, 0.4) 0%,
-                rgba(66, 133, 244, 0.2) 30%,
-                rgba(20, 22, 30, 1) 70%,
-                rgba(10, 12, 18, 1) 100%);
+            background: #1a1a22;
             box-shadow:
-                inset 0 2px 10px rgba(66, 133, 244, 0.4),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(66, 133, 244, 0.3),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                inset 0 0 0 2px var(--ai-gemini),
+                0 0 25px rgba(66, 133, 244, 0.5);
         }
 
         .node-claude {
-            border-color: var(--ai-claude);
             color: var(--ai-claude);
-            background: radial-gradient(circle at 30% 30%,
-                rgba(217, 119, 6, 0.4) 0%,
-                rgba(217, 119, 6, 0.2) 30%,
-                rgba(28, 22, 18, 1) 70%,
-                rgba(15, 12, 10, 1) 100%);
+            background: #1a1a22;
             box-shadow:
-                inset 0 2px 10px rgba(217, 119, 6, 0.4),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(217, 119, 6, 0.3),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                inset 0 0 0 2px var(--ai-claude),
+                0 0 25px rgba(217, 119, 6, 0.5);
         }
 
         .node-grok {
-            border-color: var(--ai-grok);
             color: var(--ai-grok);
-            background: radial-gradient(circle at 30% 30%,
-                rgba(249, 115, 22, 0.4) 0%,
-                rgba(249, 115, 22, 0.2) 30%,
-                rgba(30, 22, 18, 1) 70%,
-                rgba(18, 12, 10, 1) 100%);
+            background: #1a1a22;
             box-shadow:
-                inset 0 2px 10px rgba(249, 115, 22, 0.4),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(249, 115, 22, 0.3),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                inset 0 0 0 2px var(--ai-grok),
+                0 0 25px rgba(249, 115, 22, 0.5);
         }
 
         /* Active state - glowing, pulsing, with particle emission */
@@ -647,42 +605,30 @@
 
         .ai-node.active.node-gpt {
             box-shadow:
-                inset 0 2px 10px rgba(16, 163, 127, 0.5),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 2px var(--ai-gpt),
                 0 0 30px rgba(16, 163, 127, 0.6),
-                0 0 60px rgba(16, 163, 127, 0.4),
-                0 0 90px rgba(16, 163, 127, 0.2),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                0 0 60px rgba(16, 163, 127, 0.4);
         }
 
         .ai-node.active.node-gemini {
             box-shadow:
-                inset 0 2px 10px rgba(66, 133, 244, 0.5),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 2px var(--ai-gemini),
                 0 0 30px rgba(66, 133, 244, 0.6),
-                0 0 60px rgba(66, 133, 244, 0.4),
-                0 0 90px rgba(66, 133, 244, 0.2),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                0 0 60px rgba(66, 133, 244, 0.4);
         }
 
         .ai-node.active.node-claude {
             box-shadow:
-                inset 0 2px 10px rgba(217, 119, 6, 0.5),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 2px var(--ai-claude),
                 0 0 30px rgba(217, 119, 6, 0.6),
-                0 0 60px rgba(217, 119, 6, 0.4),
-                0 0 90px rgba(217, 119, 6, 0.2),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                0 0 60px rgba(217, 119, 6, 0.4);
         }
 
         .ai-node.active.node-grok {
             box-shadow:
-                inset 0 2px 10px rgba(249, 115, 22, 0.5),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.5),
+                inset 0 0 0 2px var(--ai-grok),
                 0 0 30px rgba(249, 115, 22, 0.6),
-                0 0 60px rgba(249, 115, 22, 0.4),
-                0 0 90px rgba(249, 115, 22, 0.2),
-                0 4px 20px rgba(0, 0, 0, 0.4);
+                0 0 60px rgba(249, 115, 22, 0.4);
         }
 
         /* Speaking state - extra intensity */
@@ -701,73 +647,7 @@
             }
         }
 
-        .ai-node.active.node-gpt {
-            box-shadow:
-                inset 0 4px 10px rgba(16, 163, 127, 0.5),
-                inset 0 -4px 10px rgba(0, 0, 0, 0.4),
-                0 0 0 3px rgba(16, 163, 127, 0.4),
-                0 0 50px var(--ai-gpt),
-                0 0 80px rgba(16, 163, 127, 0.5),
-                0 8px 25px rgba(0, 0, 0, 0.5);
-        }
-        .ai-node.active.node-gemini {
-            box-shadow:
-                inset 0 4px 10px rgba(66, 133, 244, 0.5),
-                inset 0 -4px 10px rgba(0, 0, 0, 0.4),
-                0 0 0 3px rgba(66, 133, 244, 0.4),
-                0 0 50px var(--ai-gemini),
-                0 0 80px rgba(66, 133, 244, 0.5),
-                0 8px 25px rgba(0, 0, 0, 0.5);
-        }
-        .ai-node.active.node-claude {
-            box-shadow:
-                inset 0 4px 10px rgba(217, 119, 6, 0.5),
-                inset 0 -4px 10px rgba(0, 0, 0, 0.4),
-                0 0 0 3px rgba(217, 119, 6, 0.4),
-                0 0 50px var(--ai-claude),
-                0 0 80px rgba(217, 119, 6, 0.5),
-                0 8px 25px rgba(0, 0, 0, 0.5);
-        }
-        .ai-node.active.node-grok {
-            box-shadow:
-                inset 0 4px 10px rgba(249, 115, 22, 0.5),
-                inset 0 -4px 10px rgba(0, 0, 0, 0.4),
-                0 0 0 3px rgba(249, 115, 22, 0.4),
-                0 0 50px var(--ai-grok),
-                0 0 80px rgba(249, 115, 22, 0.5),
-                0 8px 25px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Spinning ring effect when active - outer ring */
-        .ai-node.active::before {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            border-right-color: currentColor;
-            animation: node-spin 0.8s linear infinite;
-            filter: drop-shadow(0 0 4px currentColor);
-        }
-
-        /* Active state replaces the 3D highlight with spinning inner ring */
-        .ai-node.active::after {
-            content: '';
-            position: absolute;
-            inset: -14px;
-            border-radius: 50%;
-            border: 1px solid transparent;
-            border-bottom-color: currentColor;
-            border-left-color: currentColor;
-            opacity: 0.6;
-            animation: node-spin-reverse 1.2s linear infinite;
-            top: auto;
-            left: auto;
-            width: auto;
-            height: auto;
-            background: none;
-        }
+        /* Active state rings removed - using only box-shadow for clean circles */
 
         @keyframes node-spin {
             0% { transform: rotate(0deg); }
@@ -949,6 +829,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            overflow: visible; /* Allow node rings to extend beyond container */
         }
 
         /* AI Nodes positioned relative to core-container */
@@ -2249,6 +2130,10 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
         }
 
         .auth-btn {
@@ -4047,6 +3932,606 @@
         }
 
         /* ============================================
+           LANDING PAGE STYLES
+           ============================================ */
+
+        .landing-wrapper {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .landing-hero,
+        .landing-how-it-works,
+        .landing-features,
+        .landing-final-cta {
+            min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+            position: relative;
+        }
+
+        .landing-product {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        /* Hero Section */
+        .landing-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px 40px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero-brand {
+            font-family: var(--font-hero);
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--core-primary) 0%, var(--core-secondary) 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            animation: fadeSlideDown 0.6s ease-out;
+            text-shadow: 0 0 80px rgba(99, 102, 241, 0.5);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+            animation: fadeSlideDown 0.8s ease-out;
+        }
+
+        .badge-icon {
+            font-size: 1rem;
+        }
+
+        @keyframes fadeSlideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes landingBounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        .hero-headline {
+            font-family: var(--font-hero);
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            animation: fadeSlideUp 0.8s ease-out 0.2s both;
+        }
+
+        .headline-gradient {
+            display: block;
+            background: linear-gradient(135deg, var(--core-primary), var(--core-secondary), #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .headline-white {
+            display: block;
+            color: var(--text-primary);
+        }
+
+        .hero-subheadline {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            animation: fadeSlideUp 0.8s ease-out 0.4s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 48px;
+            animation: fadeSlideUp 0.8s ease-out 0.6s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-family: var(--font-hero);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 40px;
+            background: var(--glass-border);
+        }
+
+        .hero-cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            animation: fadeSlideUp 0.8s ease-out 0.8s both;
+        }
+
+        .hero-cta-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            font-family: var(--font-hero);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, var(--core-primary), var(--core-secondary));
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+        }
+
+        .hero-cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(99, 102, 241, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .cta-arrow {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-cta-primary:hover .cta-arrow {
+            transform: translateX(4px);
+        }
+
+        .cta-subtext {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .hero-visual {
+            position: absolute;
+            top: 50%;
+            right: 5%;
+            transform: translateY(-50%);
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-orb-preview {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        .preview-orb {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--core-primary), #1a1a2e, #000);
+            box-shadow: 0 0 80px rgba(99, 102, 241, 0.4);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .preview-node {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .preview-gpt { top: 20%; left: 20%; background: var(--ai-gpt); color: var(--ai-gpt); }
+        .preview-gemini { top: 20%; right: 20%; background: var(--ai-gemini); color: var(--ai-gemini); }
+        .preview-claude { bottom: 20%; left: 20%; background: var(--ai-claude); color: var(--ai-claude); }
+        .preview-grok { bottom: 20%; right: 20%; background: var(--ai-grok); color: var(--ai-grok); }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            animation: landingBounce 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator:hover {
+            color: var(--text-primary);
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* How It Works Section */
+        .landing-how-it-works {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.03) 50%, transparent 100%);
+        }
+
+        .section-container {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .section-title {
+            font-family: var(--font-hero);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 64px;
+        }
+
+        .steps-container {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .step-card {
+            flex: 1;
+            max-width: 300px;
+            padding: 32px;
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .step-card.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step-card:nth-child(1) { transition-delay: 0s; }
+        .step-card:nth-child(3) { transition-delay: 0.15s; }
+        .step-card:nth-child(5) { transition-delay: 0.3s; }
+
+        .step-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--core-primary);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+        }
+
+        .step-card.animate-in:hover {
+            transform: translateY(-8px);
+        }
+
+        .step-number {
+            font-family: var(--font-hero);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--core-primary);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .step-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 16px;
+        }
+
+        .step-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--core-primary);
+        }
+
+        .step-title {
+            font-family: var(--font-hero);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .step-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .step-connector {
+            width: 60px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .connector-line {
+            width: 100%;
+            height: 2px;
+            color: var(--glass-border);
+        }
+
+        /* Features Section */
+        .landing-features {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: 32px;
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-card.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:nth-child(1) { transition-delay: 0s; }
+        .feature-card:nth-child(2) { transition-delay: 0.1s; }
+        .feature-card:nth-child(3) { transition-delay: 0.2s; }
+        .feature-card:nth-child(4) { transition-delay: 0.3s; }
+
+        .feature-card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .icon-orbs {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mini-orb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--orb-color);
+            box-shadow: 0 0 10px var(--orb-color);
+        }
+
+        .feature-title {
+            font-family: var(--font-hero);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .feature-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Final CTA Section */
+        .landing-final-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            min-height: 60vh; /* Override: doesn't need full viewport */
+        }
+
+        .final-cta-card {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            padding: 64px;
+            text-align: center;
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .final-cta-card.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cta-glow {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .final-cta-headline {
+            font-family: var(--font-hero);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-cta-subheadline {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 36px;
+            font-family: var(--font-hero);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, var(--core-primary), var(--core-secondary));
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 30px rgba(99, 102, 241, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .final-cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 50px rgba(99, 102, 241, 0.5);
+        }
+
+        .final-cta-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .final-cta-footnote {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hide fixed elements when landing page is active - staggered reveal */
+        .cortex-app {
+            opacity: var(--orb-opacity, 0);
+            pointer-events: none;
+            transition: opacity 0.2s ease-out;
+        }
+
+        .omni-bar-container {
+            opacity: var(--input-opacity, 0);
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+            transform: translateX(-50%) translateY(calc(20px * (1 - var(--input-opacity, 0))));
+        }
+
+        .landing-product .auth-container,
+        .landing-product .top-bar-right {
+            opacity: var(--input-opacity, 0);
+            pointer-events: none;
+            transition: opacity 0.2s ease-out;
+        }
+
+        .landing-product.visible .cortex-app,
+        .landing-product.visible .omni-bar-container,
+        .landing-product.visible .auth-container,
+        .landing-product.visible .top-bar-right {
+            pointer-events: auto;
+        }
+
+        /* ============================================
            MOBILE RESPONSIVE - PROFESSIONAL UX REDESIGN
            Designed with thumb zones, proper hierarchy, no overlaps
            ============================================ */
@@ -4060,6 +4545,113 @@
             .user-name,
             .user-tier {
                 display: none !important;
+            }
+        }
+
+        /* Landing Page Mobile Responsive */
+        @media (max-width: 768px) {
+            .landing-hero {
+                padding: 60px 20px 40px;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .stat-divider {
+                display: none;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .scroll-indicator {
+                bottom: 20px;
+            }
+
+            .steps-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .step-connector {
+                display: none;
+            }
+
+            .step-card {
+                max-width: 100%;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .final-cta-card {
+                padding: 40px 24px;
+            }
+
+            .landing-product .cortex-app {
+                padding-top: 56px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .landing-hero {
+                padding: 40px 16px 30px;
+            }
+
+            .hero-brand {
+                font-size: 2.5rem;
+                margin-bottom: 16px;
+            }
+
+            .hero-headline {
+                font-size: 2rem;
+            }
+
+            .hero-subheadline {
+                font-size: 0.95rem;
+                margin-bottom: 32px;
+            }
+
+            .hero-cta-primary {
+                width: 100%;
+                justify-content: center;
+                padding: 14px 24px;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.65rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 40px;
+            }
+
+            .step-card,
+            .feature-card {
+                padding: 24px;
+            }
+
+            .final-cta-card {
+                padding: 32px 20px;
+            }
+
+            .final-cta-button {
+                width: 100%;
+                justify-content: center;
+                padding: 16px 24px;
             }
         }
 
@@ -4267,25 +4859,70 @@
                 display: none;
             }
             .devil-selector {
-                right: 0;
-                left: auto;
-                min-width: 160px;
+                position: fixed !important;
+                bottom: auto !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                min-width: 260px !important;
+                max-width: 85vw !important;
+                width: auto !important;
+                z-index: 1000 !important;
+                margin-bottom: 0 !important;
+                padding: 16px !important;
+                animation: none !important;
+                background: rgba(20, 20, 25, 0.98) !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                border-radius: 16px !important;
+            }
+
+            .devil-selector-option {
+                padding: 14px 16px !important;
+                font-size: 1rem !important;
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                text-align: left !important;
+                min-height: 48px !important;
+                display: flex !important;
+                align-items: center !important;
+            }
+
+            .devil-selector-title {
+                font-size: 0.85rem !important;
+                text-align: center !important;
+                margin-bottom: 12px !important;
+            }
+
+            /* Backdrop for devil selector on mobile */
+            .devil-selector.active::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: -1;
             }
 
             /* Upgrade button - compact mobile */
             .upgrade-btn {
                 display: flex !important;
-                min-height: 36px;
-                padding: 6px 10px;
+                align-items: center !important;
+                justify-content: center !important;
+                min-height: 40px !important;
+                height: 40px !important;
+                width: 40px !important;
+                min-width: 40px !important;
+                padding: 8px !important;
                 font-size: 11px;
                 gap: 4px;
+                border-radius: 12px !important;
             }
             .upgrade-btn svg {
-                width: 14px;
-                height: 14px;
+                width: 18px !important;
+                height: 18px !important;
+                flex-shrink: 0;
             }
             .upgrade-btn span {
-                display: none; /* Hide "Upgrade" text, show only icon */
+                display: none !important; /* Hide "Upgrade" text, show only icon */
             }
 
             .ai-settings-btn,
@@ -4699,6 +5336,225 @@
         <div class="nebula-cloud cloud-2"></div>
         <div class="nebula-cloud cloud-3"></div>
     </div>
+
+    <!-- Landing Page Wrapper -->
+    <div class="landing-wrapper" id="landingWrapper">
+
+        <!-- Hero Section -->
+        <section class="landing-hero" id="heroSection">
+            <div class="hero-content">
+                <div class="hero-brand">ConsensusAI</div>
+
+                <div class="hero-badge">
+                    <span class="badge-icon">&#x2728;</span>
+                    <span>Multi-AI Decision Intelligence</span>
+                </div>
+
+                <h1 class="hero-headline">
+                    <span class="headline-gradient">4 AI Models.</span>
+                    <span class="headline-white">One Decision.</span>
+                </h1>
+
+                <p class="hero-subheadline">
+                    GPT, Claude, Gemini, and Grok debate your toughest questions in real-time.
+                    Get AI consensus, not AI guesswork.
+                </p>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="debateCountStat">0</span>
+                        <span class="stat-label">Debates Run</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">AI Models</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-number">~30s</span>
+                        <span class="stat-label">Analysis Time</span>
+                    </div>
+                </div>
+
+                <div class="hero-cta-group">
+                    <button class="hero-cta-primary" onclick="scrollToProduct()">
+                        <span>Try It Free</span>
+                        <svg class="cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <span class="cta-subtext">No signup required</span>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-orb-preview">
+                    <div class="preview-orb"></div>
+                    <div class="preview-node preview-gpt"></div>
+                    <div class="preview-node preview-gemini"></div>
+                    <div class="preview-node preview-claude"></div>
+                    <div class="preview-node preview-grok"></div>
+                </div>
+            </div>
+
+            <div class="scroll-indicator" onclick="scrollToSection('howItWorks')">
+                <span>See how it works</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="landing-how-it-works" id="howItWorks">
+            <div class="section-container">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Three steps to better decisions</p>
+
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4M12 8h.01"/>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">Ask Your Question</h3>
+                        <p class="step-description">
+                            Type any decision you're facing. Career moves, investments, business strategy - anything.
+                        </p>
+                    </div>
+
+                    <div class="step-connector">
+                        <svg class="connector-line" viewBox="0 0 100 2">
+                            <line x1="0" y1="1" x2="100" y2="1" stroke="currentColor" stroke-dasharray="4 4"/>
+                        </svg>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">Watch AIs Debate</h3>
+                        <p class="step-description">
+                            See 4 leading AI models analyze, argue, and challenge each other's reasoning in real-time.
+                        </p>
+                    </div>
+
+                    <div class="step-connector">
+                        <svg class="connector-line" viewBox="0 0 100 2">
+                            <line x1="0" y1="1" x2="100" y2="1" stroke="currentColor" stroke-dasharray="4 4"/>
+                        </svg>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <h3 class="step-title">Get Consensus</h3>
+                        <p class="step-description">
+                            Receive a battle-tested recommendation backed by multiple AI perspectives.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="landing-features" id="features">
+            <div class="section-container">
+                <h2 class="section-title">Why AI Consensus?</h2>
+                <p class="section-subtitle">Single AI gives you one opinion. We give you verified wisdom.</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <div class="icon-orbs">
+                                <span class="mini-orb" style="--orb-color: var(--ai-gpt);"></span>
+                                <span class="mini-orb" style="--orb-color: var(--ai-gemini);"></span>
+                                <span class="mini-orb" style="--orb-color: var(--ai-claude);"></span>
+                                <span class="mini-orb" style="--orb-color: var(--ai-grok);"></span>
+                            </div>
+                        </div>
+                        <h3 class="feature-title">Multi-Model Analysis</h3>
+                        <p class="feature-description">
+                            Each AI has unique strengths. GPT excels at trade-offs, Claude spots risks,
+                            Gemini finds patterns, Grok cuts complexity.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--core-primary)" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 8v4l2 2"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Devil's Advocate Mode</h3>
+                        <p class="feature-description">
+                            Force one AI to challenge the consensus. Stress-test your decisions before committing.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--core-primary)" stroke-width="1.5">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Real-Time Debates</h3>
+                        <p class="feature-description">
+                            Watch the thinking process unfold. See conflicts resolved and consensus emerge live.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--core-primary)" stroke-width="1.5">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0110 0v4"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">Private & Secure</h3>
+                        <p class="feature-description">
+                            Your questions never train AI models. Enterprise-grade security for sensitive decisions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="landing-final-cta" id="finalCta">
+            <div class="section-container">
+                <div class="final-cta-card">
+                    <div class="cta-glow"></div>
+                    <h2 class="final-cta-headline">Ready for Smarter Decisions?</h2>
+                    <p class="final-cta-subheadline">
+                        Join thousands making better choices with AI consensus
+                    </p>
+                    <button class="final-cta-button" onclick="scrollToProduct()">
+                        <span>Start Your First Debate</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <p class="final-cta-footnote">Free tier includes 3 debates per day</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Section (Existing Cortex App) -->
+        <section class="landing-product" id="productSection">
 
     <!-- Auth UI (Top Left) -->
     <div class="auth-container" id="authContainer">
@@ -5227,6 +6083,9 @@
         </div>
     </div>
 
+        </section><!-- End landing-product -->
+    </div><!-- End landing-wrapper -->
+
     <!-- Site Footer -->
     <footer class="site-footer">
         <span class="copyright">&copy; 2025 ConsensusAI</span>
@@ -5405,6 +6264,10 @@
                 <button class="verdict-btn verdict-btn-secondary" onclick="copyShareLink()">
                     <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
                     Share
+                </button>
+                <button class="verdict-btn verdict-btn-secondary" id="exportPdfBtn" onclick="exportPDF()">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                    Export PDF
                 </button>
                 <button class="verdict-btn verdict-btn-secondary" onclick="askFollowup()">
                     <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -5590,6 +6453,163 @@
         const devilSelector = document.getElementById('devilSelector');
         const devilSelectedIndicator = document.getElementById('devilSelectedIndicator');
         const templateChips = document.getElementById('templateChips');
+
+        // ============================================
+        // LANDING PAGE FUNCTIONS
+        // ============================================
+
+        // Scroll to product section
+        function scrollToProduct() {
+            const productSection = document.getElementById('productSection');
+            if (productSection) {
+                productSection.scrollIntoView({ behavior: 'smooth' });
+                // Focus input after scroll completes
+                setTimeout(() => {
+                    const questionInput = document.getElementById('questionInput');
+                    if (questionInput) {
+                        questionInput.focus();
+                    }
+                }, 800);
+            }
+        }
+
+        // Scroll to any section by ID
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Animated counter for stats
+        function animateCounter(element, target) {
+            const duration = 2000;
+            const start = 0;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease out cubic for smooth deceleration
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (target - start) * easeOut);
+                element.textContent = current.toLocaleString();
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Initialize scroll-triggered animations
+        function initScrollAnimations() {
+            const animatedElements = document.querySelectorAll('.step-card, .feature-card');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.2,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            animatedElements.forEach(el => observer.observe(el));
+
+            // Animate stat counters when hero section is visible
+            const heroSection = document.getElementById('heroSection');
+            const debateCountStat = document.getElementById('debateCountStat');
+
+            if (heroSection && debateCountStat) {
+                const statsObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Fetch real debate count from API
+                            fetch('/api/config')
+                                .then(res => res.json())
+                                .then(config => {
+                                    const count = config.stats?.totalDebates || 0;
+                                    animateCounter(debateCountStat, count);
+                                })
+                                .catch(() => {
+                                    // Fallback if API fails
+                                    animateCounter(debateCountStat, 0);
+                                });
+                            statsObserver.unobserve(heroSection);
+                        }
+                    });
+                }, { threshold: 0.3 });
+
+                statsObserver.observe(heroSection);
+            }
+        }
+
+        // Show/hide product section elements based on scroll position with staggered fade
+        function initHeaderScroll() {
+            const landingWrapper = document.getElementById('landingWrapper');
+            const productSection = document.getElementById('productSection');
+
+            if (!landingWrapper || !productSection) return;
+
+            let lastOrbOpacity = 0;
+            let lastInputOpacity = 0;
+
+            landingWrapper.addEventListener('scroll', () => {
+                const productRect = productSection.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                // Orb fades in first: starts when product is 60% in view, full at 20% from top
+                const orbStartFade = windowHeight * 0.6;
+                const orbEndFade = windowHeight * 0.2;
+
+                // Input fades in last: starts when product is 30% in view, full only at top
+                const inputStartFade = windowHeight * 0.3;
+                const inputEndFade = windowHeight * 0.05;
+
+                // Calculate orb opacity
+                let orbOpacity = 0;
+                if (productRect.top < orbStartFade) {
+                    const progress = (orbStartFade - productRect.top) / (orbStartFade - orbEndFade);
+                    orbOpacity = Math.min(1, Math.max(0, progress));
+                }
+
+                // Calculate input opacity (delayed, only appears near the end)
+                let inputOpacity = 0;
+                if (productRect.top < inputStartFade) {
+                    const progress = (inputStartFade - productRect.top) / (inputStartFade - inputEndFade);
+                    inputOpacity = Math.min(1, Math.max(0, progress));
+                }
+
+                // Update CSS variables (only if changed significantly)
+                if (Math.abs(orbOpacity - lastOrbOpacity) > 0.01) {
+                    lastOrbOpacity = orbOpacity;
+                    document.documentElement.style.setProperty('--orb-opacity', orbOpacity);
+                }
+
+                if (Math.abs(inputOpacity - lastInputOpacity) > 0.01) {
+                    lastInputOpacity = inputOpacity;
+                    document.documentElement.style.setProperty('--input-opacity', inputOpacity);
+                }
+
+                // Toggle visible class for pointer-events
+                if (orbOpacity > 0.1 || inputOpacity > 0.1) {
+                    productSection.classList.add('visible');
+                } else {
+                    productSection.classList.remove('visible');
+                }
+            });
+        }
+
+        // Initialize landing page on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollAnimations();
+            initHeaderScroll();
+        });
 
         // ============================================
         // DEVIL'S ADVOCATE SELECTOR
@@ -6009,6 +7029,11 @@
         window.addEventListener('resize', initParticleCanvas);
 
         function triggerConflict(conflictingLlmId = null) {
+            // Haptic feedback on mobile (vibration)
+            if ('vibrate' in navigator) {
+                navigator.vibrate([50, 30, 100]); // Short double-pulse for conflict
+            }
+
             // Fire laser
             conflictLaser.classList.add('active');
             setTimeout(() => conflictLaser.classList.remove('active'), 600);
@@ -6482,6 +7507,11 @@
         }
 
         function showVerdict(result) {
+            // Haptic feedback on mobile - success pattern
+            if ('vibrate' in navigator) {
+                navigator.vibrate([100, 50, 200]); // Longer satisfying pulse for verdict
+            }
+
             // Reset followup section when showing new verdict
             document.getElementById('followupSection').classList.remove('active');
             document.getElementById('followupInput').value = '';
@@ -6762,6 +7792,55 @@
             navigator.clipboard.writeText(url).then(() => {
                 showToast('Link copied!', 'success');
             });
+        }
+
+        async function exportPDF() {
+            if (!currentResult?.shareId) {
+                showToast('No debate to export', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('exportPdfBtn');
+            const originalHTML = btn.innerHTML;
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<svg viewBox="0 0 24 24" class="spin"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="30 60"/></svg> Generating...';
+
+                const response = await fetch(`/api/debate/${currentResult.shareId}/pdf`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate PDF');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+
+                // Get filename from header or generate one
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'consensus-report.pdf';
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="(.+)"/);
+                    if (match) filename = match[1];
+                }
+
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                showToast('PDF downloaded!', 'success');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            } catch (error) {
+                console.error('PDF export error:', error);
+                showToast('Failed to export PDF', 'error');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
         }
 
         // ============================================

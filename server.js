@@ -24,6 +24,10 @@ const sentry = require('./sentry');
 const analytics = require('./analytics');
 const contentModeration = require('./content-moderation');
 const apiResilience = require('./api-resilience');
+const db = require('./db');
+const dbDebates = require('./db-debates');
+const dbUsers = require('./db-users');
+const pdfGenerator = require('./pdf-generator');
 
 const PORT = process.env.PORT || 3000;
 
@@ -641,8 +645,35 @@ const server = http.createServer(async (req, res) => {
         saveToJson(result);
         saveToMarkdown(result);
       } catch (saveError) {
-        console.error('Error saving report:', saveError.message);
-        // Continue even if saving fails
+        console.error('Error saving report to file:', saveError.message);
+        // Continue even if file saving fails
+      }
+
+      // Save to database (if available)
+      try {
+        const isDbAvailable = await db.isAvailable();
+        if (isDbAvailable) {
+          await dbDebates.saveDebate({
+            shareId: result.shareId,
+            question: sanitizedQuestion,
+            context: context || null,
+            timestamp: new Date().toISOString(),
+            consensusReached: result.finalConsensus?.reached || false,
+            consensusType: result.finalConsensus?.type || null,
+            consensusDecision: result.finalConsensus?.decision || null,
+            consensusPosition: result.finalConsensus?.position || null,
+            rounds: result.rounds || [],
+            finalConsensus: result.finalConsensus || null,
+            actionPlan: result.actionPlan || null,
+            totalCost: result.costEstimate?.total || 0,
+            llmsUsed: result.responses?.map(r => r.llmId) || [],
+            tier: effectiveTier
+          }, userId);
+          console.log(`[DB] Debate saved: ${result.shareId}`);
+        }
+      } catch (dbError) {
+        console.error('Error saving to database:', dbError.message);
+        // Continue even if database saving fails
       }
 
       // Send completion via SSE if connected
@@ -674,21 +705,102 @@ const server = http.createServer(async (req, res) => {
 
   // Get specific debate by filename (for sharing)
   if (pathname.startsWith('/api/debate/') && req.method === 'GET') {
-    let filename = pathname.replace('/api/debate/', '');
-    if (!filename || filename === 'stream') {
-      sendJson(res, { error: 'Filename required' }, 400);
+    let shareId = pathname.replace('/api/debate/', '');
+    if (!shareId || shareId === 'stream') {
+      sendJson(res, { error: 'Share ID required' }, 400);
       return;
     }
-    // Add .json extension if not present
-    if (!filename.endsWith('.json')) {
-      filename = filename + '.json';
+    // Remove .json extension if present
+    if (shareId.endsWith('.json')) {
+      shareId = shareId.replace('.json', '');
     }
+
+    // Try database first
+    try {
+      const isDbAvailable = await db.isAvailable();
+      if (isDbAvailable) {
+        const dbDebate = await dbDebates.getDebateByShareId(shareId);
+        if (dbDebate) {
+          sendJson(res, dbDebate);
+          return;
+        }
+      }
+    } catch (dbError) {
+      console.error('[DB] Error fetching debate:', dbError.message);
+      // Fall through to file-based lookup
+    }
+
+    // Fallback to file system
+    const filename = shareId + '.json';
     const debate = history.getDecision(filename);
     if (!debate) {
       sendJson(res, { error: 'Debate not found' }, 404);
       return;
     }
     sendJson(res, debate);
+    return;
+  }
+
+  // ==================== PDF Export Route ====================
+
+  // Generate PDF for a debate
+  if (pathname.match(/^\/api\/debate\/[^/]+\/pdf$/) && req.method === 'GET') {
+    const parts = pathname.split('/');
+    let shareId = parts[3]; // /api/debate/{shareId}/pdf
+
+    if (!shareId) {
+      sendJson(res, { error: 'Share ID required' }, 400);
+      return;
+    }
+
+    try {
+      // Get debate data
+      let debate = null;
+
+      // Try database first
+      const isDbAvailable = await db.isAvailable();
+      if (isDbAvailable) {
+        debate = await dbDebates.getDebateByShareId(shareId);
+      }
+
+      // Fallback to file system
+      if (!debate) {
+        const filename = shareId + '.json';
+        debate = history.getDecision(filename);
+      }
+
+      if (!debate) {
+        sendJson(res, { error: 'Debate not found' }, 404);
+        return;
+      }
+
+      // Check user tier for Pro features
+      const userStats = usage.getUserStats(userId);
+      const isPro = userStats.tier === 'pro' || userStats.tier === 'owner';
+
+      // Generate PDF
+      const pdfBuffer = await pdfGenerator.generateDebatePDF(debate, isPro);
+
+      // Set response headers for PDF download
+      const safeQuestion = (debate.question || 'debate')
+        .substring(0, 30)
+        .replace(/[^a-z0-9]/gi, '-')
+        .toLowerCase();
+      const filename = `consensus-${safeQuestion}-${isPro ? 'pro' : 'summary'}.pdf`;
+
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Length': pdfBuffer.length,
+        'Cache-Control': 'no-cache',
+        ...securityHeaders
+      });
+      res.end(pdfBuffer);
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      sentry.captureException(error, { tags: { endpoint: 'pdf' } });
+      sendJson(res, { error: 'Failed to generate PDF' }, 500);
+    }
     return;
   }
 
@@ -728,23 +840,52 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  const stats = usage.getGlobalStats();
-  console.log(`
+// Initialize database and start server
+async function startServer() {
+  // Initialize database if DATABASE_URL is set
+  let dbAvailable = false;
+  if (process.env.DATABASE_URL) {
+    console.log('[DB] Initializing PostgreSQL connection...');
+    db.initPool();
+
+    // Wait for connection
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    dbAvailable = await db.isAvailable();
+    if (dbAvailable) {
+      await db.initTables();
+      console.log('[DB] Database ready');
+    } else {
+      console.log('[DB] Database not available, using file storage');
+    }
+  } else {
+    console.log('[DB] No DATABASE_URL set, using file storage');
+  }
+
+  server.listen(PORT, '0.0.0.0', () => {
+    const stats = usage.getGlobalStats();
+    console.log(`
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
 ║   🧠 Consensus Platform                                       ║
-║   Multi-LLM Decision Intelligence                             ║
+║   Multi-AI Decision Intelligence                              ║
 ║                                                               ║
 ║   Server running at: http://0.0.0.0:${PORT}                     ║
 ║   Active Tier: ${config.activeTier.toUpperCase().padEnd(44)}║
 ║   Free Limit: ${usage.FREE_DAILY_LIMIT} debates/day                                  ║
 ║   Total Debates: ${String(stats.totalDebates).padEnd(41)}║
+║   Database: ${dbAvailable ? 'PostgreSQL ✓' : 'File Storage'.padEnd(31)}           ║
 ║                                                               ║
 ║   Press Ctrl+C to stop                                        ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
-  `);
+    `);
+  });
+}
+
+startServer().catch(error => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
 });
 
 // Global error handlers
@@ -765,6 +906,7 @@ process.on('SIGTERM', async () => {
   await Promise.all([
     sentry.flush(),
     analytics.flush(),
+    db.close(),
   ]);
   server.close(() => {
     console.log('[Shutdown] Server closed');
