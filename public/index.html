@@ -4815,25 +4815,33 @@
                 display: none !important;
             }
 
-            /* Show arena status on mobile - it provides important feedback during debate */
+            /* Hide arena status by default on mobile - only show during active debate */
             .arena-status {
+                display: none !important;
+            }
+
+            /* Show arena status only during active debate */
+            .cortex-app.debating .arena-status {
                 display: flex !important;
                 flex-direction: column;
                 align-items: center;
                 gap: 6px;
-                padding: 8px 16px;
-                background: rgba(0, 0, 0, 0.4);
+                padding: 10px 20px;
+                background: rgba(0, 0, 0, 0.6);
                 border-radius: 12px;
-                margin-top: 12px;
+                margin-top: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            .status-text {
-                font-size: 1rem !important;
+            .cortex-app.debating .status-text {
+                font-size: 1.1rem !important;
                 font-weight: 600;
+                color: var(--text-primary);
             }
 
-            .status-phase {
-                font-size: 0.8rem !important;
+            .cortex-app.debating .status-phase {
+                font-size: 0.85rem !important;
+                color: var(--text-secondary);
             }
 
             .round-dots {
@@ -4848,33 +4856,47 @@
             /* DEBATE STREAM - Mobile optimized */
             .debate-stream {
                 position: fixed !important;
-                top: 56px !important;
-                left: 0 !important;
-                right: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
+                top: 52px !important;
+                left: 8px !important;
+                right: 8px !important;
+                width: auto !important;
+                max-width: calc(100% - 16px) !important;
                 height: auto !important;
-                max-height: 50vh !important;
-                border-radius: 0 0 16px 16px !important;
+                max-height: 45vh !important;
+                border-radius: 16px !important;
                 z-index: 80;
-                background: rgba(10, 10, 15, 0.95) !important;
+                background: rgba(15, 15, 20, 0.98) !important;
                 backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+                overflow: hidden !important;
             }
 
             .debate-stream .stream-header-bar {
-                padding: 8px 12px;
-                border-radius: 0;
+                padding: 10px 14px;
+                border-radius: 16px 16px 0 0;
+                background: rgba(255, 255, 255, 0.03);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             }
 
             .debate-stream .stream-content {
-                padding: 8px 12px;
-                max-height: 38vh;
+                padding: 10px;
+                max-height: calc(45vh - 50px);
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .debate-stream .stream-entry {
                 font-size: 0.85rem;
-                padding: 10px 12px;
+                padding: 12px;
+                margin-bottom: 8px;
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .debate-stream .stream-entry:last-child {
+                margin-bottom: 0;
             }
 
             /* HIDE query box during active debate */
@@ -7591,6 +7613,9 @@
             statusText.textContent = devilMode ? 'Engaging Devil\'s Advocate...' : 'Initiating...';
             statusPhase.textContent = 'Connecting to neural network';
 
+            // Add debating class for mobile status visibility
+            document.querySelector('.cortex-app')?.classList.add('debating');
+
             // Hide template chips, devil toggle, and context during debate
             templateChips.style.display = 'none';
             document.getElementById('devilToggle').style.opacity = '0.3';
@@ -7670,6 +7695,8 @@
             } finally {
                 submitBtn.disabled = false;
                 setLightsActive(false);
+                // Remove debating class
+                document.querySelector('.cortex-app')?.classList.remove('debating');
                 // Restore devil toggle and context toggle visibility
                 document.getElementById('devilToggle').style.opacity = '1';
                 document.getElementById('devilToggle').style.pointerEvents = 'auto';
@@ -8066,9 +8093,55 @@
                 return;
             }
             const url = `${window.location.origin}/share/${currentResult.shareId}`;
-            navigator.clipboard.writeText(url).then(() => {
+
+            // Try native share first (mobile)
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ConsensusAI Decision',
+                    text: currentResult.question,
+                    url: url
+                }).catch(() => {
+                    // Fall back to clipboard
+                    copyToClipboard(url);
+                });
+            } else {
+                copyToClipboard(url);
+            }
+        }
+
+        function copyToClipboard(text) {
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Link copied!', 'success');
+                }).catch(() => {
+                    // Fallback for iOS
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            // Create temporary input for iOS compatibility
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            textArea.style.top = '0';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
                 showToast('Link copied!', 'success');
-            });
+            } catch (err) {
+                showToast('Could not copy link', 'error');
+            }
+
+            document.body.removeChild(textArea);
         }
 
         async function exportPDF() {
@@ -8091,9 +8164,6 @@
                 }
 
                 const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
 
                 // Get filename from header or generate one
                 const contentDisposition = response.headers.get('Content-Disposition');
@@ -8103,11 +8173,26 @@
                     if (match) filename = match[1];
                 }
 
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
+                // Check if iOS/Safari (needs different handling)
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+                if (isIOS || isSafari) {
+                    // iOS Safari: Open in new tab
+                    const url = window.URL.createObjectURL(blob);
+                    window.open(url, '_blank');
+                    setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                } else {
+                    // Standard download for other browsers
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
 
                 showToast('PDF downloaded!', 'success');
                 btn.innerHTML = originalHTML;
