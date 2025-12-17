@@ -5176,8 +5176,8 @@
             }
 
             .omni-submit {
-                width: 40px;
-                height: 40px;
+                width: 44px;
+                height: 44px;
                 flex-shrink: 0;
             }
 
@@ -5263,6 +5263,7 @@
                 border-radius: 16px 16px 0 0;
                 padding: 16px 12px 24px;
                 overflow-y: auto;
+                overflow-x: hidden;
             }
             .verdict-close { min-width: 44px; min-height: 44px; }
             .verdict-decision { font-size: 1.1rem; }
@@ -5270,37 +5271,110 @@
             .verdict-btn { min-height: 48px; width: 100%; }
             .action-grid { grid-template-columns: 1fr; gap: 12px; }
             .verdict-actions { flex-direction: column; gap: 8px; }
-            /* LLM Response Cards - Mobile optimized */
+            /* LLM Response Cards - SINGLE COLUMN on mobile */
             .ai-agreement-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                margin: 12px 0;
+                grid-template-columns: 1fr !important;
+                gap: 10px;
+                margin: 16px 0;
             }
             .ai-response-card {
-                padding: 10px;
+                padding: 14px;
                 display: flex;
                 flex-direction: column;
             }
             .ai-resp-header {
-                margin-bottom: 6px;
+                margin-bottom: 8px;
                 flex-wrap: wrap;
-                gap: 4px;
+                gap: 6px;
             }
             .ai-resp-name {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
             }
             .ai-resp-verdict {
-                font-size: 0.6rem;
-                padding: 2px 6px;
+                font-size: 0.7rem;
+                padding: 4px 8px;
             }
             .ai-resp-summary {
-                font-size: 0.75rem;
-                line-height: 1.4;
-                -webkit-line-clamp: 3;
+                font-size: 0.85rem;
+                line-height: 1.5;
+                -webkit-line-clamp: 4;
                 margin: 0;
             }
             .insights-grid { grid-template-columns: 1fr; gap: 12px; }
-            .spectrum-container { padding: 12px 8px; }
+
+            /* SPECTRUM - Hide the horizontal track, show simple list instead */
+            .spectrum-container {
+                padding: 12px;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 12px;
+            }
+            .spectrum-track {
+                display: none !important;
+            }
+            .spectrum-labels {
+                display: none !important;
+            }
+            .spectrum-label {
+                margin-bottom: 12px;
+                font-size: 0.7rem;
+            }
+            /* Convert spectrum avatars to vertical list */
+            .spectrum-avatars {
+                position: static !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+            }
+            .spectrum-avatar {
+                position: static !important;
+                transform: none !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 48px !important;
+                padding: 12px 16px !important;
+                border-radius: 10px !important;
+                justify-content: flex-start !important;
+                font-size: 0.85rem !important;
+            }
+            .spectrum-avatar::after {
+                content: ' - Tap to view';
+                font-weight: 400;
+                opacity: 0.7;
+                margin-left: 8px;
+            }
+
+            /* Touch targets - Ensure all interactive elements are at least 48px */
+            .ai-response-card {
+                min-height: 48px;
+                cursor: pointer;
+            }
+            .insight-card {
+                min-height: 48px;
+            }
+            .action-item {
+                min-height: 48px;
+                padding: 12px 16px;
+            }
+            .tier-btn {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            .settings-toggle {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            .model-checkbox {
+                min-height: 44px;
+                padding: 10px 12px;
+            }
+            .devil-toggle {
+                min-height: 44px;
+                padding: 10px 12px;
+            }
+            .auth-btn {
+                min-height: 44px;
+                padding: 10px 16px;
+            }
 
             /* Upgrade modal - Mobile optimized */
             .upgrade-overlay {
@@ -5479,8 +5553,8 @@
             }
 
             .omni-submit {
-                width: 34px;
-                height: 34px;
+                width: 44px;
+                height: 44px;
             }
 
             .template-chips {
@@ -5488,9 +5562,9 @@
             }
 
             .template-chip {
-                padding: 4px 8px;
-                font-size: 10px;
-                min-height: 28px;
+                padding: 8px 12px;
+                font-size: 11px;
+                min-height: 36px;
             }
 
             .site-footer { font-size: 7px; padding: 2px 6px; }
