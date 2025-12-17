@@ -4817,9 +4817,20 @@
             .arena-status,
             .devil-toggle,
             .mobile-debate-header,
-            .landing-wrapper,
-            .site-footer {
+            .site-footer,
+            .landing-hero,
+            .landing-how-it-works,
+            .landing-features,
+            .landing-final-cta,
+            .landing-pricing {
                 display: none !important;
+            }
+
+            /* Landing wrapper - just pass through on mobile */
+            .landing-wrapper {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
             }
 
             /* Arena becomes just a container on mobile */
