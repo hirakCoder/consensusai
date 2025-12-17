@@ -5322,21 +5322,24 @@
             }
             .insights-grid { grid-template-columns: 1fr; gap: 12px; }
 
-            /* SPECTRUM - Hide the horizontal track, show simple list instead */
+            /* SPECTRUM - Convert to vertical list on mobile */
             .spectrum-container {
                 padding: 12px;
                 background: rgba(255, 255, 255, 0.02);
                 border-radius: 12px;
             }
             .spectrum-track {
-                display: none !important;
+                /* Don't hide - just remove the bar styling */
+                height: auto !important;
+                background: transparent !important;
+                position: static !important;
             }
             .spectrum-labels {
                 display: none !important;
             }
             .spectrum-label {
                 margin-bottom: 12px;
-                font-size: 0.7rem;
+                font-size: 0.75rem;
             }
             /* Convert spectrum avatars to vertical list */
             .spectrum-avatars {
@@ -5344,23 +5347,38 @@
                 display: flex !important;
                 flex-direction: column !important;
                 gap: 8px !important;
+                width: 100% !important;
             }
             .spectrum-avatar {
                 position: static !important;
                 transform: none !important;
+                left: auto !important;
                 width: 100% !important;
                 height: auto !important;
                 min-height: 48px !important;
                 padding: 12px 16px !important;
                 border-radius: 10px !important;
+                display: flex !important;
+                align-items: center !important;
                 justify-content: flex-start !important;
-                font-size: 0.85rem !important;
+                font-size: 0.9rem !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
-            .spectrum-avatar::after {
-                content: ' - Tap to view';
-                font-weight: 400;
-                opacity: 0.7;
-                margin-left: 8px;
+            .spectrum-avatar.gpt { color: #10a37f; }
+            .spectrum-avatar.gemini { color: #4285f4; }
+            .spectrum-avatar.claude { color: #d97706; }
+            .spectrum-avatar.grok { color: #f97316; }
+            .spectrum-avatar::before {
+                content: attr(title);
+                font-weight: 500;
+            }
+            /* Hide the short label, show full name from title */
+            .spectrum-avatar {
+                font-size: 0 !important;
+            }
+            .spectrum-avatar::before {
+                font-size: 0.85rem !important;
             }
 
             /* Touch targets - Ensure all interactive elements are at least 48px */
