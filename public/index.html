@@ -4085,6 +4085,24 @@
             text-shadow: 0 0 80px rgba(99, 102, 241, 0.5);
         }
 
+        .beta-badge {
+            display: inline-block;
+            font-size: 0.35em;
+            font-weight: 600;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: white;
+            background-clip: unset;
+            color: white;
+            border-radius: 6px;
+            vertical-align: super;
+            margin-left: 8px;
+            letter-spacing: 0.05em;
+            text-shadow: none;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -5434,24 +5452,24 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: flex-start !important;
-                font-size: 0.9rem !important;
                 background: rgba(255, 255, 255, 0.05) !important;
                 border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                cursor: pointer !important;
+                -webkit-tap-highlight-color: rgba(99, 102, 241, 0.3) !important;
+            }
+            .spectrum-avatar:active {
+                background: rgba(99, 102, 241, 0.2) !important;
             }
             .spectrum-avatar.gpt { color: #10a37f; }
             .spectrum-avatar.gemini { color: #4285f4; }
             .spectrum-avatar.claude { color: #d97706; }
             .spectrum-avatar.grok { color: #f97316; }
-            .spectrum-avatar::before {
-                content: attr(title);
-                font-weight: 500;
-            }
-            /* Hide the short label, show full name from title */
-            .spectrum-avatar {
-                font-size: 0 !important;
-            }
-            .spectrum-avatar::before {
-                font-size: 0.85rem !important;
+            /* Show AI name + tap hint */
+            .spectrum-avatar::after {
+                content: " → Tap to inspect";
+                font-size: 0.7rem;
+                opacity: 0.5;
+                margin-left: auto;
             }
 
             /* Touch targets - Ensure all interactive elements are at least 48px */
@@ -5699,7 +5717,7 @@
         <!-- Hero Section -->
         <section class="landing-hero" id="heroSection">
             <div class="hero-content">
-                <div class="hero-brand">ConsensusAI</div>
+                <div class="hero-brand">ConsensusAI <span class="beta-badge">BETA</span></div>
 
                 <div class="hero-badge">
                     <span class="badge-icon">&#x2728;</span>
@@ -6465,7 +6483,7 @@
 
     <!-- Site Footer -->
     <footer class="site-footer">
-        <span class="copyright">&copy; 2025 ConsensusAI</span>
+        <span class="copyright">&copy; 2025 ConsensusAI <span style="color: #f59e0b; font-weight: 600;">BETA</span></span>
         <a href="/privacy.html">Privacy</a>
         <a href="/terms.html">Terms</a>
         <a href="/disclaimer.html">Disclaimer</a>
@@ -8494,23 +8512,33 @@
             let decision = r.decision || 'ANALYZING';
             let keyArg = r.key_argument;
 
-            // If position looks like JSON, try to parse it
+            // If position looks like JSON string, try to parse it
             if (typeof position === 'string' && position.trim().startsWith('{')) {
                 try {
                     const parsed = JSON.parse(position);
-                    position = parsed.position || parsed.reasoning || position;
+                    position = parsed.position || parsed.reasoning || parsed.summary || parsed.text || position;
                     decision = parsed.decision || decision;
-                    keyArg = parsed.key_argument || keyArg;
+                    keyArg = parsed.key_argument || parsed.keyArgument || keyArg;
                 } catch (e) {
                     // If still can't parse, truncate the JSON garbage
                     position = position.replace(/^\s*\{[\s\S]*?"position"\s*:\s*"/, '').replace(/"[\s\S]*$/, '');
                 }
             }
 
-            // If position is an object (shouldn't happen but safety)
-            if (typeof position === 'object') {
-                position = position.position || JSON.stringify(position).substring(0, 200);
+            // If position is an object (extract meaningful text)
+            if (typeof position === 'object' && position !== null) {
+                position = position.position || position.reasoning || position.summary ||
+                           position.text || position.content || position.answer ||
+                           (Array.isArray(position) ? position.join('. ') : 'Analysis in progress...');
             }
+
+            // Final safety: ensure position is a string
+            if (typeof position !== 'string') {
+                position = 'Analysis in progress...';
+            }
+
+            // Clean up any remaining null/undefined text
+            position = position.replace(/null|undefined|\[object Object\]/gi, '').trim() || 'Analysis in progress...';
 
             return { ...r, position, decision, key_argument: keyArg };
         }
