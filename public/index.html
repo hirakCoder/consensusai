@@ -4794,369 +4794,387 @@
             }
         }
 
-        /* Mobile: 768px and below */
+        /* ============================================
+           MOBILE: COMPLETE REDESIGN (768px and below)
+           Clean, professional, app-like experience
+           ============================================ */
         @media (max-width: 768px) {
+            /* Base mobile reset */
             html, body {
                 overflow-x: hidden;
                 height: 100dvh;
                 width: 100%;
+                background: #0a0a0f;
             }
 
+            /* HIDE ALL COMPLEX DESKTOP ELEMENTS */
+            .nebula-bg,
+            .core-container,
+            .cortex-arena,
+            .particle-canvas,
+            .energy-beams-svg,
+            .conflict-lines-svg,
+            .conflict-laser,
+            .arena-status,
+            .devil-toggle,
+            .mobile-debate-header,
+            .landing-wrapper,
+            .site-footer {
+                display: none !important;
+            }
+
+            /* MOBILE APP LAYOUT */
             .cortex-app {
                 height: 100dvh;
                 width: 100%;
-                padding: 56px 0 0 0;
-                overflow-x: hidden;
-                overflow-y: auto;
+                padding: 0;
+                overflow: hidden;
                 display: flex;
                 flex-direction: column;
+                background: #0a0a0f;
             }
 
-            .cortex-arena {
-                flex: 1;
-                min-height: 0;
-                padding: 8px 16px;
+            /* Mobile Header Bar */
+            .auth-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 56px;
+                background: rgba(10, 10, 15, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                 display: flex;
-                flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                gap: 16px;
+                justify-content: space-between;
+                padding: 0 16px;
+                z-index: 100;
             }
 
-            /* Central orb area - fixed size, not overlapping */
-            .core-container {
-                width: 160px;
-                height: 160px;
-                flex-shrink: 0;
-                position: relative;
+            .auth-btn {
+                min-height: 36px;
+                padding: 8px 14px;
+                font-size: 13px;
+                border-radius: 8px;
             }
 
-            .core-orb {
-                width: 70px;
-                height: 70px;
+            .top-bar-right {
+                position: fixed;
+                top: 10px;
+                right: 16px;
+                z-index: 101;
+                display: flex;
+                gap: 8px;
             }
 
-            /* AI nodes - repositioned to corners, no overlap */
-            .ai-node {
+            .top-bar-right button {
                 width: 36px;
                 height: 36px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
-            .ai-node svg {
-                width: 16px;
-                height: 16px;
+            .top-bar-right button svg {
+                width: 18px;
+                height: 18px;
             }
 
-            /* Push AI nodes to corners on mobile to prevent overlap */
-            .core-container .node-gpt { top: -5px; left: -5px; }
-            .core-container .node-gemini { top: -5px; right: -5px; }
-            .core-container .node-claude { bottom: 25px; left: -5px; }
-            .core-container .node-grok { bottom: 25px; right: -5px; }
+            .top-bar-right button span {
+                display: none;
+            }
 
-            /* Hide node names on mobile */
-            .ai-node .node-name {
+            /* Main Content Area */
+            .cortex-app::before {
+                content: '';
+                display: block;
+                height: 56px;
+                flex-shrink: 0;
+            }
+
+            /* MOBILE INPUT SECTION - Clean, centered */
+            .omni-bar-container {
+                position: relative !important;
+                bottom: auto !important;
+                left: auto !important;
+                right: auto !important;
+                transform: none !important;
+                width: 100%;
+                max-width: 100%;
+                padding: 24px 16px;
+                flex-shrink: 0;
+                z-index: 10;
+            }
+
+            body.debating .omni-bar-container {
                 display: none !important;
             }
 
-            /* ALWAYS hide arena status on mobile - use debate stream header instead */
-            .arena-status {
+            .omni-bar {
+                width: 100%;
+                padding: 12px 16px;
+                border-radius: 16px;
+                gap: 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .omni-input {
+                font-size: 16px;
+                min-height: 44px;
+                padding: 10px 4px;
+            }
+
+            .omni-submit {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                flex-shrink: 0;
+            }
+
+            /* Template chips - horizontal scroll */
+            .template-chips {
+                display: flex !important;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                gap: 8px;
+                padding: 16px;
+                margin: 0;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .template-chips::-webkit-scrollbar {
+                display: none;
+            }
+
+            .template-chip {
+                flex-shrink: 0;
+                padding: 10px 16px;
+                font-size: 13px;
+                border-radius: 20px;
+                white-space: nowrap;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            body.debating .template-chips {
                 display: none !important;
             }
 
-            .round-dots {
-                gap: 6px;
+            /* AI INDICATORS - Simple row at top during debate */
+            .mobile-ai-indicators {
+                display: none;
+                justify-content: center;
+                gap: 12px;
+                padding: 16px;
+                background: rgba(10, 10, 15, 0.8);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             }
 
-            .round-dot {
-                width: 8px;
-                height: 8px;
+            body.debating .mobile-ai-indicators {
+                display: flex;
             }
 
-            /* DEBATE STREAM - Bottom sheet design for mobile */
+            .mobile-ai-dot {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 600;
+                color: white;
+                opacity: 0.4;
+                transition: all 0.3s;
+            }
+
+            .mobile-ai-dot.active {
+                opacity: 1;
+                transform: scale(1.1);
+                box-shadow: 0 0 20px currentColor;
+            }
+
+            .mobile-ai-dot.gpt { background: #10a37f; }
+            .mobile-ai-dot.gemini { background: #4285f4; }
+            .mobile-ai-dot.claude { background: #d97706; }
+            .mobile-ai-dot.grok { background: #f97316; }
+
+            /* DEBATE STREAM - Full screen chat view */
             .debate-stream {
                 position: fixed !important;
-                bottom: 0 !important;
+                top: 56px !important;
                 left: 0 !important;
                 right: 0 !important;
-                top: auto !important;
+                bottom: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
                 height: auto !important;
-                max-height: 55vh !important;
-                border-radius: 20px 20px 0 0 !important;
-                z-index: 200;
-                background: rgba(10, 10, 15, 0.98) !important;
-                backdrop-filter: blur(24px);
-                -webkit-backdrop-filter: blur(24px);
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                border-bottom: none !important;
-                box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6) !important;
-                overflow: hidden !important;
+                max-height: none !important;
+                border-radius: 0 !important;
+                z-index: 50;
+                background: #0a0a0f !important;
+                border: none !important;
+                box-shadow: none !important;
                 transform: translateY(100%);
                 transition: transform 0.3s ease-out;
+                display: flex;
+                flex-direction: column;
             }
 
             .debate-stream.active {
                 transform: translateY(0);
             }
 
-            /* Bottom sheet drag handle */
             .debate-stream::before {
-                content: '';
-                position: absolute;
-                top: 8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 40px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.3);
-                border-radius: 2px;
-                z-index: 10;
+                display: none;
             }
 
             .debate-stream .stream-header-bar {
-                padding: 20px 16px 12px;
-                background: transparent;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 16px 20px;
+                background: rgba(99, 102, 241, 0.1);
+                border-bottom: 1px solid rgba(99, 102, 241, 0.2);
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                flex-shrink: 0;
             }
 
             .debate-stream .stream-title {
                 font-weight: 600;
                 font-size: 1rem;
-                color: var(--text-primary);
+                color: var(--core-primary);
             }
 
             .debate-stream .stream-round {
-                font-size: 0.85rem;
-                color: var(--core-primary);
+                font-size: 0.9rem;
+                color: var(--text-secondary);
                 font-weight: 500;
             }
 
             .debate-stream .stream-content {
-                padding: 12px 16px 24px;
-                max-height: calc(55vh - 60px);
+                flex: 1;
+                padding: 16px;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
             }
 
+            /* Chat-like message bubbles */
             .debate-stream .stream-entry {
-                font-size: 0.9rem;
-                padding: 14px;
-                margin-bottom: 10px;
+                font-size: 0.95rem;
+                padding: 14px 16px;
+                margin-bottom: 12px;
                 background: rgba(255, 255, 255, 0.04);
-                border-radius: 12px;
+                border-radius: 16px;
                 border: 1px solid rgba(255, 255, 255, 0.06);
+                position: relative;
             }
 
-            .debate-stream .stream-entry:last-child {
-                margin-bottom: 0;
+            .debate-stream .stream-entry::before {
+                content: '';
+                position: absolute;
+                left: -3px;
+                top: 16px;
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
             }
+
+            .debate-stream .stream-entry[data-ai="gpt"]::before { background: #10a37f; }
+            .debate-stream .stream-entry[data-ai="gemini"]::before { background: #4285f4; }
+            .debate-stream .stream-entry[data-ai="claude"]::before { background: #d97706; }
+            .debate-stream .stream-entry[data-ai="grok"]::before { background: #f97316; }
 
             .debate-stream .stream-entry strong {
                 display: block;
-                margin-bottom: 6px;
-                font-size: 0.85rem;
-            }
-
-            /* HIDE query box and chips during active debate */
-            body.debating .omni-bar-container,
-            body.debating .template-chips,
-            body.debating .site-footer {
-                display: none !important;
-            }
-
-            /* Mobile debate header - shows round info at top */
-            .mobile-debate-header {
-                display: none;
-                position: fixed;
-                top: 56px;
-                left: 12px;
-                right: 12px;
-                padding: 10px 16px;
-                background: rgba(10, 10, 15, 0.95);
-                backdrop-filter: blur(12px);
-                border-radius: 12px;
-                border: 1px solid rgba(99, 102, 241, 0.3);
-                z-index: 90;
-                text-align: center;
-            }
-
-            body.debating .mobile-debate-header {
-                display: block;
-            }
-
-            .mobile-debate-header .round-label {
+                margin-bottom: 8px;
                 font-size: 0.85rem;
                 font-weight: 600;
-                color: var(--core-primary);
             }
 
-            .mobile-debate-header .round-status {
-                font-size: 0.75rem;
-                color: var(--text-secondary);
-                margin-top: 2px;
+            .debate-stream .stream-entry:last-child {
+                margin-bottom: 80px; /* Space for bottom safe area */
             }
 
-            /* Disable spinning rings on mobile - use pulse instead */
-            .ai-node.active::before,
-            .ai-node.active::after {
-                display: none;
+            /* System messages */
+            .debate-stream .system-message {
+                text-align: center;
+                padding: 12px;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                background: transparent;
+                border: none;
             }
 
-            .ai-node.active {
-                transform: scale(1.2);
-                box-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
-                animation: mobilePulse 1.5s ease-in-out infinite;
+            /* VERDICT OVERLAY - Full screen on mobile */
+            .verdict-overlay {
+                padding: 0 !important;
             }
 
-            @keyframes mobilePulse {
-                0%, 100% {
-                    transform: scale(1.2);
-                    box-shadow: 0 0 25px currentColor, 0 0 50px currentColor;
-                }
-                50% {
-                    transform: scale(1.35);
-                    box-shadow: 0 0 35px currentColor, 0 0 70px currentColor;
-                }
+            .verdict-overlay.active {
+                align-items: stretch;
             }
 
-            /* Header - compact, no overlap */
-            .auth-container {
-                position: fixed;
-                top: 8px;
-                left: 8px;
-                z-index: 100;
-                display: flex;
-                gap: 6px;
-            }
-
-            .auth-btn {
-                min-height: 40px;
-                min-width: auto;
-                padding: 8px 12px;
-                font-size: 12px;
-            }
-
-            .auth-btn-signin {
-                padding: 8px 10px;
-            }
-
-            .auth-btn-signup {
-                padding: 8px 12px;
-            }
-
-            .top-bar-right {
-                position: fixed;
-                top: 8px;
-                right: 8px;
-                z-index: 100;
-                gap: 6px;
-                display: flex;
-            }
-
-            /* Devil toggle - hide on mobile, it's too cramped */
-            .devil-toggle {
-                display: none !important;
-            }
-            .devil-toggle label {
-                gap: 4px;
-            }
-            .devil-toggle > label > span:not(.devil-switch):not(.devil-icon):not(.devil-selected-indicator) {
-                display: none; /* Hide "Devil's Advocate" text - only in label, not in selector */
-            }
-            .devil-switch {
-                width: 28px;
-                height: 16px;
-            }
-            .devil-switch::after {
-                width: 12px;
-                height: 12px;
-                top: 2px;
-                left: 2px;
-            }
-            .devil-toggle input:checked + .devil-switch::after {
-                left: 14px;
-            }
-            .devil-icon {
-                font-size: 14px;
-            }
-            .devil-selected-indicator {
-                display: none;
-            }
-            /* Devil selector - bottom sheet modal on mobile */
-            .devil-selector {
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                top: auto !important;
+            .verdict-panel {
                 width: 100% !important;
                 max-width: 100% !important;
-                min-width: 100% !important;
-                z-index: 1001 !important;
+                height: 100dvh !important;
+                max-height: 100dvh !important;
+                border-radius: 0 !important;
                 margin: 0 !important;
-                padding: 20px 16px 32px !important;
-                animation: mobileSlideUp 0.3s ease !important;
-                background: #1a1a1f !important;
-                border: none !important;
-                border-radius: 20px 20px 0 0 !important;
-                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5) !important;
-                transform: none !important;
             }
 
-            @keyframes mobileSlideUp {
-                from { transform: translateY(100%); }
-                to { transform: translateY(0); }
+            .verdict-header {
+                padding: 20px 16px;
+                border-radius: 0;
             }
 
-            .devil-selector-option {
-                padding: 16px 20px !important;
-                font-size: 1.1rem !important;
-                white-space: normal !important;
-                word-wrap: break-word !important;
-                text-align: left !important;
-                min-height: 56px !important;
-                display: flex !important;
-                align-items: center !important;
-                border-radius: 12px !important;
-                margin-bottom: 8px !important;
-                background: rgba(255, 255, 255, 0.05) !important;
+            .verdict-close {
+                top: 16px;
+                right: 16px;
             }
 
-            .devil-selector-option:last-child {
-                margin-bottom: 0 !important;
+            .verdict-content {
+                padding: 20px 16px;
             }
 
-            .devil-selector-option .ai-dot {
-                width: 12px !important;
-                height: 12px !important;
-                margin-right: 12px !important;
+            .verdict-actions {
+                padding: 16px;
+                flex-wrap: wrap;
+                gap: 10px;
             }
 
-            .devil-selector-title {
-                font-size: 1rem !important;
-                text-align: center !important;
-                margin-bottom: 16px !important;
-                padding-bottom: 12px !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            .verdict-actions button {
+                flex: 1;
+                min-width: calc(50% - 5px);
+                padding: 12px;
+                font-size: 13px;
             }
 
-            /* Backdrop for devil selector on mobile */
-            .devil-selector.active::before {
-                content: '';
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.7);
-                z-index: -1;
-                animation: fadeIn 0.2s ease;
+            /* History drawer - full screen */
+            .history-drawer {
+                width: 100vw !important;
+                max-width: 100vw !important;
             }
 
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+            /* AI Settings - full screen */
+            .ai-settings-panel {
+                position: fixed !important;
+                inset: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100dvh !important;
+                border-radius: 0 !important;
+                z-index: 1000 !important;
+            }
+
+            /* Hide complex elements */
+            .context-toggle,
+            .status-lights {
+                display: none !important;
             }
 
             /* Upgrade button - icon only on mobile */
@@ -5164,31 +5182,32 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                min-height: 40px !important;
-                height: 40px !important;
-                width: 40px !important;
-                min-width: 40px !important;
-                max-width: 40px !important;
+                min-height: 36px !important;
+                height: 36px !important;
+                width: 36px !important;
+                min-width: 36px !important;
+                max-width: 36px !important;
                 padding: 0 !important;
-                font-size: 0 !important; /* Hide text by making it invisible */
+                font-size: 0 !important;
                 line-height: 0 !important;
-                border-radius: 12px !important;
+                border-radius: 8px !important;
                 overflow: hidden !important;
             }
             .upgrade-btn svg {
-                width: 20px !important;
-                height: 20px !important;
+                width: 18px !important;
+                height: 18px !important;
                 flex-shrink: 0 !important;
-                margin: 0 !important; /* Override inline margin-right */
+                margin: 0 !important;
             }
 
             .ai-settings-btn,
             .history-toggle {
-                min-height: 40px;
-                min-width: 40px;
-                width: 40px;
-                height: 40px;
-                padding: 8px;
+                min-height: 36px;
+                min-width: 36px;
+                width: 36px;
+                height: 36px;
+                padding: 6px;
+                border-radius: 8px;
             }
 
             .user-avatar {
@@ -5196,16 +5215,12 @@
                 height: 32px;
             }
 
-            .user-menu {
-                padding: 4px;
-            }
-
             /* User dropdown - bottom sheet on mobile */
             .user-dropdown-backdrop {
                 display: block;
                 position: fixed;
                 inset: 0;
-                background: rgba(0,0,0,0.5);
+                background: rgba(0,0,0,0.6);
                 opacity: 0;
                 visibility: hidden;
                 z-index: 999;
@@ -5224,168 +5239,58 @@
                 top: auto !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                border-radius: 16px 16px 0 0 !important;
+                border-radius: 20px 20px 0 0 !important;
                 padding: 24px 16px 32px !important;
                 transform: translateY(100%);
                 z-index: 1000 !important;
-                background: #1a1a1f !important;
+                background: #0f0f14 !important;
             }
             .user-dropdown.active {
                 transform: translateY(0);
             }
             .user-dropdown-item {
                 padding: 16px;
-                min-height: 56px;
+                min-height: 52px;
                 font-size: 16px;
-            }
-
-            /* Omni bar - in flow, not fixed (better mobile UX) */
-            .omni-bar-container {
-                position: fixed;
-                bottom: 24px;
-                left: 12px;
-                right: 12px;
-                width: auto;
-                max-width: none;
-                transform: none;
-                z-index: 50;
-            }
-
-            .omni-bar {
-                width: 100%;
-                padding: 6px 10px;
-                border-radius: 24px;
-                gap: 8px;
-            }
-
-            .omni-input {
-                font-size: 16px;
-                min-height: 40px;
-                padding: 8px 4px;
-            }
-
-            .omni-submit {
-                width: 40px;
-                height: 40px;
-                flex-shrink: 0;
-            }
-
-            .status-lights {
-                display: none;
-            }
-
-            /* Template chips - VISIBLE and scrollable */
-            .template-chips {
-                display: flex !important;
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                -webkit-overflow-scrolling: touch;
-                gap: 6px;
-                padding: 8px 0 4px;
-                margin: 0 -4px;
-                scrollbar-width: none;
-            }
-            .template-chips::-webkit-scrollbar {
-                display: none;
-            }
-            .template-chip {
-                flex-shrink: 0;
-                min-height: 36px;
-                padding: 6px 12px;
-                font-size: 12px;
-                white-space: nowrap;
-            }
-
-            /* Context toggle */
-            .context-toggle {
-                display: none;
-            }
-
-            /* Footer - minimal */
-            .site-footer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 4px 12px;
-                font-size: 9px;
-                z-index: 40;
-                background: rgba(0,0,0,0.8);
+                border-radius: 12px;
             }
 
             /* History drawer */
             .history-overlay { z-index: 900; }
-            .history-drawer {
-                width: 100vw;
-                max-width: 100vw;
-                right: -100vw;
-                z-index: 901;
-            }
             .history-drawer.open { right: 0; }
-            .history-item { min-height: 56px; padding: 16px; }
+            .history-item { min-height: 52px; padding: 16px; }
 
-            /* AI Settings - full screen */
+            /* AI Settings overlay */
             .ai-settings-overlay { z-index: 910; }
-            .ai-settings-panel {
-                position: fixed !important;
-                inset: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                height: 100dvh !important;
-                border-radius: 0 !important;
-                padding: 16px !important;
-                transform: none !important;
-                z-index: 911 !important;
-            }
             .ai-settings-close { min-width: 44px; min-height: 44px; }
 
-            /* Verdict panel - bottom sheet */
-            .verdict-overlay {
-                z-index: 920;
-                padding: 0;
-                align-items: flex-end;
-            }
-            .verdict-panel {
-                width: 100%;
-                max-width: 100%;
-                max-height: 90dvh;
-                border-radius: 16px 16px 0 0;
-                padding: 16px 12px 24px;
-                overflow-y: auto;
-            }
-            .verdict-close { min-width: 44px; min-height: 44px; }
-            .verdict-decision { font-size: 1.1rem; }
-            .verdict-question { font-size: 0.85rem; }
-            .verdict-btn { min-height: 48px; width: 100%; }
-            .action-grid { grid-template-columns: 1fr; gap: 12px; }
-            .verdict-actions { flex-direction: column; gap: 8px; }
-            /* LLM Response Cards - Mobile optimized */
+            /* AI Response Cards - Mobile optimized */
             .ai-agreement-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
+                grid-template-columns: 1fr;
+                gap: 10px;
                 margin: 12px 0;
             }
             .ai-response-card {
-                padding: 10px;
+                padding: 14px;
                 display: flex;
                 flex-direction: column;
             }
             .ai-resp-header {
-                margin-bottom: 6px;
+                margin-bottom: 8px;
                 flex-wrap: wrap;
-                gap: 4px;
+                gap: 6px;
             }
             .ai-resp-name {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
             }
             .ai-resp-verdict {
-                font-size: 0.6rem;
-                padding: 2px 6px;
+                font-size: 0.7rem;
+                padding: 3px 8px;
             }
             .ai-resp-summary {
-                font-size: 0.75rem;
-                line-height: 1.4;
-                -webkit-line-clamp: 3;
+                font-size: 0.85rem;
+                line-height: 1.5;
+                -webkit-line-clamp: 4;
                 margin: 0;
             }
             .insights-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -5395,50 +5300,53 @@
             .upgrade-overlay {
                 z-index: 930;
                 align-items: flex-end;
+                padding: 0;
             }
             .upgrade-modal {
                 width: 100%;
                 max-width: 100%;
                 max-height: 85dvh;
-                border-radius: 16px 16px 0 0;
-                padding: 20px 16px 28px;
+                border-radius: 20px 20px 0 0;
+                padding: 24px 20px 32px;
                 overflow-y: auto;
             }
             .upgrade-modal-header {
                 text-align: center;
             }
             .upgrade-modal-title {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
             }
             .upgrade-modal-subtitle {
-                font-size: 0.85rem;
+                font-size: 0.9rem;
             }
             .upgrade-feature {
-                padding: 10px 0;
+                padding: 12px 0;
             }
             .upgrade-feature-text {
-                font-size: 0.85rem;
+                font-size: 0.9rem;
             }
             .upgrade-price {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             .upgrade-cta {
-                min-height: 48px;
+                min-height: 52px;
                 font-size: 1rem;
+                border-radius: 14px;
             }
 
-            /* Toast - Mobile optimized for error messages */
+            /* Toast - Mobile optimized */
             .toast {
-                bottom: 80px;
-                left: 12px;
-                right: 12px;
+                bottom: 100px;
+                left: 16px;
+                right: 16px;
                 max-width: none;
                 transform: translateY(20px);
-                padding: 12px 16px;
-                font-size: 0.8rem;
+                padding: 14px 18px;
+                font-size: 0.9rem;
                 line-height: 1.4;
                 text-align: center;
                 word-wrap: break-word;
+                border-radius: 14px;
             }
             .toast.show {
                 transform: translateY(0);
@@ -5447,142 +5355,77 @@
 
         /* Small mobile: 480px and below */
         @media (max-width: 480px) {
-            .cortex-app {
-                padding-top: 52px;
-            }
-
-            .core-container {
-                width: 140px;
-                height: 140px;
-            }
-
-            .core-orb {
-                width: 60px;
-                height: 60px;
-            }
-
-            .ai-node {
-                width: 32px;
-                height: 32px;
-            }
-
-            .ai-node svg {
-                width: 14px;
-                height: 14px;
-            }
-
-            /* AI nodes pushed further out on small screens */
-            .core-container .node-gpt { top: -8px; left: -8px; }
-            .core-container .node-gemini { top: -8px; right: -8px; }
-            .core-container .node-claude { bottom: 20px; left: -8px; }
-            .core-container .node-grok { bottom: 20px; right: -8px; }
-
             .omni-bar-container {
-                bottom: 22px;
-                left: 8px;
-                right: 8px;
+                padding: 20px 12px;
             }
 
             .template-chip {
-                padding: 5px 10px;
-                font-size: 11px;
+                padding: 8px 14px;
+                font-size: 12px;
             }
 
-            .site-footer { font-size: 8px; padding: 3px 8px; }
+            .auth-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
         }
 
         /* Tiny mobile (Galaxy Fold): 320px and below */
         @media (max-width: 320px) {
-            .cortex-app {
-                padding-top: 44px;
-            }
-
-            /* Compact header for tiny screens - below cookie banner */
             .auth-container {
-                top: 42px;
-                left: 6px;
-                gap: 3px;
+                height: 48px;
+                padding: 0 10px;
             }
 
             .auth-btn {
-                min-height: 32px;
+                min-height: 30px;
                 padding: 4px 8px;
                 font-size: 10px;
             }
 
             .top-bar-right {
-                top: 42px;
-                right: 6px;
-                gap: 3px;
+                top: 8px;
+                right: 10px;
+                gap: 4px;
             }
 
             .ai-settings-btn,
-            .history-toggle {
-                min-height: 32px;
-                min-width: 32px;
-                width: 32px;
-                height: 32px;
-                padding: 5px;
+            .history-toggle,
+            .upgrade-btn {
+                min-height: 30px !important;
+                min-width: 30px !important;
+                width: 30px !important;
+                height: 30px !important;
+                padding: 4px !important;
             }
-
-            .core-container {
-                width: 130px;
-                height: 130px;
-            }
-
-            .core-orb {
-                width: 55px;
-                height: 55px;
-            }
-
-            .ai-node {
-                width: 28px;
-                height: 28px;
-            }
-
-            .ai-node svg {
-                width: 12px;
-                height: 12px;
-            }
-
-            /* AI nodes at corners for tiny screens */
-            .core-container .node-gpt { top: -10px; left: -10px; }
-            .core-container .node-gemini { top: -10px; right: -10px; }
-            .core-container .node-claude { bottom: 15px; left: -10px; }
-            .core-container .node-grok { bottom: 15px; right: -10px; }
 
             .omni-bar-container {
-                bottom: 18px;
-                left: 6px;
-                right: 6px;
+                padding: 16px 10px;
             }
 
             .omni-bar {
-                padding: 4px 8px;
-                border-radius: 20px;
+                padding: 10px 12px;
+                border-radius: 14px;
             }
 
             .omni-input {
                 font-size: 14px;
-                min-height: 34px;
+                min-height: 38px;
             }
 
             .omni-submit {
-                width: 34px;
-                height: 34px;
+                width: 38px;
+                height: 38px;
             }
 
             .template-chips {
-                padding: 4px 0 2px;
+                padding: 12px 10px;
             }
 
             .template-chip {
-                padding: 4px 8px;
-                font-size: 10px;
-                min-height: 28px;
+                padding: 6px 12px;
+                font-size: 11px;
             }
-
-            .site-footer { font-size: 7px; padding: 2px 6px; }
         }
     </style>
 </head>
