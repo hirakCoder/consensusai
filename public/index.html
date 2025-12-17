@@ -4807,10 +4807,9 @@
                 background: #0a0a0f;
             }
 
-            /* HIDE ALL COMPLEX DESKTOP ELEMENTS */
+            /* HIDE COMPLEX VISUAL ELEMENTS - Keep structural containers */
             .nebula-bg,
             .core-container,
-            .cortex-arena,
             .particle-canvas,
             .energy-beams-svg,
             .conflict-lines-svg,
@@ -4821,6 +4820,15 @@
             .landing-wrapper,
             .site-footer {
                 display: none !important;
+            }
+
+            /* Arena becomes just a container on mobile */
+            .cortex-arena {
+                display: block !important;
+                padding: 0 !important;
+                height: auto !important;
+                min-height: 0 !important;
+                background: transparent !important;
             }
 
             /* MOBILE APP LAYOUT */
