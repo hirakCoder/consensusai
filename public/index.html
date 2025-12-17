@@ -4911,6 +4911,32 @@
                 display: none !important;
             }
 
+            /* CLEAN LIVE DEBATE VIEW - Hide orbs, maximize stream */
+            body.debating .core-container,
+            body.debating .arena-status,
+            .cortex-app.debating .core-container,
+            .cortex-app.debating .arena-status {
+                display: none !important;
+            }
+
+            /* Make debate stream larger during active debate */
+            body.debating .debate-stream,
+            .debate-stream.active {
+                top: 56px !important;
+                left: 0 !important;
+                right: 0 !important;
+                max-height: calc(100dvh - 56px) !important;
+                height: auto !important;
+                border-radius: 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+            }
+
+            body.debating .debate-stream .stream-content,
+            .debate-stream.active .stream-content {
+                max-height: calc(100dvh - 120px) !important;
+            }
+
             /* Disable spinning rings on mobile - use pulse instead */
             .ai-node.active::before,
             .ai-node.active::after {
