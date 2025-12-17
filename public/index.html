@@ -2748,6 +2748,11 @@
             transform: translateX(-50%) scale(1.2);
             box-shadow: 0 0 15px currentColor;
         }
+        /* Desktop: show abbreviation only */
+        .spec-abbrev { display: inline; }
+        .spec-name { display: none; }
+        .spec-decision { display: none;
+        }
 
         .spectrum-avatar.gpt { background: var(--ai-gpt); }
         .spectrum-avatar.gemini { background: var(--ai-gemini); }
@@ -5417,63 +5422,126 @@
             }
             .insights-grid { grid-template-columns: 1fr; gap: 12px; }
 
-            /* SPECTRUM - Convert to vertical list on mobile */
+            /* SPECTRUM - Convert to tappable buttons on mobile */
             .spectrum-container {
-                padding: 12px;
-                background: rgba(255, 255, 255, 0.02);
+                padding: 16px;
+                background: rgba(255, 255, 255, 0.03);
                 border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                margin: 16px 0;
             }
             .spectrum-track {
-                /* Don't hide - just remove the bar styling */
                 height: auto !important;
                 background: transparent !important;
-                position: static !important;
+                position: relative !important;
+                pointer-events: auto !important;
             }
             .spectrum-labels {
                 display: none !important;
             }
             .spectrum-label {
                 margin-bottom: 12px;
-                font-size: 0.75rem;
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: var(--text-primary);
             }
-            /* Convert spectrum avatars to vertical list */
+            /* Convert spectrum avatars to vertical tappable list */
             .spectrum-avatars {
-                position: static !important;
+                position: relative !important;
                 display: flex !important;
                 flex-direction: column !important;
-                gap: 8px !important;
+                gap: 10px !important;
                 width: 100% !important;
+                pointer-events: auto !important;
             }
             .spectrum-avatar {
-                position: static !important;
+                position: relative !important;
                 transform: none !important;
                 left: auto !important;
+                right: auto !important;
+                top: auto !important;
+                bottom: auto !important;
                 width: 100% !important;
                 height: auto !important;
-                min-height: 48px !important;
-                padding: 12px 16px !important;
-                border-radius: 10px !important;
+                min-height: 52px !important;
+                padding: 14px 18px !important;
+                border-radius: 12px !important;
                 display: flex !important;
                 align-items: center !important;
-                justify-content: flex-start !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                justify-content: space-between !important;
+                background: rgba(255, 255, 255, 0.06) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
                 cursor: pointer !important;
-                -webkit-tap-highlight-color: rgba(99, 102, 241, 0.3) !important;
+                pointer-events: auto !important;
+                z-index: 10 !important;
+                -webkit-tap-highlight-color: rgba(99, 102, 241, 0.4) !important;
+                font-size: 0.95rem !important;
+                font-weight: 600 !important;
             }
             .spectrum-avatar:active {
-                background: rgba(99, 102, 241, 0.2) !important;
+                background: rgba(99, 102, 241, 0.25) !important;
+                transform: scale(0.98) !important;
             }
-            .spectrum-avatar.gpt { color: #10a37f; }
-            .spectrum-avatar.gemini { color: #4285f4; }
-            .spectrum-avatar.claude { color: #d97706; }
-            .spectrum-avatar.grok { color: #f97316; }
-            /* Show AI name + tap hint */
-            .spectrum-avatar::after {
-                content: " → Tap to inspect";
-                font-size: 0.7rem;
-                opacity: 0.5;
-                margin-left: auto;
+            .spectrum-avatar.gpt { color: #10a37f; border-left: 3px solid #10a37f !important; }
+            .spectrum-avatar.gemini { color: #4285f4; border-left: 3px solid #4285f4 !important; }
+            .spectrum-avatar.claude { color: #d97706; border-left: 3px solid #d97706 !important; }
+            .spectrum-avatar.grok { color: #f97316; border-left: 3px solid #f97316 !important; }
+            /* Mobile: show full name and decision, hide abbreviation */
+            .spec-abbrev { display: none !important; }
+            .spec-name { display: inline !important; flex: 1; }
+            .spec-decision {
+                display: inline-block !important;
+                font-size: 0.7rem !important;
+                font-weight: 700 !important;
+                padding: 3px 8px !important;
+                border-radius: 4px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+                margin-left: auto !important;
+            }
+            .spec-decision.yes { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+            .spec-decision.no { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+            .spec-decision.conditional { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+            .spec-decision.wait { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+
+            /* NODE INSPECTOR OVERLAY - Mobile Styling */
+            .node-inspector-overlay {
+                z-index: 1000 !important; /* Above verdict overlay (z-index: 920) */
+                padding: 0 !important;
+                align-items: flex-end !important;
+            }
+            .glass-dossier {
+                width: 100% !important;
+                max-width: 100% !important;
+                border-radius: 16px 16px 0 0 !important;
+                padding: 20px 16px 32px !important;
+                max-height: 85vh !important;
+                overflow-y: auto !important;
+            }
+            .dossier-header {
+                gap: 12px !important;
+                margin-bottom: 16px !important;
+                padding-bottom: 12px !important;
+            }
+            .dossier-icon {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 1rem !important;
+            }
+            .dossier-title {
+                font-size: 1.25rem !important;
+            }
+            .dossier-verdict {
+                font-size: 0.7rem !important;
+                padding: 3px 8px !important;
+            }
+            .dossier-body {
+                font-size: 0.95rem !important;
+                line-height: 1.6 !important;
+            }
+            .dossier-close {
+                min-width: 44px !important;
+                min-height: 44px !important;
             }
 
             /* Touch targets - Ensure all interactive elements are at least 48px */
@@ -6523,13 +6591,13 @@
 
             <!-- Spectrum Slider -->
             <div class="spectrum-container">
-                <div class="spectrum-label">AI Position Spectrum <span style="opacity:0.5">(click to inspect)</span></div>
+                <div class="spectrum-label">AI Position Spectrum <span style="opacity:0.5">(tap to inspect)</span></div>
                 <div class="spectrum-track">
                     <div class="spectrum-avatars">
-                        <div class="spectrum-avatar gpt" id="specGpt" style="left: 80%" onclick="openInspector('openai')" title="Click to see GPT analysis">G</div>
-                        <div class="spectrum-avatar gemini" id="specGemini" style="left: 75%" onclick="openInspector('gemini')" title="Click to see Gemini analysis">Gm</div>
-                        <div class="spectrum-avatar grok" id="specGrok" style="left: 85%" onclick="openInspector('grok')" title="Click to see Grok analysis">Gk</div>
-                        <div class="spectrum-avatar claude" id="specClaude" style="left: 70%" onclick="openInspector('claude')" title="Click to see Claude analysis">C</div>
+                        <div class="spectrum-avatar gpt" id="specGpt" style="left: 80%" title="Tap to see GPT analysis"><span class="spec-abbrev">G</span><span class="spec-name">GPT-4o</span><span class="spec-decision" id="specGptDecision"></span></div>
+                        <div class="spectrum-avatar gemini" id="specGemini" style="left: 75%" title="Tap to see Gemini analysis"><span class="spec-abbrev">Gm</span><span class="spec-name">Gemini</span><span class="spec-decision" id="specGeminiDecision"></span></div>
+                        <div class="spectrum-avatar grok" id="specGrok" style="left: 85%" title="Tap to see Grok analysis"><span class="spec-abbrev">Gk</span><span class="spec-name">Grok</span><span class="spec-decision" id="specGrokDecision"></span></div>
+                        <div class="spectrum-avatar claude" id="specClaude" style="left: 70%" title="Tap to see Claude analysis"><span class="spec-abbrev">C</span><span class="spec-name">Claude</span><span class="spec-decision" id="specClaudeDecision"></span></div>
                     </div>
                 </div>
                 <div class="spectrum-labels">
@@ -8130,6 +8198,15 @@
                     avatar.style.left = pos + '%';
                 }
 
+                // Update spectrum decision badge (for mobile display)
+                const decisionBadgeMap = { openai: 'specGptDecision', gemini: 'specGeminiDecision', grok: 'specGrokDecision', claude: 'specClaudeDecision' };
+                const decisionBadge = document.getElementById(decisionBadgeMap[r.llmId]);
+                if (decisionBadge) {
+                    const decision = r.decision || '-';
+                    decisionBadge.textContent = decision;
+                    decisionBadge.className = 'spec-decision ' + decision.toLowerCase();
+                }
+
                 // AI Agreement card
                 const cardSuffix = cardSuffixMap[r.llmId];
                 if (cardSuffix) {
@@ -8657,6 +8734,27 @@
         document.getElementById('nodeGemini').addEventListener('click', () => openInspector('gemini'));
         document.getElementById('nodeClaude').addEventListener('click', () => openInspector('claude'));
         document.getElementById('nodeGrok').addEventListener('click', () => openInspector('grok'));
+
+        // Attach click/touch handlers to spectrum avatars (more reliable than inline onclick for mobile)
+        ['specGpt', 'specGemini', 'specGrok', 'specClaude'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                const llmIdMap = { specGpt: 'openai', specGemini: 'gemini', specGrok: 'grok', specClaude: 'claude' };
+                const llmId = llmIdMap[id];
+                // Use touchend for mobile (fires after finger lifted, avoids scroll conflicts)
+                el.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openInspector(llmId);
+                }, { passive: false });
+                // Keep click for desktop
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openInspector(llmId);
+                });
+            }
+        });
 
         // ============================================
         // TACTICAL DRAWER
