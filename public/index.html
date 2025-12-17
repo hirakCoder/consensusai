@@ -4800,33 +4800,33 @@
 
             /* Central orb area - fixed size, not overlapping */
             .core-container {
-                width: 160px;
-                height: 160px;
+                width: 200px;
+                height: 200px;
                 flex-shrink: 0;
                 position: relative;
             }
 
             .core-orb {
-                width: 70px;
-                height: 70px;
+                width: 90px;
+                height: 90px;
             }
 
-            /* AI nodes - repositioned to corners, no overlap */
+            /* AI nodes - larger for better proportion */
             .ai-node {
-                width: 36px;
-                height: 36px;
+                width: 42px;
+                height: 42px;
             }
 
             .ai-node svg {
-                width: 16px;
-                height: 16px;
+                width: 18px;
+                height: 18px;
             }
 
-            /* Push AI nodes to corners on mobile to prevent overlap */
-            .core-container .node-gpt { top: -5px; left: -5px; }
-            .core-container .node-gemini { top: -5px; right: -5px; }
-            .core-container .node-claude { bottom: 25px; left: -5px; }
-            .core-container .node-grok { bottom: 25px; right: -5px; }
+            /* Push AI nodes to corners on mobile */
+            .core-container .node-gpt { top: 0; left: 0; }
+            .core-container .node-gemini { top: 0; right: 0; }
+            .core-container .node-claude { bottom: 30px; left: 0; }
+            .core-container .node-grok { bottom: 30px; right: 0; }
 
             /* Hide node names on mobile */
             .ai-node .node-name {
@@ -5036,18 +5036,18 @@
             }
 
             .auth-btn {
-                min-height: 40px;
+                min-height: 34px;
                 min-width: auto;
-                padding: 8px 12px;
-                font-size: 12px;
+                padding: 6px 12px;
+                font-size: 11px;
             }
 
             .auth-btn-signin {
-                padding: 8px 10px;
+                padding: 6px 10px;
             }
 
             .auth-btn-signup {
-                padding: 8px 12px;
+                padding: 6px 14px;
             }
 
             /* Hide Sign In on mobile - less clutter, Sign Up is primary action */
@@ -5066,17 +5066,17 @@
 
             /* AI Settings button - icon only on mobile */
             .ai-settings-btn {
-                width: 40px;
-                height: 40px;
-                padding: 8px;
+                width: 34px;
+                height: 34px;
+                padding: 6px;
                 border-radius: 50%;
             }
             .ai-settings-btn span {
                 display: none !important;
             }
             .ai-settings-btn svg {
-                width: 20px;
-                height: 20px;
+                width: 16px;
+                height: 16px;
             }
 
             /* Devil toggle - hide on mobile, it's too cramped */
@@ -5186,31 +5186,35 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                min-height: 40px !important;
-                height: 40px !important;
-                width: 40px !important;
-                min-width: 40px !important;
-                max-width: 40px !important;
+                min-height: 34px !important;
+                height: 34px !important;
+                width: 34px !important;
+                min-width: 34px !important;
+                max-width: 34px !important;
                 padding: 0 !important;
                 font-size: 0 !important; /* Hide text by making it invisible */
                 line-height: 0 !important;
-                border-radius: 12px !important;
+                border-radius: 10px !important;
                 overflow: hidden !important;
             }
             .upgrade-btn svg {
-                width: 20px !important;
-                height: 20px !important;
+                width: 16px !important;
+                height: 16px !important;
                 flex-shrink: 0 !important;
                 margin: 0 !important; /* Override inline margin-right */
             }
 
             .ai-settings-btn,
             .history-toggle {
-                min-height: 40px;
-                min-width: 40px;
-                width: 40px;
-                height: 40px;
-                padding: 8px;
+                min-height: 34px;
+                min-width: 34px;
+                width: 34px;
+                height: 34px;
+                padding: 6px;
+            }
+            .history-toggle svg {
+                width: 16px;
+                height: 16px;
             }
 
             .user-avatar {
@@ -5566,30 +5570,30 @@
             }
 
             .core-container {
-                width: 140px;
-                height: 140px;
+                width: 180px;
+                height: 180px;
             }
 
             .core-orb {
-                width: 60px;
-                height: 60px;
+                width: 80px;
+                height: 80px;
             }
 
             .ai-node {
-                width: 32px;
-                height: 32px;
+                width: 38px;
+                height: 38px;
             }
 
             .ai-node svg {
-                width: 14px;
-                height: 14px;
+                width: 16px;
+                height: 16px;
             }
 
-            /* AI nodes pushed further out on small screens */
-            .core-container .node-gpt { top: -8px; left: -8px; }
-            .core-container .node-gemini { top: -8px; right: -8px; }
-            .core-container .node-claude { bottom: 20px; left: -8px; }
-            .core-container .node-grok { bottom: 20px; right: -8px; }
+            /* AI nodes positioned for 180px container */
+            .core-container .node-gpt { top: -5px; left: -5px; }
+            .core-container .node-gemini { top: -5px; right: -5px; }
+            .core-container .node-claude { bottom: 25px; left: -5px; }
+            .core-container .node-grok { bottom: 25px; right: -5px; }
 
             .omni-bar-container {
                 bottom: 22px;
@@ -5640,30 +5644,30 @@
             }
 
             .core-container {
-                width: 130px;
-                height: 130px;
+                width: 160px;
+                height: 160px;
             }
 
             .core-orb {
-                width: 55px;
-                height: 55px;
+                width: 70px;
+                height: 70px;
             }
 
             .ai-node {
-                width: 28px;
-                height: 28px;
+                width: 34px;
+                height: 34px;
             }
 
             .ai-node svg {
-                width: 12px;
-                height: 12px;
+                width: 14px;
+                height: 14px;
             }
 
             /* AI nodes at corners for tiny screens */
-            .core-container .node-gpt { top: -10px; left: -10px; }
-            .core-container .node-gemini { top: -10px; right: -10px; }
-            .core-container .node-claude { bottom: 15px; left: -10px; }
-            .core-container .node-grok { bottom: 15px; right: -10px; }
+            .core-container .node-gpt { top: -5px; left: -5px; }
+            .core-container .node-gemini { top: -5px; right: -5px; }
+            .core-container .node-claude { bottom: 20px; left: -5px; }
+            .core-container .node-grok { bottom: 20px; right: -5px; }
 
             .omni-bar-container {
                 bottom: 18px;
