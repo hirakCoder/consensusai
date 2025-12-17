@@ -5030,34 +5030,49 @@
                 }
             }
 
-            /* Header - compact, no overlap */
+            /* Header - compact, proportional, no overlap */
             .auth-container {
                 position: fixed;
                 top: 8px;
                 left: 8px;
                 z-index: 100;
                 display: flex;
-                gap: 6px;
+                align-items: center;
+                gap: 8px;
             }
 
             .auth-btn {
-                min-height: 34px;
+                height: 32px;
+                min-height: 32px;
                 min-width: auto;
-                padding: 6px 12px;
+                padding: 0 10px;
                 font-size: 11px;
+                font-weight: 600;
+                border-radius: 8px;
             }
 
+            /* Sign In - subtle link style */
             .auth-btn-signin {
-                padding: 6px 10px;
+                display: flex !important;
+                background: transparent !important;
+                border: none !important;
+                color: var(--text-secondary) !important;
+                padding: 0 6px !important;
+                font-size: 11px !important;
+                text-decoration: underline;
+                text-underline-offset: 2px;
+            }
+            .auth-btn-signin:hover {
+                color: var(--text-primary) !important;
             }
 
+            /* Sign Up - small, proportional to header icons */
             .auth-btn-signup {
-                padding: 6px 14px;
-            }
-
-            /* Hide Sign In on mobile - less clutter, Sign Up is primary action */
-            .auth-btn-signin {
-                display: none !important;
+                height: 32px !important;
+                padding: 0 12px !important;
+                font-size: 11px !important;
+                background: rgba(99, 102, 241, 0.15) !important;
+                border: 1px solid rgba(99, 102, 241, 0.3) !important;
             }
 
             .top-bar-right {
@@ -5065,23 +5080,29 @@
                 top: 8px;
                 right: 8px;
                 z-index: 100;
-                gap: 4px;
+                gap: 6px;
                 display: flex;
+                align-items: center;
             }
 
             /* AI Settings button - icon only on mobile */
             .ai-settings-btn {
-                width: 34px;
-                height: 34px;
-                padding: 6px;
-                border-radius: 50%;
+                width: 32px !important;
+                height: 32px !important;
+                min-width: 32px !important;
+                min-height: 32px !important;
+                padding: 0 !important;
+                border-radius: 8px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             .ai-settings-btn span {
                 display: none !important;
             }
             .ai-settings-btn svg {
-                width: 16px;
-                height: 16px;
+                width: 16px !important;
+                height: 16px !important;
             }
 
             /* Devil toggle - hide on mobile, it's too cramped */
@@ -5191,35 +5212,38 @@
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                min-height: 34px !important;
-                height: 34px !important;
-                width: 34px !important;
-                min-width: 34px !important;
-                max-width: 34px !important;
+                height: 32px !important;
+                width: 32px !important;
+                min-height: 32px !important;
+                min-width: 32px !important;
+                max-width: 32px !important;
                 padding: 0 !important;
-                font-size: 0 !important; /* Hide text by making it invisible */
+                font-size: 0 !important;
                 line-height: 0 !important;
-                border-radius: 10px !important;
+                border-radius: 8px !important;
                 overflow: hidden !important;
             }
             .upgrade-btn svg {
                 width: 16px !important;
                 height: 16px !important;
                 flex-shrink: 0 !important;
-                margin: 0 !important; /* Override inline margin-right */
+                margin: 0 !important;
             }
 
-            .ai-settings-btn,
             .history-toggle {
-                min-height: 34px;
-                min-width: 34px;
-                width: 34px;
-                height: 34px;
-                padding: 6px;
+                height: 32px !important;
+                width: 32px !important;
+                min-height: 32px !important;
+                min-width: 32px !important;
+                padding: 0 !important;
+                border-radius: 8px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
             .history-toggle svg {
-                width: 16px;
-                height: 16px;
+                width: 16px !important;
+                height: 16px !important;
             }
 
             .user-avatar {
