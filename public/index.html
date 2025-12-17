@@ -4959,13 +4959,33 @@
                 padding: 8px 12px;
             }
 
+            /* Hide Sign In on mobile - less clutter, Sign Up is primary action */
+            .auth-btn-signin {
+                display: none !important;
+            }
+
             .top-bar-right {
                 position: fixed;
                 top: 8px;
                 right: 8px;
                 z-index: 100;
-                gap: 6px;
+                gap: 4px;
                 display: flex;
+            }
+
+            /* AI Settings button - icon only on mobile */
+            .ai-settings-btn {
+                width: 40px;
+                height: 40px;
+                padding: 8px;
+                border-radius: 50%;
+            }
+            .ai-settings-btn span {
+                display: none !important;
+            }
+            .ai-settings-btn svg {
+                width: 20px;
+                height: 20px;
             }
 
             /* Devil toggle - hide on mobile, it's too cramped */
