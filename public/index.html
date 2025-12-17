@@ -2089,6 +2089,49 @@
             box-shadow: 0 0 10px var(--core-primary);
         }
 
+        /* Devil's Advocate AI Selector in Settings */
+        .devil-ai-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .devil-ai-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .devil-ai-option:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+        }
+
+        .devil-ai-option.selected {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--core-primary);
+            color: var(--text-primary);
+        }
+
+        .devil-ai-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
         /* ============================================
            CONTEXT INPUT (Expandable)
            ============================================ */
@@ -4815,33 +4858,9 @@
                 display: none !important;
             }
 
-            /* Hide arena status by default on mobile - only show during active debate */
+            /* ALWAYS hide arena status on mobile - use debate stream header instead */
             .arena-status {
                 display: none !important;
-            }
-
-            /* Show arena status only during active debate */
-            .cortex-app.debating .arena-status {
-                display: flex !important;
-                flex-direction: column;
-                align-items: center;
-                gap: 6px;
-                padding: 10px 20px;
-                background: rgba(0, 0, 0, 0.6);
-                border-radius: 12px;
-                margin-top: 8px;
-                border: 1px solid rgba(255, 255, 255, 0.1);
-            }
-
-            .cortex-app.debating .status-text {
-                font-size: 1.1rem !important;
-                font-weight: 600;
-                color: var(--text-primary);
-            }
-
-            .cortex-app.debating .status-phase {
-                font-size: 0.85rem !important;
-                color: var(--text-secondary);
             }
 
             .round-dots {
@@ -4853,62 +4872,132 @@
                 height: 8px;
             }
 
-            /* DEBATE STREAM - Mobile optimized */
+            /* DEBATE STREAM - Bottom sheet design for mobile */
             .debate-stream {
                 position: fixed !important;
-                top: 52px !important;
-                left: 8px !important;
-                right: 8px !important;
-                width: auto !important;
-                max-width: calc(100% - 16px) !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 height: auto !important;
-                max-height: 45vh !important;
-                border-radius: 16px !important;
-                z-index: 80;
-                background: rgba(15, 15, 20, 0.98) !important;
-                backdrop-filter: blur(20px);
+                max-height: 55vh !important;
+                border-radius: 20px 20px 0 0 !important;
+                z-index: 200;
+                background: rgba(10, 10, 15, 0.98) !important;
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
                 border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+                border-bottom: none !important;
+                box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.6) !important;
                 overflow: hidden !important;
+                transform: translateY(100%);
+                transition: transform 0.3s ease-out;
+            }
+
+            .debate-stream.active {
+                transform: translateY(0);
+            }
+
+            /* Bottom sheet drag handle */
+            .debate-stream::before {
+                content: '';
+                position: absolute;
+                top: 8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 2px;
+                z-index: 10;
             }
 
             .debate-stream .stream-header-bar {
-                padding: 10px 14px;
-                border-radius: 16px 16px 0 0;
-                background: rgba(255, 255, 255, 0.03);
+                padding: 20px 16px 12px;
+                background: transparent;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .debate-stream .stream-title {
+                font-weight: 600;
+                font-size: 1rem;
+                color: var(--text-primary);
+            }
+
+            .debate-stream .stream-round {
+                font-size: 0.85rem;
+                color: var(--core-primary);
+                font-weight: 500;
             }
 
             .debate-stream .stream-content {
-                padding: 10px;
-                max-height: calc(45vh - 50px);
+                padding: 12px 16px 24px;
+                max-height: calc(55vh - 60px);
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
             }
 
             .debate-stream .stream-entry {
-                font-size: 0.85rem;
-                padding: 12px;
-                margin-bottom: 8px;
-                background: rgba(255, 255, 255, 0.03);
-                border-radius: 10px;
-                border: 1px solid rgba(255, 255, 255, 0.05);
+                font-size: 0.9rem;
+                padding: 14px;
+                margin-bottom: 10px;
+                background: rgba(255, 255, 255, 0.04);
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.06);
             }
 
             .debate-stream .stream-entry:last-child {
                 margin-bottom: 0;
             }
 
-            /* HIDE query box during active debate */
-            .debate-stream.active ~ .omni-bar-container,
-            body.debating .omni-bar-container {
-                display: none !important;
+            .debate-stream .stream-entry strong {
+                display: block;
+                margin-bottom: 6px;
+                font-size: 0.85rem;
             }
 
-            /* Also hide template chips and footer during debate */
+            /* HIDE query box and chips during active debate */
+            body.debating .omni-bar-container,
             body.debating .template-chips,
             body.debating .site-footer {
                 display: none !important;
+            }
+
+            /* Mobile debate header - shows round info at top */
+            .mobile-debate-header {
+                display: none;
+                position: fixed;
+                top: 56px;
+                left: 12px;
+                right: 12px;
+                padding: 10px 16px;
+                background: rgba(10, 10, 15, 0.95);
+                backdrop-filter: blur(12px);
+                border-radius: 12px;
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                z-index: 90;
+                text-align: center;
+            }
+
+            body.debating .mobile-debate-header {
+                display: block;
+            }
+
+            .mobile-debate-header .round-label {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: var(--core-primary);
+            }
+
+            .mobile-debate-header .round-status {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+                margin-top: 2px;
             }
 
             /* Disable spinning rings on mobile - use pulse instead */
@@ -6031,6 +6120,46 @@
             </div>
         </div>
 
+        <!-- Devil's Advocate Mode Section -->
+        <div class="ai-settings-section">
+            <div class="ai-settings-section-title">
+                <span style="font-size: 1.2em;">😈</span>
+                Devil's Advocate Mode
+            </div>
+            <div class="setting-toggle-row">
+                <div class="setting-toggle-info">
+                    <span class="setting-toggle-label">Enable Devil's Advocate</span>
+                    <span class="setting-toggle-desc">One AI challenges the majority opinion</span>
+                </div>
+                <label class="setting-switch">
+                    <input type="checkbox" id="devilAdvocateSettings" onchange="toggleDevilAdvocateFromSettings(this.checked)">
+                    <span class="setting-switch-slider"></span>
+                </label>
+            </div>
+            <div class="devil-ai-selector" id="devilAiSelector" style="display: none; margin-top: 12px;">
+                <div class="devil-ai-option selected" data-ai="random" onclick="selectDevilAIFromSettings('random', this)">
+                    <span class="devil-ai-dot" style="background: linear-gradient(135deg, #10a37f, #4285f4, #d97706, #f97316);"></span>
+                    <span>Random (Recommended)</span>
+                </div>
+                <div class="devil-ai-option" data-ai="openai" onclick="selectDevilAIFromSettings('openai', this)">
+                    <span class="devil-ai-dot" style="background: #10a37f;"></span>
+                    <span>GPT-4</span>
+                </div>
+                <div class="devil-ai-option" data-ai="gemini" onclick="selectDevilAIFromSettings('gemini', this)">
+                    <span class="devil-ai-dot" style="background: #4285f4;"></span>
+                    <span>Gemini</span>
+                </div>
+                <div class="devil-ai-option" data-ai="claude" onclick="selectDevilAIFromSettings('claude', this)">
+                    <span class="devil-ai-dot" style="background: #d97706;"></span>
+                    <span>Claude</span>
+                </div>
+                <div class="devil-ai-option" data-ai="grok" onclick="selectDevilAIFromSettings('grok', this)">
+                    <span class="devil-ai-dot" style="background: #f97316;"></span>
+                    <span>Grok</span>
+                </div>
+            </div>
+        </div>
+
         <div class="ai-settings-note">
             Changes apply to your next debate. Select at least 2 AIs.
         </div>
@@ -6063,6 +6192,12 @@
 
     <!-- Main App -->
     <div class="cortex-app">
+        <!-- Mobile Debate Header (shown during active debate on mobile) -->
+        <div class="mobile-debate-header" id="mobileDebateHeader">
+            <div class="round-label" id="mobileRoundLabel">Round 1 of 3</div>
+            <div class="round-status" id="mobileRoundStatus">Analyzing positions...</div>
+        </div>
+
         <!-- The Arena -->
         <div class="cortex-arena" id="arena">
             <!-- Live Debate Stream (left side during debate) -->
@@ -6933,6 +7068,54 @@
             return devilAdvocate.checked ? selectedDevilAI : null;
         }
 
+        // Settings panel devil's advocate functions
+        function toggleDevilAdvocateFromSettings(enabled) {
+            // Sync with main devil advocate checkbox
+            document.getElementById('devilAdvocate').checked = enabled;
+
+            // Show/hide AI selector
+            const selector = document.getElementById('devilAiSelector');
+            selector.style.display = enabled ? 'flex' : 'none';
+
+            // Trigger the change event on the main checkbox
+            devilAdvocate.dispatchEvent(new Event('change'));
+        }
+
+        function selectDevilAIFromSettings(aiId, element) {
+            selectedDevilAI = aiId;
+
+            // Update selected state in settings panel
+            document.querySelectorAll('.devil-ai-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            // Also update the main devil selector if it exists
+            document.querySelectorAll('.devil-selector-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.ai === aiId);
+            });
+
+            // Update indicator
+            updateDevilIndicator();
+        }
+
+        // Sync settings panel with main devil advocate state on open
+        function syncDevilAdvocateSettings() {
+            const settingsCheckbox = document.getElementById('devilAdvocateSettings');
+            const selector = document.getElementById('devilAiSelector');
+            const mainCheckbox = document.getElementById('devilAdvocate');
+
+            if (settingsCheckbox && selector) {
+                settingsCheckbox.checked = mainCheckbox.checked;
+                selector.style.display = mainCheckbox.checked ? 'flex' : 'none';
+
+                // Sync selected AI
+                document.querySelectorAll('.devil-ai-option').forEach(opt => {
+                    opt.classList.toggle('selected', opt.dataset.ai === selectedDevilAI);
+                });
+            }
+        }
+
         // ============================================
         // QUICK TEMPLATE CHIPS
         // ============================================
@@ -7526,6 +7709,22 @@
                     updateStreamRound(data.round);
                     setCoreState('debating');
 
+                    // Update mobile debate header
+                    const mobileRoundLabel = document.getElementById('mobileRoundLabel');
+                    const mobileRoundStatus = document.getElementById('mobileRoundStatus');
+                    if (mobileRoundLabel) {
+                        mobileRoundLabel.textContent = `Round ${data.round} of ${data.totalRounds}`;
+                    }
+                    if (mobileRoundStatus) {
+                        if (data.round === 1) {
+                            mobileRoundStatus.textContent = 'Initial analysis...';
+                        } else if (data.round === 2) {
+                            mobileRoundStatus.textContent = 'Rebuttal phase...';
+                        } else {
+                            mobileRoundStatus.textContent = 'Seeking consensus...';
+                        }
+                    }
+
                     // Add system message for round
                     if (data.round === 1) {
                         addSystemMessage('ROUND 1: Initial Analysis');
@@ -7566,11 +7765,21 @@
                 sseConnection.addEventListener('synthesis_start', () => {
                     statusText.textContent = 'Synthesizing Verdict';
                     statusPhase.textContent = 'Generating action plan...';
+                    // Update mobile header
+                    const mobileRoundLabel = document.getElementById('mobileRoundLabel');
+                    const mobileRoundStatus = document.getElementById('mobileRoundStatus');
+                    if (mobileRoundLabel) mobileRoundLabel.textContent = 'Synthesizing';
+                    if (mobileRoundStatus) mobileRoundStatus.textContent = 'Generating verdict...';
                 });
 
                 sseConnection.addEventListener('debate_complete', () => {
                     setCoreState('consensus');
                     statusText.textContent = 'Complete';
+                    // Update mobile header
+                    const mobileRoundLabel = document.getElementById('mobileRoundLabel');
+                    const mobileRoundStatus = document.getElementById('mobileRoundStatus');
+                    if (mobileRoundLabel) mobileRoundLabel.textContent = 'Complete';
+                    if (mobileRoundStatus) mobileRoundStatus.textContent = 'Tap to view verdict';
                 });
 
                 sseConnection.onerror = () => resolve(false);
@@ -8095,14 +8304,18 @@
             const url = `${window.location.origin}/share/${currentResult.shareId}`;
 
             // Try native share first (mobile)
-            if (navigator.share) {
+            if (navigator.share && navigator.canShare && navigator.canShare({ url: url })) {
                 navigator.share({
                     title: 'ConsensusAI Decision',
-                    text: currentResult.question,
+                    text: currentResult.question || 'Check out this AI debate',
                     url: url
-                }).catch(() => {
-                    // Fall back to clipboard
-                    copyToClipboard(url);
+                }).then(() => {
+                    showToast('Shared successfully!', 'success');
+                }).catch((err) => {
+                    // User cancelled or error - fall back to clipboard
+                    if (err.name !== 'AbortError') {
+                        copyToClipboard(url);
+                    }
                 });
             } else {
                 copyToClipboard(url);
@@ -8147,6 +8360,26 @@
         async function exportPDF() {
             if (!currentResult?.shareId) {
                 showToast('No debate to export', 'error');
+                return;
+            }
+
+            // Check if user has Pro tier
+            const userTierEl = document.getElementById('userTier');
+            const tier = userTierEl?.textContent?.toLowerCase() || 'free';
+            const isPro = tier === 'pro' || tier === 'enterprise' || tier === 'owner';
+
+            if (!isPro) {
+                // Show upgrade prompt instead of exporting
+                showToast('PDF export is a Pro feature', 'warning');
+                // Open pricing section
+                setTimeout(() => {
+                    const pricingSection = document.querySelector('.landing-pricing');
+                    if (pricingSection) {
+                        pricingSection.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        window.location.href = '/#pricing';
+                    }
+                }, 500);
                 return;
             }
 
@@ -9034,6 +9267,7 @@
             document.getElementById('aiSettingsOverlay').classList.add('open');
             document.getElementById('aiSettingsPanel').classList.add('open');
             updateAISettingsUI();
+            syncDevilAdvocateSettings();
         }
 
         function closeAISettings() {
