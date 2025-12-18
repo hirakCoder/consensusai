@@ -4810,11 +4810,11 @@
             .cortex-arena {
                 flex: 1;
                 min-height: 0;
-                padding: 8px 16px;
+                padding: 100px 16px 0 16px; /* Push orbs to top */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: center;
+                justify-content: flex-start; /* Align to top */
                 gap: 16px;
             }
 
@@ -5365,14 +5365,14 @@
                 display: none;
             }
 
-            /* Template chips - ICON GRID, centered, no scroll */
+            /* Template chips - ICON GRID at bottom, above input */
             .template-chips {
                 display: grid !important;
                 grid-template-columns: repeat(4, 48px);
                 place-content: center;
                 position: fixed;
-                top: 100px;
-                bottom: auto !important;
+                top: auto !important;
+                bottom: 125px; /* Above input bar */
                 left: 50%;
                 transform: translateX(-50%);
                 gap: 12px;
@@ -5719,7 +5719,7 @@
             }
 
             .template-chips {
-                top: 90px;
+                bottom: 115px;
                 gap: 10px;
                 grid-template-columns: repeat(4, 44px);
             }
@@ -5806,7 +5806,7 @@
             }
 
             .template-chips {
-                top: 85px;
+                bottom: 105px;
                 gap: 8px;
                 grid-template-columns: repeat(4, 40px);
             }
