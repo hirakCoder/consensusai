@@ -3093,6 +3093,18 @@
             border-color: var(--glass-glow);
         }
 
+        /* Home button - hidden on desktop, shown on mobile */
+        .verdict-btn-home {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+        }
+        .verdict-btn-home:hover {
+            background: var(--glass-glow);
+            color: var(--text-primary);
+        }
+
         .verdict-btn svg {
             width: 18px;
             height: 18px;
@@ -4664,6 +4676,14 @@
 
         /* Landing Page Mobile Responsive */
         @media (max-width: 768px) {
+            /* Reduce section heights to eliminate blank space */
+            .landing-hero,
+            .landing-how-it-works,
+            .landing-features,
+            .landing-final-cta,
+            .landing-product {
+                min-height: auto !important;
+            }
             .landing-hero {
                 padding: 60px 20px 40px;
             }
@@ -4929,10 +4949,18 @@
                 display: none !important;
             }
 
-            /* CLEAN LIVE DEBATE VIEW - Hide orbs, show compact status bar */
+            /* CLEAN LIVE DEBATE VIEW - Hide orbs and header for focus */
             body.debating .core-container,
             .cortex-app.debating .core-container {
                 display: none !important;
+            }
+
+            /* Hide header during debate for maximum focus */
+            body.debating .auth-container,
+            body.debating .top-bar-right {
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transition: opacity 0.3s ease !important;
             }
 
             /* Compact status bar at BOTTOM during debate */
@@ -5118,34 +5146,48 @@
                 height: 18px !important;
             }
 
-            /* Devil toggle - hide on mobile, it's too cramped */
+            /* Devil toggle - show compact version on mobile */
             .devil-toggle {
-                display: none !important;
+                display: flex !important;
+                position: fixed !important;
+                bottom: 80px !important;
+                right: 12px !important;
+                z-index: 80 !important;
+                background: rgba(20, 20, 25, 0.95) !important;
+                border: 1px solid rgba(239, 68, 68, 0.3) !important;
+                border-radius: 20px !important;
+                padding: 8px 12px !important;
+                backdrop-filter: blur(10px) !important;
             }
             .devil-toggle label {
-                gap: 4px;
+                gap: 6px;
+                font-size: 11px;
             }
             .devil-toggle > label > span:not(.devil-switch):not(.devil-icon):not(.devil-selected-indicator) {
-                display: none; /* Hide "Devil's Advocate" text - only in label, not in selector */
+                display: none; /* Hide text, icon only */
             }
             .devil-switch {
-                width: 28px;
-                height: 16px;
+                width: 32px;
+                height: 18px;
             }
             .devil-switch::after {
-                width: 12px;
-                height: 12px;
+                width: 14px;
+                height: 14px;
                 top: 2px;
                 left: 2px;
             }
             .devil-toggle input:checked + .devil-switch::after {
-                left: 14px;
+                left: 16px;
             }
             .devil-icon {
-                font-size: 14px;
+                font-size: 16px;
             }
             .devil-selected-indicator {
                 display: none;
+            }
+            /* Hide devil toggle during debate */
+            body.debating .devil-toggle {
+                display: none !important;
             }
             /* Devil selector - bottom sheet modal on mobile */
             .devil-selector {
@@ -5353,30 +5395,45 @@
                 display: none;
             }
 
-            /* Template chips - VISIBLE and scrollable */
+            /* Template chips - Prominent preset suggestions */
             .template-chips {
                 display: flex !important;
                 overflow-x: auto;
                 flex-wrap: nowrap;
                 -webkit-overflow-scrolling: touch;
-                gap: 6px;
-                padding: 8px 0 4px;
-                margin: 0 -4px;
+                gap: 8px;
+                padding: 12px 4px;
+                margin: 0;
                 scrollbar-width: none;
+            }
+            .template-chips::before {
+                content: "Try:";
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding-right: 4px;
             }
             .template-chips::-webkit-scrollbar {
                 display: none;
             }
             .template-chip {
                 flex-shrink: 0;
-                min-height: 44px;
-                padding: 10px 14px;
-                font-size: 13px;
+                min-height: 40px;
+                padding: 10px 16px;
+                font-size: 12px;
                 white-space: nowrap;
+                background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15)) !important;
+                border: 1px solid rgba(99, 102, 241, 0.25) !important;
+                color: #c7d2fe !important;
             }
             .template-chip:active {
                 transform: scale(0.97);
-                opacity: 0.85;
+                background: rgba(99, 102, 241, 0.3) !important;
             }
 
             /* Context toggle */
@@ -5442,6 +5499,7 @@
             .verdict-decision { font-size: 1.1rem; }
             .verdict-question { font-size: 0.85rem; }
             .verdict-btn { min-height: 48px; width: 100%; }
+            .verdict-btn-home { display: flex !important; }
             .action-grid { grid-template-columns: 1fr; gap: 12px; }
             .verdict-actions { flex-direction: column; gap: 8px; }
             /* LLM Response Cards - SINGLE COLUMN on mobile */
@@ -5475,56 +5533,35 @@
             }
             .insights-grid { grid-template-columns: 1fr; gap: 12px; }
 
-            /* SPECTRUM - Simple vertical list on mobile */
+            /* SPECTRUM - Keep horizontal slider style (like desktop) */
             .spectrum-container {
-                padding: 12px;
+                padding: 16px;
                 background: rgba(255, 255, 255, 0.02);
                 border-radius: 12px;
-            }
-            .spectrum-track {
-                height: auto !important;
-                background: transparent !important;
-                position: static !important;
-            }
-            .spectrum-labels {
-                display: none !important;
+                margin: 16px 0;
             }
             .spectrum-label {
                 margin-bottom: 12px;
-                font-size: 0.75rem;
+                font-size: 0.7rem;
+                text-align: center;
             }
-            /* Convert spectrum avatars to vertical list */
-            .spectrum-avatars {
-                position: static !important;
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-                width: 100% !important;
+            .spectrum-track {
+                height: 12px !important;
+                margin-bottom: 12px !important;
             }
             .spectrum-avatar {
-                position: static !important;
-                transform: none !important;
-                left: auto !important;
-                width: 100% !important;
-                height: auto !important;
-                min-height: 48px !important;
-                padding: 12px 16px !important;
-                border-radius: 10px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: flex-start !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                width: 36px !important;
+                height: 36px !important;
+                font-size: 0.7rem !important;
                 cursor: pointer !important;
                 -webkit-tap-highlight-color: rgba(99, 102, 241, 0.3) !important;
             }
             .spectrum-avatar:active {
-                background: rgba(99, 102, 241, 0.2) !important;
+                transform: translateX(-50%) scale(1.3) !important;
             }
-            .spectrum-avatar.gpt { color: #10a37f; }
-            .spectrum-avatar.gemini { color: #4285f4; }
-            .spectrum-avatar.claude { color: #d97706; }
-            .spectrum-avatar.grok { color: #f97316; }
+            .spectrum-labels {
+                font-size: 0.65rem !important;
+            }
 
             /* NODE INSPECTOR OVERLAY - Mobile Styling */
             .node-inspector-overlay {
@@ -6766,6 +6803,10 @@
                 <button class="verdict-btn verdict-btn-primary" onclick="newDebate()">
                     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
                     New Question
+                </button>
+                <button class="verdict-btn verdict-btn-home" onclick="goHome()">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Back to Home
                 </button>
             </div>
 
@@ -8383,6 +8424,21 @@
             templateChips.style.opacity = '1';
             templateChips.style.transform = 'translateY(0)';
             templateChips.querySelectorAll('.template-chip').forEach(c => c.classList.remove('dissolving', 'selected'));
+        }
+
+        function goHome() {
+            closeVerdict();
+            hidePostDebateUI();
+            hideStream();
+            // Scroll to top of page (hero section)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Reset state
+            currentRound = 1;
+            input.value = '';
+            setCoreState('ready');
+            statusText.textContent = 'Ask the Council';
+            statusPhase.textContent = 'Enter your question below';
+            resetRoundDots();
         }
 
         function copyShareLink() {
