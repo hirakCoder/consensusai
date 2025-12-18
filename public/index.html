@@ -5406,21 +5406,22 @@
                 display: none;
             }
 
-            /* Template chips - Fixed above input bar */
+            /* Template chips - TOP area below devil icon */
             .template-chips {
                 display: flex !important;
                 position: fixed;
-                bottom: 110px; /* Above omni-bar */
+                top: 90px; /* Below header, near devil icon */
+                bottom: auto !important;
                 left: 0;
                 right: 0;
                 overflow-x: auto;
                 flex-wrap: nowrap;
                 -webkit-overflow-scrolling: touch;
-                gap: 8px;
-                padding: 8px 12px;
+                gap: 10px;
+                padding: 12px 16px;
                 margin: 0;
                 scrollbar-width: none;
-                z-index: 49;
+                z-index: 45;
                 background: transparent;
             }
             .template-chips::before {
@@ -5428,13 +5429,11 @@
                 flex-shrink: 0;
                 display: flex;
                 align-items: center;
-                font-size: 10px;
-                font-weight: 700;
-                color: var(--text-muted);
-                text-transform: uppercase;
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--text-secondary);
                 letter-spacing: 0.5px;
-                padding-right: 6px;
-                opacity: 0.7;
+                padding-right: 8px;
             }
             .template-chips::-webkit-scrollbar {
                 display: none;
@@ -5442,24 +5441,22 @@
             .template-chip {
                 flex-shrink: 0;
                 min-height: 36px;
-                padding: 8px 14px;
-                font-size: 12px;
+                padding: 9px 16px;
+                font-size: 13px;
                 white-space: nowrap;
-                background: rgba(20, 20, 28, 0.9) !important;
+                background: rgba(25, 25, 35, 0.85) !important;
                 border: 1px solid rgba(99, 102, 241, 0.2) !important;
-                color: #a5b4fc !important;
+                color: #c7d2fe !important;
                 border-radius: 18px;
-                backdrop-filter: blur(8px);
             }
             .template-chip:active {
                 transform: scale(0.97);
-                background: rgba(99, 102, 241, 0.25) !important;
-                border-color: rgba(99, 102, 241, 0.4) !important;
+                background: rgba(99, 102, 241, 0.3) !important;
             }
 
-            /* Context toggle */
+            /* Context toggle - small button in omni-bar area */
             .context-toggle {
-                display: none;
+                display: none; /* Keep hidden for clean mobile UI */
             }
 
             /* Footer - clean minimal design */
@@ -5760,25 +5757,26 @@
             .core-container .node-grok { bottom: 25px; right: -5px; }
 
             .omni-bar-container {
-                bottom: 40px;
+                bottom: 36px;
                 padding: 6px 8px;
             }
 
             .template-chips {
-                bottom: 100px;
-                padding: 6px 8px;
+                top: 85px; /* Adjusted for smaller screens */
+                padding: 8px 12px;
+                gap: 8px;
             }
 
             .template-chip {
-                padding: 6px 10px;
-                font-size: 11px;
+                padding: 7px 12px;
+                font-size: 12px;
                 min-height: 32px;
             }
 
             .site-footer {
                 font-size: 9px;
-                padding: 6px 8px;
-                gap: 8px;
+                padding: 6px 10px;
+                gap: 10px;
             }
         }
 
@@ -5843,13 +5841,14 @@
             .core-container .node-grok { bottom: 20px; right: -5px; }
 
             .omni-bar-container {
-                bottom: 36px;
+                bottom: 32px;
                 padding: 4px 6px;
             }
 
             .template-chips {
-                bottom: 92px;
-                padding: 4px 6px;
+                top: 80px; /* Top positioning for tiny screens */
+                padding: 6px 8px;
+                gap: 6px;
             }
 
             .omni-bar {
@@ -5863,27 +5862,28 @@
             }
 
             .omni-submit {
-                width: 44px;
-                height: 44px;
+                width: 40px;
+                height: 40px;
             }
 
             .template-chip {
-                padding: 5px 8px;
-                font-size: 10px;
+                padding: 6px 10px;
+                font-size: 11px;
                 min-height: 28px;
             }
 
             .template-chips::before {
                 font-size: 9px;
+                padding-right: 4px;
             }
 
             .site-footer {
                 font-size: 8px;
-                padding: 4px 6px;
-                gap: 6px;
+                padding: 5px 8px;
+                gap: 8px;
             }
             .site-footer .copyright {
-                font-size: 8px;
+                font-size: 7px;
             }
         }
     </style>
