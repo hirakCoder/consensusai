@@ -5365,80 +5365,96 @@
                 font-size: 16px;
             }
 
-            /* Omni bar - in flow, not fixed (better mobile UX) */
+            /* MOBILE INPUT AREA - Fixed bottom bar */
             .omni-bar-container {
                 position: fixed;
-                bottom: 24px;
-                left: 12px;
-                right: 12px;
-                width: auto;
+                bottom: 44px; /* Above footer */
+                left: 0;
+                right: 0;
+                width: 100%;
                 max-width: none;
                 transform: none;
                 z-index: 50;
+                padding: 8px 12px;
+                background: linear-gradient(to top, rgba(3,3,4,0.98) 0%, rgba(3,3,4,0.9) 70%, transparent 100%);
             }
 
             .omni-bar {
                 width: 100%;
-                padding: 6px 10px;
-                border-radius: 24px;
-                gap: 8px;
+                padding: 8px 12px;
+                border-radius: 28px;
+                gap: 10px;
+                background: rgba(20, 20, 25, 0.95);
+                border: 1px solid rgba(99, 102, 241, 0.15);
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
             }
 
             .omni-input {
                 font-size: 16px;
-                min-height: 40px;
-                padding: 8px 4px;
+                min-height: 42px;
+                padding: 10px 4px;
             }
 
             .omni-submit {
                 width: 44px;
                 height: 44px;
                 flex-shrink: 0;
+                border-radius: 50%;
             }
 
             .status-lights {
                 display: none;
             }
 
-            /* Template chips - Prominent preset suggestions */
+            /* Template chips - Fixed above input bar */
             .template-chips {
                 display: flex !important;
+                position: fixed;
+                bottom: 110px; /* Above omni-bar */
+                left: 0;
+                right: 0;
                 overflow-x: auto;
                 flex-wrap: nowrap;
                 -webkit-overflow-scrolling: touch;
                 gap: 8px;
-                padding: 12px 4px;
+                padding: 8px 12px;
                 margin: 0;
                 scrollbar-width: none;
+                z-index: 49;
+                background: transparent;
             }
             .template-chips::before {
                 content: "Try:";
                 flex-shrink: 0;
                 display: flex;
                 align-items: center;
-                font-size: 11px;
-                font-weight: 600;
+                font-size: 10px;
+                font-weight: 700;
                 color: var(--text-muted);
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                padding-right: 4px;
+                padding-right: 6px;
+                opacity: 0.7;
             }
             .template-chips::-webkit-scrollbar {
                 display: none;
             }
             .template-chip {
                 flex-shrink: 0;
-                min-height: 40px;
-                padding: 10px 16px;
+                min-height: 36px;
+                padding: 8px 14px;
                 font-size: 12px;
                 white-space: nowrap;
-                background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15)) !important;
-                border: 1px solid rgba(99, 102, 241, 0.25) !important;
-                color: #c7d2fe !important;
+                background: rgba(20, 20, 28, 0.9) !important;
+                border: 1px solid rgba(99, 102, 241, 0.2) !important;
+                color: #a5b4fc !important;
+                border-radius: 18px;
+                backdrop-filter: blur(8px);
             }
             .template-chip:active {
                 transform: scale(0.97);
-                background: rgba(99, 102, 241, 0.3) !important;
+                background: rgba(99, 102, 241, 0.25) !important;
+                border-color: rgba(99, 102, 241, 0.4) !important;
             }
 
             /* Context toggle */
@@ -5446,17 +5462,33 @@
                 display: none;
             }
 
-            /* Footer - minimal but readable */
+            /* Footer - clean minimal design */
             .site-footer {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                padding: 6px 12px;
-                padding-bottom: max(6px, env(safe-area-inset-bottom));
-                font-size: 11px;
+                padding: 8px 16px;
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
+                font-size: 10px;
                 z-index: 40;
-                background: rgba(0,0,0,0.85);
+                background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.85) 100%);
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+                border-top: 1px solid rgba(255,255,255,0.05);
+            }
+            .site-footer .copyright {
+                width: 100%;
+                text-align: center;
+                order: -1;
+                font-size: 9px;
+                opacity: 0.5;
+                margin-bottom: 2px;
+            }
+            .site-footer a {
+                font-size: 10px;
+                opacity: 0.6;
             }
 
             /* History drawer */
@@ -5728,18 +5760,26 @@
             .core-container .node-grok { bottom: 25px; right: -5px; }
 
             .omni-bar-container {
-                bottom: 22px;
-                left: 8px;
-                right: 8px;
+                bottom: 40px;
+                padding: 6px 8px;
+            }
+
+            .template-chips {
+                bottom: 100px;
+                padding: 6px 8px;
             }
 
             .template-chip {
-                padding: 8px 12px;
-                font-size: 12px;
-                min-height: 44px;
+                padding: 6px 10px;
+                font-size: 11px;
+                min-height: 32px;
             }
 
-            .site-footer { font-size: 10px; padding: 4px 8px; }
+            .site-footer {
+                font-size: 9px;
+                padding: 6px 8px;
+                gap: 8px;
+            }
         }
 
         /* Tiny mobile (Galaxy Fold): 320px and below */
@@ -5803,9 +5843,13 @@
             .core-container .node-grok { bottom: 20px; right: -5px; }
 
             .omni-bar-container {
-                bottom: 18px;
-                left: 6px;
-                right: 6px;
+                bottom: 36px;
+                padding: 4px 6px;
+            }
+
+            .template-chips {
+                bottom: 92px;
+                padding: 4px 6px;
             }
 
             .omni-bar {
@@ -5823,17 +5867,24 @@
                 height: 44px;
             }
 
-            .template-chips {
-                padding: 4px 0 2px;
-            }
-
             .template-chip {
-                padding: 10px 14px;
-                font-size: 12px;
-                min-height: 44px;
+                padding: 5px 8px;
+                font-size: 10px;
+                min-height: 28px;
             }
 
-            .site-footer { font-size: 10px; padding: 4px 6px; }
+            .template-chips::before {
+                font-size: 9px;
+            }
+
+            .site-footer {
+                font-size: 8px;
+                padding: 4px 6px;
+                gap: 6px;
+            }
+            .site-footer .copyright {
+                font-size: 8px;
+            }
         }
     </style>
 </head>
@@ -8435,8 +8486,6 @@
             closeVerdict();
             hidePostDebateUI();
             hideStream();
-            // Scroll to top of page (hero section)
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             // Reset state
             currentRound = 1;
             input.value = '';
@@ -8444,6 +8493,16 @@
             statusText.textContent = 'Ask the Council';
             statusPhase.textContent = 'Enter your question below';
             resetRoundDots();
+            // Restore template chips properly
+            currentTemplateValue = null;
+            const templateChips = document.getElementById('templateChips');
+            templateChips.style.display = '';  // Let CSS handle display
+            templateChips.style.opacity = '1';
+            templateChips.style.transform = '';
+            templateChips.querySelectorAll('.template-chip').forEach(c => c.classList.remove('dissolving', 'selected'));
+            // Scroll to product section (not hero) so user sees the input
+            document.getElementById('productSection')?.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => input.focus(), 500);
         }
 
         function copyShareLink() {
