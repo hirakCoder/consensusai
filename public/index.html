@@ -5146,44 +5146,49 @@
                 height: 18px !important;
             }
 
-            /* Devil toggle - show compact version on mobile */
+            /* Devil toggle - small icon in header area on mobile */
             .devil-toggle {
                 display: flex !important;
-                position: fixed !important;
-                bottom: 80px !important;
-                right: 12px !important;
-                z-index: 80 !important;
-                background: rgba(20, 20, 25, 0.95) !important;
-                border: 1px solid rgba(239, 68, 68, 0.3) !important;
-                border-radius: 20px !important;
-                padding: 8px 12px !important;
-                backdrop-filter: blur(10px) !important;
+                position: static !important;
+                order: -1 !important; /* Place before other header items */
+                background: transparent !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
             }
             .devil-toggle label {
-                gap: 6px;
-                font-size: 11px;
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                gap: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(239, 68, 68, 0.2) !important;
+                border-radius: 8px !important;
             }
-            .devil-toggle > label > span:not(.devil-switch):not(.devil-icon):not(.devil-selected-indicator) {
-                display: none; /* Hide text, icon only */
+            .devil-toggle > label > span:not(.devil-icon) {
+                display: none !important; /* Hide switch and text, icon only */
             }
             .devil-switch {
-                width: 32px;
-                height: 18px;
-            }
-            .devil-switch::after {
-                width: 14px;
-                height: 14px;
-                top: 2px;
-                left: 2px;
-            }
-            .devil-toggle input:checked + .devil-switch::after {
-                left: 16px;
+                display: none !important;
             }
             .devil-icon {
-                font-size: 16px;
+                font-size: 18px !important;
+                opacity: 0.6 !important;
+            }
+            .devil-toggle input:checked ~ .devil-icon {
+                opacity: 1 !important;
+                filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5)) !important;
+            }
+            .devil-toggle input:checked + .devil-switch + .devil-icon,
+            .devil-toggle input:checked ~ label {
+                border-color: rgba(239, 68, 68, 0.5) !important;
             }
             .devil-selected-indicator {
-                display: none;
+                display: none !important;
             }
             /* Hide devil toggle during debate */
             body.debating .devil-toggle {
