@@ -5157,9 +5157,39 @@
                 height: 18px !important;
             }
 
-            /* Devil toggle - HIDE on mobile for clean UI */
+            /* Devil toggle - Compact switch above input on mobile */
             .devil-toggle {
-                display: none !important;
+                display: flex !important;
+                position: fixed;
+                bottom: 135px; /* Above the input bar */
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 8px 16px;
+                background: rgba(25, 25, 32, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 20px;
+                backdrop-filter: blur(12px);
+                z-index: 51;
+                gap: 10px;
+                align-items: center;
+            }
+            .devil-toggle label {
+                font-size: 12px;
+                gap: 8px;
+            }
+            .devil-toggle .devil-switch {
+                width: 36px;
+                height: 20px;
+            }
+            .devil-toggle .devil-switch::after {
+                width: 16px;
+                height: 16px;
+            }
+            .devil-toggle .devil-icon {
+                font-size: 16px;
+            }
+            .devil-toggle .devil-label-text {
+                font-size: 12px;
             }
             .devil-selected-indicator {
                 display: none !important;
@@ -5338,7 +5368,7 @@
             /* MOBILE INPUT AREA - Fixed bottom bar */
             .omni-bar-container {
                 position: fixed;
-                bottom: 52px; /* Above footer with breathing room */
+                bottom: 72px; /* Moved up slightly */
                 left: 16px;
                 right: 16px;
                 width: auto;
@@ -5360,9 +5390,12 @@
             }
 
             .omni-input {
-                font-size: 16px;
+                font-size: 14px; /* Smaller to prevent truncation */
                 min-height: 40px;
                 padding: 8px 4px;
+            }
+            .omni-input::placeholder {
+                font-size: 13px;
             }
 
             .omni-submit {
