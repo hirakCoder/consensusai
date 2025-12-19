@@ -4974,7 +4974,7 @@
                 transition: opacity 0.3s ease !important;
             }
 
-            /* Compact status bar at BOTTOM during debate */
+            /* Enhanced status bar at BOTTOM during debate */
             body.debating .arena-status,
             .cortex-app.debating .arena-status {
                 position: fixed !important;
@@ -4984,39 +4984,45 @@
                 top: auto !important;
                 width: 100% !important;
                 height: auto !important;
-                min-height: 56px !important;
-                padding: 12px 16px !important;
-                padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
-                background: linear-gradient(180deg, rgba(10, 10, 15, 0.95) 0%, rgba(5, 5, 10, 0.98) 100%) !important;
-                backdrop-filter: blur(12px) !important;
-                border-top: 1px solid rgba(99, 102, 241, 0.3) !important;
+                min-height: 80px !important;
+                padding: 16px 20px !important;
+                padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+                background: linear-gradient(180deg, rgba(15, 15, 22, 0.98) 0%, rgba(8, 8, 14, 0.99) 100%) !important;
+                backdrop-filter: blur(16px) !important;
+                border-top: 1px solid rgba(99, 102, 241, 0.4) !important;
                 border-radius: 0 !important;
                 display: flex !important;
-                flex-direction: row !important;
+                flex-direction: column !important;
                 align-items: center !important;
-                justify-content: space-between !important;
-                gap: 12px !important;
+                justify-content: center !important;
+                gap: 10px !important;
                 z-index: 85 !important;
             }
 
             body.debating .status-text,
             .cortex-app.debating .status-text {
-                font-size: 0.85rem !important;
+                font-size: 1rem !important;
                 font-weight: 600 !important;
                 margin: 0 !important;
                 color: var(--text-primary) !important;
-                flex: 1 !important;
+                text-align: center !important;
+                animation: debatePulse 2s ease-in-out infinite !important;
+            }
+
+            @keyframes debatePulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
             }
 
             body.debating .status-phase,
             .cortex-app.debating .status-phase {
-                font-size: 0.7rem !important;
+                font-size: 0.75rem !important;
                 font-weight: 500 !important;
                 margin: 0 !important;
-                padding: 5px 12px !important;
-                background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25)) !important;
-                border: 1px solid rgba(99, 102, 241, 0.3) !important;
-                border-radius: 16px !important;
+                padding: 6px 14px !important;
+                background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3)) !important;
+                border: 1px solid rgba(99, 102, 241, 0.4) !important;
+                border-radius: 20px !important;
                 color: #a5b4fc !important;
                 text-transform: uppercase !important;
                 letter-spacing: 0.5px !important;
@@ -5027,10 +5033,11 @@
             body.debating .round-dots,
             .cortex-app.debating .round-dots {
                 display: flex !important;
-                gap: 8px !important;
-                padding: 6px 10px !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                border-radius: 12px !important;
+                gap: 10px !important;
+                padding: 8px 14px !important;
+                background: rgba(255, 255, 255, 0.06) !important;
+                border-radius: 16px !important;
+                margin-top: 4px !important;
             }
             body.debating .round-dot,
             .cortex-app.debating .round-dot {
@@ -8312,17 +8319,21 @@
 
             // Spectrum positions + AI Agreement cards
             const cardSuffixMap = { openai: 'Gpt', gemini: 'Gemini', grok: 'Grok', claude: 'Claude' };
-            allResults.forEach(r => {
-                // Spectrum avatar positioning
+            const avatarOffsets = { openai: 0, gemini: 1, grok: 2, claude: 3 }; // Spread avatars
+            allResults.forEach((r, idx) => {
+                // Spectrum avatar positioning with spread to avoid overlap
                 const avatarMap = { openai: 'specGpt', gemini: 'specGemini', grok: 'specGrok', claude: 'specClaude' };
                 const avatar = document.getElementById(avatarMap[r.llmId]);
                 if (avatar) {
                     let pos = 50;
-                    if (r.decision === 'YES') pos = 70 + Math.random() * 25;
-                    else if (r.decision === 'NO') pos = 5 + Math.random() * 25;
-                    else if (r.decision === 'CONDITIONAL') pos = 40 + Math.random() * 20;
-                    else if (r.decision === 'WAIT') pos = 25 + Math.random() * 20;
-                    avatar.style.left = pos + '%';
+                    const spread = (avatarOffsets[r.llmId] || idx) * 5; // 5% spread between avatars
+                    if (r.decision === 'YES') pos = 70 + spread;
+                    else if (r.decision === 'NO') pos = 5 + spread;
+                    else if (r.decision === 'CONDITIONAL') pos = 35 + spread;
+                    else if (r.decision === 'WAIT') pos = 20 + spread;
+                    else pos = 40 + spread; // Default for ANSWERED, etc.
+                    avatar.style.left = Math.min(95, Math.max(5, pos)) + '%';
+                    avatar.style.display = 'flex'; // Ensure visible
                 }
 
                 // AI Agreement card
