@@ -5376,73 +5376,61 @@
                 display: none;
             }
 
-            /* Template chips - Vertical list style on mobile */
+            /* Template chips - Simple horizontal row on mobile */
             .template-chips {
-                display: flex !important; /* Always visible */
-                flex-direction: column !important;
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
                 position: fixed;
-                bottom: 125px; /* Above input bar */
+                bottom: 115px;
                 left: 16px;
                 right: 16px;
-                padding: 12px;
+                padding: 0;
                 margin: 0;
+                gap: 8px;
                 z-index: 55;
-                background: rgba(18, 18, 24, 0.95);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                border-radius: 20px;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-                max-height: 280px;
-                overflow-y: auto;
-                backdrop-filter: blur(24px);
+                background: transparent;
+                border: none;
+                box-shadow: none;
             }
             .template-chips::before {
-                content: "Try asking...";
-                display: block;
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--text-secondary);
-                padding: 4px 8px 12px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-                margin-bottom: 8px;
+                display: none;
+            }
+            /* Only show first 4 chips on mobile */
+            .template-chip:nth-child(n+5) {
+                display: none !important;
             }
             .template-chip {
-                width: 100% !important;
+                width: auto !important;
                 height: auto !important;
-                padding: 14px 12px !important;
-                font-size: 15px !important;
-                background: rgba(255, 255, 255, 0.03) !important;
-                border: none !important;
-                border-radius: 12px !important;
-                color: var(--text-primary) !important;
+                padding: 10px 14px !important;
+                background: rgba(30, 30, 40, 0.9) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 20px !important;
+                color: var(--text-secondary) !important;
                 display: flex !important;
                 align-items: center !important;
-                justify-content: flex-start !important;
-                gap: 12px !important;
-                text-align: left !important;
-                margin-bottom: 6px;
+                justify-content: center !important;
+                gap: 6px !important;
+                backdrop-filter: blur(12px);
             }
-            .template-chip:last-child {
-                margin-bottom: 0;
-            }
-            /* Show icon + full question on mobile */
+            /* Show icon + short label on mobile */
             .chip-icon {
-                font-size: 18px !important;
-                flex-shrink: 0;
-                width: 28px;
-                text-align: center;
+                font-size: 16px !important;
             }
             .chip-short {
-                display: none !important; /* Hide short label on mobile */
+                display: inline !important;
+                font-size: 13px !important;
+                font-weight: 500;
             }
             .chip-full {
-                display: block !important; /* Show full question on mobile */
-                font-size: 14px;
-                color: var(--text-primary);
-                line-height: 1.4;
+                display: none !important;
             }
             .template-chip:active {
-                transform: none;
-                background: rgba(99, 102, 241, 0.15) !important;
+                transform: scale(0.95);
+                background: rgba(99, 102, 241, 0.2) !important;
+                border-color: var(--core-primary) !important;
             }
 
             /* Context toggle hidden */
