@@ -1309,6 +1309,17 @@
             animation: chipDissolve 0.4s ease-out forwards;
         }
 
+        /* Chip span structure - desktop shows icon + short label */
+        .chip-icon {
+            font-size: 14px;
+        }
+        .chip-short {
+            display: inline;
+        }
+        .chip-full {
+            display: none; /* Hide full question on desktop */
+        }
+
         @keyframes chipDissolve {
             0% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.95) translateY(-5px); }
@@ -5370,58 +5381,70 @@
                 display: none; /* Hidden by default */
                 flex-direction: column !important;
                 position: fixed;
-                bottom: 120px; /* Above input bar */
+                bottom: 125px; /* Above input bar */
                 left: 16px;
                 right: 16px;
-                padding: 8px;
+                padding: 12px;
                 margin: 0;
                 z-index: 55;
-                background: rgba(20, 20, 28, 0.98);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 16px;
-                box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
-                max-height: 280px;
+                background: rgba(18, 18, 24, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 20px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+                max-height: 320px;
                 overflow-y: auto;
-                backdrop-filter: blur(20px);
+                backdrop-filter: blur(24px);
             }
             /* Show dropdown when input is focused */
             .template-chips.show {
                 display: flex !important;
             }
             .template-chips::before {
-                content: "Quick suggestions";
+                content: "Try asking...";
                 display: block;
-                font-size: 11px;
-                font-weight: 600;
-                color: var(--text-muted);
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                padding: 8px 12px 6px;
-                border-bottom: 1px solid rgba(255,255,255,0.05);
-                margin-bottom: 4px;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-secondary);
+                padding: 4px 8px 12px;
             }
             .template-chip {
                 width: 100% !important;
                 height: auto !important;
-                padding: 14px 16px !important;
-                font-size: 14px !important;
-                background: transparent !important;
+                padding: 14px 12px !important;
+                font-size: 15px !important;
+                background: rgba(255, 255, 255, 0.03) !important;
                 border: none !important;
-                border-radius: 10px !important;
+                border-radius: 12px !important;
                 color: var(--text-primary) !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: flex-start !important;
                 gap: 12px !important;
                 text-align: left !important;
+                margin-bottom: 6px;
             }
-            .template-chip span {
-                font-size: 20px !important;
+            .template-chip:last-child {
+                margin-bottom: 0;
+            }
+            /* Show icon + full question on mobile */
+            .chip-icon {
+                font-size: 18px !important;
                 flex-shrink: 0;
+                width: 28px;
+                text-align: center;
+            }
+            .chip-short {
+                display: none !important; /* Hide short label on mobile */
+            }
+            .chip-full {
+                display: block !important; /* Show full question on mobile */
+                font-size: 14px;
+                color: var(--text-primary);
+                line-height: 1.4;
             }
             .template-chip:active {
                 transform: none;
-                background: rgba(99, 102, 241, 0.2) !important;
+                background: rgba(99, 102, 241, 0.15) !important;
             }
 
             /* Context toggle hidden */
@@ -6575,28 +6598,44 @@
             <!-- Quick Template Chips -->
             <div class="template-chips" id="templateChips">
                 <div class="template-chip" onclick="useTemplate('Should I invest in Bitcoin right now?', this)">
-                    <span>&#128200;</span> Crypto
+                    <span class="chip-icon">📈</span>
+                    <span class="chip-short">Crypto</span>
+                    <span class="chip-full">Should I invest in Bitcoin right now?</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('Should I switch jobs for a 20% salary increase?', this)">
-                    <span>&#128188;</span> Career
+                    <span class="chip-icon">💼</span>
+                    <span class="chip-short">Career</span>
+                    <span class="chip-full">Should I switch jobs for a 20% raise?</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('React vs Vue vs Svelte for a new project?', this)">
-                    <span>&#128187;</span> Tech Stack
+                    <span class="chip-icon">💻</span>
+                    <span class="chip-short">Tech Stack</span>
+                    <span class="chip-full">React vs Vue vs Svelte for new project?</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('What should I watch tonight? I like sci-fi thrillers', this)">
-                    <span>&#127871;</span> Movie Rec
+                    <span class="chip-icon">🍿</span>
+                    <span class="chip-short">Movie</span>
+                    <span class="chip-full">What should I watch tonight?</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('Help me understand how photosynthesis works step by step', this)">
-                    <span>&#9883;</span> Homework
+                    <span class="chip-icon">⚛️</span>
+                    <span class="chip-short">Learn</span>
+                    <span class="chip-full">Help me understand photosynthesis</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('Best noise-canceling headphones under $300?', this)">
-                    <span>&#128722;</span> Product Pick
+                    <span class="chip-icon">🛒</span>
+                    <span class="chip-short">Shopping</span>
+                    <span class="chip-full">Best noise-canceling headphones?</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('Is buying a house better than renting in 2024?', this)">
-                    <span>&#127968;</span> Life Decision
+                    <span class="chip-icon">🏠</span>
+                    <span class="chip-short">Life</span>
+                    <span class="chip-full">Buy vs rent a house in 2024?</span>
                 </div>
                 <div class="template-chip" onclick="useTemplate('Plan a 5-day trip to Japan for first-time visitors', this)">
-                    <span>&#9992;</span> Travel Plan
+                    <span class="chip-icon">✈️</span>
+                    <span class="chip-short">Travel</span>
+                    <span class="chip-full">Plan a 5-day trip to Japan</span>
                 </div>
             </div>
             <!-- Context Input (Expandable) -->
@@ -7296,31 +7335,48 @@
             // Store template value and populate input
             currentTemplateValue = question;
             input.value = question;
+
+            // On mobile, hide the dropdown immediately after selection
+            if (window.innerWidth <= 768) {
+                templateChips.classList.remove('show');
+            }
+
             input.focus();
         }
 
         // Hide chips when user starts typing custom text
         input.addEventListener('input', () => {
             const currentValue = input.value;
+            const isMobile = window.innerWidth <= 768;
 
             // If input is empty, show chips and reset
             if (currentValue === '') {
                 currentTemplateValue = null;
-                templateChips.style.display = 'grid';
-                templateChips.style.opacity = '1';
-                templateChips.style.transform = 'translateY(0)';
+                if (isMobile) {
+                    // On mobile, show dropdown if input is focused
+                    templateChips.classList.add('show');
+                } else {
+                    // On desktop, use old grid style
+                    templateChips.style.display = 'grid';
+                    templateChips.style.opacity = '1';
+                    templateChips.style.transform = 'translateY(0)';
+                }
                 templateChips.querySelectorAll('.template-chip').forEach(c => {
                     c.classList.remove('dissolving', 'selected');
                 });
             }
             // If user modified the template or is typing fresh, hide chips
-            else if (currentValue !== currentTemplateValue && templateChips.style.display !== 'none') {
+            else if (currentValue !== currentTemplateValue) {
                 currentTemplateValue = null;
-                templateChips.style.opacity = '0';
-                templateChips.style.transform = 'translateY(10px)';
-                setTimeout(() => {
-                    templateChips.style.display = 'none';
-                }, 300);
+                if (isMobile) {
+                    templateChips.classList.remove('show');
+                } else if (templateChips.style.display !== 'none') {
+                    templateChips.style.opacity = '0';
+                    templateChips.style.transform = 'translateY(10px)';
+                    setTimeout(() => {
+                        templateChips.style.display = 'none';
+                    }, 300);
+                }
             }
         });
 
@@ -8463,6 +8519,7 @@
             // Restore template chips properly
             currentTemplateValue = null;
             const templateChips = document.getElementById('templateChips');
+            templateChips.classList.remove('show'); // Reset mobile dropdown state
             templateChips.style.display = '';  // Let CSS handle display
             templateChips.style.opacity = '1';
             templateChips.style.transform = '';
