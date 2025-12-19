@@ -5376,9 +5376,9 @@
                 display: none;
             }
 
-            /* Template chips - DROPDOWN style, hidden by default */
+            /* Template chips - Vertical list style on mobile */
             .template-chips {
-                display: none; /* Hidden by default */
+                display: flex !important; /* Always visible */
                 flex-direction: column !important;
                 position: fixed;
                 bottom: 125px; /* Above input bar */
@@ -5387,25 +5387,23 @@
                 padding: 12px;
                 margin: 0;
                 z-index: 55;
-                background: rgba(18, 18, 24, 0.98);
+                background: rgba(18, 18, 24, 0.95);
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 border-radius: 20px;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-                max-height: 320px;
+                max-height: 280px;
                 overflow-y: auto;
                 backdrop-filter: blur(24px);
-            }
-            /* Show dropdown when input is focused */
-            .template-chips.show {
-                display: flex !important;
             }
             .template-chips::before {
                 content: "Try asking...";
                 display: block;
                 font-size: 13px;
-                font-weight: 500;
+                font-weight: 600;
                 color: var(--text-secondary);
                 padding: 4px 8px 12px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                margin-bottom: 8px;
             }
             .template-chip {
                 width: 100% !important;
