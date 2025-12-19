@@ -5365,49 +5365,63 @@
                 display: none;
             }
 
-            /* Template chips - ICON GRID at bottom, above input */
+            /* Template chips - DROPDOWN style, hidden by default */
             .template-chips {
-                display: grid !important;
-                grid-template-columns: repeat(4, 48px);
-                place-content: center;
+                display: none; /* Hidden by default */
+                flex-direction: column !important;
                 position: fixed;
-                top: auto !important;
-                bottom: 125px; /* Above input bar */
-                left: 50%;
-                transform: translateX(-50%);
-                gap: 12px;
-                padding: 0;
+                bottom: 120px; /* Above input bar */
+                left: 16px;
+                right: 16px;
+                padding: 8px;
                 margin: 0;
-                z-index: 45;
-                background: transparent;
-                overflow: hidden !important;
+                z-index: 55;
+                background: rgba(20, 20, 28, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+                max-height: 280px;
+                overflow-y: auto;
+                backdrop-filter: blur(20px);
+            }
+            /* Show dropdown when input is focused */
+            .template-chips.show {
+                display: flex !important;
             }
             .template-chips::before {
-                display: none !important;
+                content: "Quick suggestions";
+                display: block;
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                padding: 8px 12px 6px;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+                margin-bottom: 4px;
             }
             .template-chip {
-                width: 48px !important;
-                height: 48px !important;
-                padding: 0 !important;
-                font-size: 0 !important; /* Hide text */
-                background: rgba(30, 30, 40, 0.9) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                color: transparent !important;
-                border-radius: 14px !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 14px 16px !important;
+                font-size: 14px !important;
+                background: transparent !important;
+                border: none !important;
+                border-radius: 10px !important;
+                color: var(--text-primary) !important;
                 display: flex !important;
                 align-items: center !important;
-                justify-content: center !important;
-                overflow: hidden !important;
+                justify-content: flex-start !important;
+                gap: 12px !important;
+                text-align: left !important;
             }
-            /* Show only the emoji span */
             .template-chip span {
-                font-size: 22px !important;
-                color: #fff !important;
-                line-height: 1 !important;
+                font-size: 20px !important;
+                flex-shrink: 0;
             }
             .template-chip:active {
-                transform: scale(0.95);
-                background: rgba(99, 102, 241, 0.4) !important;
+                transform: none;
+                background: rgba(99, 102, 241, 0.2) !important;
             }
 
             /* Context toggle hidden */
@@ -5719,17 +5733,9 @@
             }
 
             .template-chips {
-                bottom: 115px;
-                gap: 10px;
-                grid-template-columns: repeat(4, 44px);
-            }
-
-            .template-chip {
-                width: 44px !important;
-                height: 44px !important;
-            }
-            .template-chip span {
-                font-size: 20px !important;
+                bottom: 110px;
+                left: 12px;
+                right: 12px;
             }
 
             .site-footer {
@@ -5806,9 +5812,9 @@
             }
 
             .template-chips {
-                bottom: 105px;
-                gap: 8px;
-                grid-template-columns: repeat(4, 40px);
+                bottom: 100px;
+                left: 8px;
+                right: 8px;
             }
 
             .omni-bar {
@@ -5824,15 +5830,6 @@
             .omni-submit {
                 width: 36px;
                 height: 36px;
-            }
-
-            .template-chip {
-                width: 40px !important;
-                height: 40px !important;
-                border-radius: 10px !important;
-            }
-            .template-chip span {
-                font-size: 18px !important;
             }
 
             .site-footer {
@@ -8055,10 +8052,25 @@
         // Input effects
         input.addEventListener('input', () => {
             setLightsActive(input.value.length > 0);
+            // Hide suggestions when user starts typing
+            if (input.value.length > 0) {
+                templateChips.classList.remove('show');
+            }
         });
 
         input.addEventListener('blur', () => {
             if (!input.value) setLightsActive(false);
+            // Hide suggestions dropdown on blur (with delay for click to register)
+            setTimeout(() => {
+                templateChips.classList.remove('show');
+            }, 200);
+        });
+
+        // Show suggestions dropdown on focus (mobile only)
+        input.addEventListener('focus', () => {
+            if (window.innerWidth <= 768 && !input.value) {
+                templateChips.classList.add('show');
+            }
         });
 
         // ============================================
