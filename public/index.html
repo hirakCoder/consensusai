@@ -5376,61 +5376,10 @@
                 display: none;
             }
 
-            /* Template chips - Simple horizontal row on mobile */
+            /* Template chips - HIDDEN on mobile for clean UI */
+            /* Research shows cluttered suggestions hurt UX */
             .template-chips {
-                display: flex !important;
-                flex-direction: row !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                position: fixed;
-                bottom: 115px;
-                left: 16px;
-                right: 16px;
-                padding: 0;
-                margin: 0;
-                gap: 8px;
-                z-index: 55;
-                background: transparent;
-                border: none;
-                box-shadow: none;
-            }
-            .template-chips::before {
-                display: none;
-            }
-            /* Only show first 4 chips on mobile */
-            .template-chip:nth-child(n+5) {
                 display: none !important;
-            }
-            .template-chip {
-                width: auto !important;
-                height: auto !important;
-                padding: 10px 14px !important;
-                background: rgba(30, 30, 40, 0.9) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                border-radius: 20px !important;
-                color: var(--text-secondary) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 6px !important;
-                backdrop-filter: blur(12px);
-            }
-            /* Show icon + short label on mobile */
-            .chip-icon {
-                font-size: 16px !important;
-            }
-            .chip-short {
-                display: inline !important;
-                font-size: 13px !important;
-                font-weight: 500;
-            }
-            .chip-full {
-                display: none !important;
-            }
-            .template-chip:active {
-                transform: scale(0.95);
-                background: rgba(99, 102, 241, 0.2) !important;
-                border-color: var(--core-primary) !important;
             }
 
             /* Context toggle hidden */
@@ -7089,6 +7038,45 @@
         const devilSelector = document.getElementById('devilSelector');
         const devilSelectedIndicator = document.getElementById('devilSelectedIndicator');
         const templateChips = document.getElementById('templateChips');
+
+        // ============================================
+        // CYCLING PLACEHOLDER (Mobile-friendly suggestions)
+        // ============================================
+        const placeholderExamples = [
+            "Should I invest in Bitcoin right now?",
+            "Should I switch jobs for a 20% raise?",
+            "Buy vs rent a house in 2024?",
+            "React vs Vue for my next project?",
+            "Should I pursue a master's degree?"
+        ];
+        let placeholderIndex = 0;
+        let placeholderInterval = null;
+
+        function startPlaceholderCycle() {
+            if (placeholderInterval) return;
+            placeholderInterval = setInterval(() => {
+                placeholderIndex = (placeholderIndex + 1) % placeholderExamples.length;
+                input.placeholder = placeholderExamples[placeholderIndex];
+            }, 3000);
+        }
+
+        function stopPlaceholderCycle() {
+            if (placeholderInterval) {
+                clearInterval(placeholderInterval);
+                placeholderInterval = null;
+            }
+        }
+
+        // Start cycling on mobile
+        if (window.innerWidth <= 768) {
+            input.placeholder = placeholderExamples[0];
+            startPlaceholderCycle();
+
+            input.addEventListener('focus', stopPlaceholderCycle);
+            input.addEventListener('blur', () => {
+                if (!input.value) startPlaceholderCycle();
+            });
+        }
 
         // ============================================
         // LANDING PAGE FUNCTIONS
