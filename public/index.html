@@ -7998,6 +7998,7 @@
                 sseConnection.addEventListener('debate_complete', () => {
                     setCoreState('consensus');
                     statusText.textContent = 'Complete';
+                    statusPhase.textContent = 'Tap to view results';
                 });
 
                 sseConnection.onerror = () => resolve(false);
@@ -8503,6 +8504,11 @@
             hidePostDebateUI();
             // Remove debating class to show input again
             hideStream();
+            // Reset to ready state
+            setCoreState('ready');
+            statusText.textContent = 'Ask the Council';
+            statusPhase.textContent = 'Ready for new question';
+            resetRoundDots();
             // Restore template chips
             templateChips.style.display = 'flex';
         }
