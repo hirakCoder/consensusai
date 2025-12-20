@@ -548,22 +548,17 @@ class DebateEngine {
     const isYesNoQuestion = questionType === 'decision';
 
     if (finalConsensus && !isYesNoQuestion) {
-      // For non-yes/no questions, replace generic YES/NO with appropriate labels
-      // BUT: Keep the actual decision for unanimous consensus - users want to see it!
+      // For non-yes/no questions, ALWAYS replace generic YES/NO with appropriate labels
+      // "What is the best app idea?" should show "RECOMMENDED" not "YES"
       const currentDecision = (finalConsensus.decision || '').toUpperCase();
       const isGenericDecision = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN'].includes(currentDecision);
 
       if (isGenericDecision) {
-        // For unanimous consensus, keep the decision but add context
-        if (finalConsensus.type === 'unanimous' && (currentDecision === 'YES' || currentDecision === 'NO')) {
-          // Keep YES/NO for unanimous - it's a strong signal users want to see
-          finalConsensus.questionType = questionType;
-        } else {
-          // Use the appropriate label for this question type
-          finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
-          finalConsensus.questionType = questionType;
-        }
+        // Use the appropriate label for this question type
+        finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
+        finalConsensus.questionType = questionType;
       }
+      // If decision is something specific (like "PS5" for comparison), keep it
     }
 
     // Store question type for UI display
