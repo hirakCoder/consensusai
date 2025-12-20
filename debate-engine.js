@@ -549,13 +549,20 @@ class DebateEngine {
 
     if (finalConsensus && !isYesNoQuestion) {
       // For non-yes/no questions, replace generic YES/NO with appropriate labels
+      // BUT: Keep the actual decision for unanimous consensus - users want to see it!
       const currentDecision = (finalConsensus.decision || '').toUpperCase();
-      if (currentDecision === 'YES' || currentDecision === 'NO' ||
-          currentDecision === 'CONDITIONAL' || currentDecision === 'WAIT' ||
-          currentDecision === 'ALTERNATIVE' || currentDecision === 'UNKNOWN') {
-        // Use the appropriate label for this question type
-        finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
-        finalConsensus.questionType = questionType;
+      const isGenericDecision = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN'].includes(currentDecision);
+
+      if (isGenericDecision) {
+        // For unanimous consensus, keep the decision but add context
+        if (finalConsensus.type === 'unanimous' && (currentDecision === 'YES' || currentDecision === 'NO')) {
+          // Keep YES/NO for unanimous - it's a strong signal users want to see
+          finalConsensus.questionType = questionType;
+        } else {
+          // Use the appropriate label for this question type
+          finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
+          finalConsensus.questionType = questionType;
+        }
       }
     }
 
