@@ -354,12 +354,14 @@ class DebateEngine {
       if (!decision) return 'UNKNOWN';
       const d = decision.toUpperCase().trim();
       // Map common variations
-      if (d.includes('YES') || d.includes('PROCEED') || d.includes('APPROVE')) return 'YES';
-      if (d.includes('NO') || d.includes('REJECT') || d.includes('DECLINE')) return 'NO';
-      if (d.includes('CONDITIONAL') || d.includes('IF') || d.includes('DEPENDS')) return 'CONDITIONAL';
-      if (d.includes('WAIT') || d.includes('DELAY') || d.includes('MORE INFO')) return 'WAIT';
-      if (d.includes('ALTERNATIVE') || d.includes('DIFFERENT') || d.includes('NEITHER')) return 'ALTERNATIVE';
-      return d;
+      if (d.includes('YES') || d.includes('PROCEED') || d.includes('APPROVE') || d.includes('RECOMMEND') || d.includes('SUPPORT')) return 'YES';
+      if (d.includes('NO') || d.includes('REJECT') || d.includes('DECLINE') || d.includes('AGAINST') || d.includes('AVOID')) return 'NO';
+      if (d.includes('CONDITIONAL') || d.includes('IF') || d.includes('DEPENDS') || d.includes('MAYBE') || d.includes('CONSIDER')) return 'CONDITIONAL';
+      if (d.includes('WAIT') || d.includes('DELAY') || d.includes('MORE INFO') || d.includes('HOLD') || d.includes('PAUSE')) return 'WAIT';
+      if (d.includes('ALTERNATIVE') || d.includes('DIFFERENT') || d.includes('NEITHER') || d.includes('OTHER')) return 'ALTERNATIVE';
+      if (d.includes('MAINTAIN') || d.includes('STAY') || d.includes('KEEP') || d.includes('CONTINUE')) return 'CONDITIONAL';
+      // If nothing matched, return CONDITIONAL as safe fallback (most nuanced)
+      return 'CONDITIONAL';
     };
 
     // Group by structured decision (not free-form position)
