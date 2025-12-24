@@ -321,8 +321,48 @@ const server = http.createServer(async (req, res) => {
           }
           break;
 
+        case 'SUBSCRIPTION_UPDATED':
+          // Handle various subscription update scenarios
+          if (result.userId) {
+            switch (result.updateType) {
+              case 'SCHEDULED_CANCEL':
+                // User scheduled cancellation - keep pro until period ends
+                console.log(`[Stripe] User ${result.userId} scheduled cancellation for end of period`);
+                // Don't downgrade yet - they keep access until period ends
+                break;
+
+              case 'CANCEL_REVERTED':
+                // User un-cancelled their subscription
+                console.log(`[Stripe] User ${result.userId} reverted cancellation - staying PRO`);
+                usage.setUserTier(result.userId, 'pro');
+                await auth.updateUserTier(result.userId, 'pro');
+                break;
+
+              case 'REACTIVATED':
+                // Subscription reactivated after being past_due or paused
+                console.log(`[Stripe] User ${result.userId} subscription reactivated`);
+                usage.setUserTier(result.userId, 'pro');
+                await auth.updateUserTier(result.userId, 'pro');
+                break;
+
+              case 'PLAN_CHANGED':
+                // User upgraded/downgraded plan (if we have multiple plans)
+                console.log(`[Stripe] User ${result.userId} changed plan`);
+                // For now, any active subscription = pro
+                if (result.status === 'active') {
+                  usage.setUserTier(result.userId, 'pro');
+                  await auth.updateUserTier(result.userId, 'pro');
+                }
+                break;
+
+              default:
+                console.log(`[Stripe] User ${result.userId} subscription updated: ${result.updateType}`);
+            }
+          }
+          break;
+
         case 'SUBSCRIPTION_CANCELLED':
-          // Downgrade user to free
+          // Downgrade user to free (subscription actually ended)
           if (result.userId) {
             usage.setUserTier(result.userId, 'free');
             // Also update in Clerk
@@ -332,7 +372,9 @@ const server = http.createServer(async (req, res) => {
           break;
 
         case 'PAYMENT_FAILED':
+          // Log and potentially notify user
           console.log(`[Stripe] Payment failed for customer ${result.customerId}`);
+          // Could add: email notification, grace period tracking, etc.
           break;
       }
 

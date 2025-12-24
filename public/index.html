@@ -1089,6 +1089,115 @@
             animation: screenShake 0.4s ease-out;
         }
 
+        /* Offline Banner */
+        .offline-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 12px 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 10001;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .offline-banner.visible {
+            display: flex;
+        }
+
+        .offline-icon {
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        .offline-dismiss {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }
+
+        .offline-dismiss:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Paste Warning Toast */
+        .paste-warning-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .paste-warning-toast.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .paste-warning-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Character Counter */
+        .char-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted, #666);
+            text-align: right;
+            padding: 4px 8px 0;
+            opacity: 0;
+            transition: opacity 0.2s, color 0.2s;
+        }
+
+        .char-counter.visible {
+            opacity: 1;
+        }
+
+        .char-counter.warning {
+            color: #f59e0b;
+        }
+
+        .char-counter.danger {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .context-counter {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+        }
+
+        .context-input-container {
+            position: relative;
+        }
+
         /* Conflict Flash Overlay - visual feedback for mobile */
         .conflict-flash {
             position: fixed;
@@ -6069,6 +6178,19 @@
     </style>
 </head>
 <body>
+    <!-- Offline Banner -->
+    <div class="offline-banner" id="offlineBanner">
+        <span class="offline-icon">📡</span>
+        <span>You're offline. Some features may not work.</span>
+        <button class="offline-dismiss" onclick="dismissOfflineBanner()">×</button>
+    </div>
+
+    <!-- Paste Warning Toast -->
+    <div class="paste-warning-toast" id="pasteWarningToast">
+        <span class="paste-warning-icon">⚠️</span>
+        <span id="pasteWarningText">Text was truncated to 500 characters</span>
+    </div>
+
     <!-- Conflict Flash Overlay (for mobile visual feedback) -->
     <div class="conflict-flash" id="conflictFlash"></div>
 
@@ -6808,6 +6930,10 @@
                     <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
             </form>
+            <!-- Character Counter -->
+            <div class="char-counter" id="questionCharCounter">
+                <span id="questionCharCount">0</span>/500
+            </div>
             <!-- Quick Template Chips -->
             <div class="template-chips" id="templateChips">
                 <div class="template-chip" onclick="useTemplate('Should I invest in Bitcoin right now?', this)">
@@ -6866,6 +6992,9 @@
                     maxlength="300"
                     rows="3"
                 ></textarea>
+                <div class="char-counter context-counter" id="contextCharCounter">
+                    <span id="contextCharCount">0</span>/300
+                </div>
             </div>
         </div>
     </div>
@@ -10233,6 +10362,226 @@
                     banner.remove();
                 };
             }
+        })();
+    </script>
+
+    <!-- Production Resilience: Offline Detection, Input Limits, Session Persistence -->
+    <script>
+        (function() {
+            // ==================== OFFLINE DETECTION ====================
+            let offlineDismissed = false;
+
+            function updateOnlineStatus() {
+                const banner = document.getElementById('offlineBanner');
+                if (!banner) return;
+
+                if (!navigator.onLine && !offlineDismissed) {
+                    banner.classList.add('visible');
+                } else {
+                    banner.classList.remove('visible');
+                }
+            }
+
+            window.dismissOfflineBanner = function() {
+                offlineDismissed = true;
+                const banner = document.getElementById('offlineBanner');
+                if (banner) banner.classList.remove('visible');
+            };
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            updateOnlineStatus();
+
+            // ==================== CHARACTER COUNTER ====================
+            function setupCharacterCounter(inputId, counterId, maxLength) {
+                const input = document.getElementById(inputId);
+                const counter = document.getElementById(counterId);
+                const countSpan = document.getElementById(inputId.replace('Input', 'CharCount'));
+
+                if (!input || !counter || !countSpan) return;
+
+                function updateCounter() {
+                    const len = input.value.length;
+                    countSpan.textContent = len;
+
+                    // Show counter when user starts typing
+                    if (len > 0) {
+                        counter.classList.add('visible');
+                    } else {
+                        counter.classList.remove('visible');
+                    }
+
+                    // Warning at 80%, danger at 95%
+                    counter.classList.remove('warning', 'danger');
+                    if (len >= maxLength * 0.95) {
+                        counter.classList.add('danger');
+                    } else if (len >= maxLength * 0.8) {
+                        counter.classList.add('warning');
+                    }
+                }
+
+                input.addEventListener('input', updateCounter);
+                input.addEventListener('focus', () => {
+                    if (input.value.length > 0) counter.classList.add('visible');
+                });
+                input.addEventListener('blur', () => {
+                    if (input.value.length === 0) counter.classList.remove('visible');
+                });
+            }
+
+            // ==================== PASTE WARNING ====================
+            function setupPasteWarning(inputId, maxLength) {
+                const input = document.getElementById(inputId);
+                if (!input) return;
+
+                input.addEventListener('paste', (e) => {
+                    const pastedText = e.clipboardData?.getData('text') || '';
+                    const currentLen = input.value.length;
+                    const selectionLen = input.selectionEnd - input.selectionStart;
+                    const effectiveLen = currentLen - selectionLen + pastedText.length;
+
+                    if (effectiveLen > maxLength) {
+                        // Show warning toast
+                        const toast = document.getElementById('pasteWarningToast');
+                        const textEl = document.getElementById('pasteWarningText');
+                        if (toast && textEl) {
+                            const truncated = effectiveLen - maxLength;
+                            textEl.textContent = `Text truncated: ${truncated} characters removed (max ${maxLength})`;
+                            toast.classList.add('visible');
+                            setTimeout(() => toast.classList.remove('visible'), 4000);
+                        }
+                    }
+                });
+            }
+
+            // Setup for both inputs
+            setupCharacterCounter('questionInput', 'questionCharCounter', 500);
+            setupCharacterCounter('contextInput', 'contextCharCounter', 300);
+            setupPasteWarning('questionInput', 500);
+            setupPasteWarning('contextInput', 300);
+
+            // ==================== BEFOREUNLOAD WARNING ====================
+            let debateInProgress = false;
+
+            // Hook into debate start/end
+            const originalFetch = window.fetch;
+            window.fetch = function(...args) {
+                const url = args[0];
+                if (typeof url === 'string') {
+                    if (url.includes('/api/debate') && args[1]?.method === 'POST') {
+                        debateInProgress = true;
+                    }
+                }
+                return originalFetch.apply(this, args).then(response => {
+                    // Check if debate completed
+                    if (typeof url === 'string' && url.includes('/api/debate')) {
+                        // Debate completed (either success or error)
+                        setTimeout(() => { debateInProgress = false; }, 1000);
+                    }
+                    return response;
+                }).catch(err => {
+                    debateInProgress = false;
+                    throw err;
+                });
+            };
+
+            window.addEventListener('beforeunload', (e) => {
+                if (debateInProgress) {
+                    e.preventDefault();
+                    e.returnValue = 'A debate is in progress. Are you sure you want to leave?';
+                    return e.returnValue;
+                }
+            });
+
+            // ==================== SESSION PERSISTENCE ====================
+            const SESSION_KEY = 'consensus_debate_draft';
+
+            function saveDraft() {
+                const questionInput = document.getElementById('questionInput');
+                const contextInput = document.getElementById('contextInput');
+                if (!questionInput) return;
+
+                const draft = {
+                    question: questionInput.value,
+                    context: contextInput?.value || '',
+                    timestamp: Date.now()
+                };
+
+                // Only save if there's content
+                if (draft.question.trim()) {
+                    localStorage.setItem(SESSION_KEY, JSON.stringify(draft));
+                }
+            }
+
+            function restoreDraft() {
+                try {
+                    const saved = localStorage.getItem(SESSION_KEY);
+                    if (!saved) return;
+
+                    const draft = JSON.parse(saved);
+                    // Only restore if less than 1 hour old
+                    if (Date.now() - draft.timestamp > 60 * 60 * 1000) {
+                        localStorage.removeItem(SESSION_KEY);
+                        return;
+                    }
+
+                    const questionInput = document.getElementById('questionInput');
+                    const contextInput = document.getElementById('contextInput');
+
+                    if (questionInput && draft.question && !questionInput.value) {
+                        questionInput.value = draft.question;
+                        // Trigger counter update
+                        questionInput.dispatchEvent(new Event('input'));
+                    }
+                    if (contextInput && draft.context && !contextInput.value) {
+                        contextInput.value = draft.context;
+                        contextInput.dispatchEvent(new Event('input'));
+                        // Show context container
+                        const container = document.getElementById('contextContainer');
+                        if (container) container.classList.add('expanded');
+                    }
+                } catch (e) {
+                    console.warn('Failed to restore draft:', e);
+                }
+            }
+
+            function clearDraft() {
+                localStorage.removeItem(SESSION_KEY);
+            }
+
+            // Auto-save drafts
+            const questionInput = document.getElementById('questionInput');
+            const contextInput = document.getElementById('contextInput');
+
+            if (questionInput) {
+                questionInput.addEventListener('input', debounce(saveDraft, 1000));
+            }
+            if (contextInput) {
+                contextInput.addEventListener('input', debounce(saveDraft, 1000));
+            }
+
+            // Restore on page load
+            setTimeout(restoreDraft, 500);
+
+            // Clear draft when debate starts
+            const form = document.querySelector('.omni-bar-form');
+            if (form) {
+                form.addEventListener('submit', () => {
+                    clearDraft();
+                });
+            }
+
+            // Debounce helper
+            function debounce(fn, delay) {
+                let timer;
+                return function(...args) {
+                    clearTimeout(timer);
+                    timer = setTimeout(() => fn.apply(this, args), delay);
+                };
+            }
+
+            // Expose for external use
+            window.clearDebateDraft = clearDraft;
         })();
     </script>
 </body>

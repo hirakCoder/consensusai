@@ -168,13 +168,32 @@ function processWebhookEvent(event) {
 
     case 'customer.subscription.updated': {
       const subscription = data.object;
+      const previousAttributes = data.previous_attributes || {};
+
+      // Determine what kind of update this is
+      let updateType = 'OTHER';
+      if (previousAttributes.status && subscription.status === 'active') {
+        updateType = 'REACTIVATED';
+      } else if (subscription.cancel_at_period_end && !previousAttributes.cancel_at_period_end) {
+        updateType = 'SCHEDULED_CANCEL';
+      } else if (!subscription.cancel_at_period_end && previousAttributes.cancel_at_period_end) {
+        updateType = 'CANCEL_REVERTED';
+      } else if (previousAttributes.items) {
+        updateType = 'PLAN_CHANGED';
+      }
+
       return {
         action: 'SUBSCRIPTION_UPDATED',
+        updateType,
         userId: subscription.metadata?.userId,
         customerId: subscription.customer,
         subscriptionId: subscription.id,
         status: subscription.status,
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
+        currentPeriodEnd: subscription.current_period_end,
+        // For proration tracking
+        previousStatus: previousAttributes.status,
+        priceId: subscription.items?.data?.[0]?.price?.id,
       };
     }
 
