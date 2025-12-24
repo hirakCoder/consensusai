@@ -126,8 +126,26 @@ async function initTables() {
                 stripe_customer_id VARCHAR(100),
                 total_debates INTEGER DEFAULT 0,
                 daily_usage JSONB DEFAULT '{}',
+                total_cost_incurred DECIMAL(10, 4) DEFAULT 0,
+                monthly_cost DECIMAL(10, 4) DEFAULT 0,
+                cost_by_provider JSONB DEFAULT '{"openai": 0, "gemini": 0, "claude": 0, "grok": 0}',
+                last_debate_at TIMESTAMPTZ,
                 created_at TIMESTAMPTZ DEFAULT NOW(),
                 updated_at TIMESTAMPTZ DEFAULT NOW()
+            )
+        `);
+
+        // Create api_costs table for tracking provider spending
+        await query(`
+            CREATE TABLE IF NOT EXISTS api_costs (
+                id SERIAL PRIMARY KEY,
+                date DATE NOT NULL,
+                provider VARCHAR(20) NOT NULL,
+                total_cost DECIMAL(10, 6) DEFAULT 0,
+                total_tokens INTEGER DEFAULT 0,
+                request_count INTEGER DEFAULT 0,
+                created_at TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE(date, provider)
             )
         `);
 
@@ -136,6 +154,8 @@ async function initTables() {
         await query(`CREATE INDEX IF NOT EXISTS idx_debates_user_id ON debates(user_id)`);
         await query(`CREATE INDEX IF NOT EXISTS idx_debates_timestamp ON debates(timestamp DESC)`);
         await query(`CREATE INDEX IF NOT EXISTS idx_users_user_id ON users(user_id)`);
+        await query(`CREATE INDEX IF NOT EXISTS idx_api_costs_date ON api_costs(date DESC)`);
+        await query(`CREATE INDEX IF NOT EXISTS idx_api_costs_provider ON api_costs(provider)`);
 
         console.log('[DB] Tables initialized successfully');
         return true;

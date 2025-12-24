@@ -848,14 +848,13 @@
             border-left: 3px solid var(--glass-border);
             padding: 14px 18px;
             border-radius: 0 14px 14px 0;
-            /* Stacking animation */
-            animation: streamEntrySlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
             transform-origin: center bottom;
             font-size: 0.9rem;
             line-height: 1.6;
             opacity: 0;
             transform: translateY(30px) scale(0.95);
-            animation: streamFlyIn 0.5s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Stacking animation - slide in with bounce */
+            animation: streamEntrySlideIn 0.5s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             max-width: 85%;
         }
@@ -2172,7 +2171,12 @@
         }
 
         .context-input-container.open {
-            max-height: 120px;
+            max-height: 200px;
+        }
+
+        /* Mobile devil button in input bar - hidden on desktop */
+        .mobile-devil-btn {
+            display: none;
         }
 
         .context-input {
@@ -2229,6 +2233,41 @@
         .site-footer .copyright {
             color: var(--text-muted);
             opacity: 0.6;
+        }
+
+        /* Footer during debate - show AI indicators */
+        body.debating .site-footer {
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: rgba(10, 10, 15, 0.95);
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        body.debating .site-footer .copyright,
+        body.debating .site-footer a {
+            display: none;
+        }
+
+        body.debating .site-footer::before {
+            content: '🤖 GPT  ·  💎 Gemini';
+            font-size: 12px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            animation: aiPulse 1.5s ease-in-out infinite;
+        }
+
+        body.debating .site-footer::after {
+            content: '🔶 Claude  ·  🔴 Grok';
+            font-size: 12px;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            animation: aiPulse 1.5s ease-in-out infinite 0.3s;
+        }
+
+        @keyframes aiPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.9; }
         }
 
         /* ============================================
@@ -4991,35 +5030,87 @@
             /* Repurpose footer during debate to show AI status */
             body.debating .site-footer {
                 display: flex !important;
+                flex-direction: column !important;
                 justify-content: center !important;
                 align-items: center !important;
-                gap: 16px !important;
-                padding: 12px 16px !important;
-                background: rgba(10, 10, 15, 0.95) !important;
-                border-top: 1px solid rgba(99, 102, 241, 0.2) !important;
+                gap: 6px !important;
+                padding: 10px 16px !important;
+                background: rgba(10, 10, 15, 0.98) !important;
+                border-top: 1px solid rgba(99, 102, 241, 0.3) !important;
             }
             body.debating .site-footer .copyright,
             body.debating .site-footer a {
                 display: none !important;
             }
-            /* Show AI indicators in footer during debate */
-            body.debating .site-footer::before {
-                content: '🤖 GPT';
-                font-size: 11px;
-                color: var(--ai-gpt);
-                opacity: 0.6;
-                animation: aiPulse 1.5s ease-in-out infinite;
-            }
+            body.debating .site-footer::before,
             body.debating .site-footer::after {
-                content: '💎 Gemini  ·  🔶 Claude  ·  🔴 Grok';
-                font-size: 11px;
-                color: var(--text-secondary);
-                opacity: 0.6;
-                animation: aiPulse 1.5s ease-in-out infinite 0.3s;
+                display: none !important;
             }
-            @keyframes aiPulse {
-                0%, 100% { opacity: 0.4; }
-                50% { opacity: 0.8; }
+            /* Show progress bar in footer */
+            .footer-progress {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+            }
+            body.debating .footer-progress {
+                display: flex !important;
+            }
+            .footer-progress-text {
+                font-size: 0.7rem;
+                color: var(--text-secondary);
+                text-align: center;
+            }
+            .footer-progress-bar {
+                width: 100%;
+                max-width: 200px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 2px;
+                overflow: hidden;
+            }
+            .footer-progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, var(--ai-gpt), var(--ai-gemini), var(--ai-claude), var(--ai-grok));
+                background-size: 200% 100%;
+                border-radius: 2px;
+                width: 0%;
+                transition: width 0.3s ease;
+                animation: progressShimmer 2s ease-in-out infinite;
+            }
+            @keyframes progressShimmer {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            .footer-ai-dots {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+            .footer-ai-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                opacity: 0.3;
+                transition: all 0.3s ease;
+            }
+            .footer-ai-dot.active {
+                opacity: 1;
+                box-shadow: 0 0 8px currentColor;
+                animation: dotPulse 1s ease-in-out infinite;
+            }
+            .footer-ai-dot.done {
+                opacity: 1;
+            }
+            .footer-ai-dot.gpt { background: var(--ai-gpt); color: var(--ai-gpt); }
+            .footer-ai-dot.gemini { background: var(--ai-gemini); color: var(--ai-gemini); }
+            .footer-ai-dot.claude { background: var(--ai-claude); color: var(--ai-claude); }
+            .footer-ai-dot.grok { background: var(--ai-grok); color: var(--ai-grok); }
+            @keyframes dotPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.3); }
             }
 
             /* CLEAN LIVE DEBATE VIEW - Hide orbs and header for focus */
@@ -5226,91 +5317,103 @@
                 height: 18px !important;
             }
 
-            /* Devil toggle - Hidden on mobile for clean UI */
+            /* Devil toggle - Hidden on mobile, accessed via context toggle area */
             .devil-toggle {
                 display: none !important;
             }
             .devil-selected-indicator {
                 display: none !important;
             }
-            /* Devil selector - vertical bottom sheet on mobile */
+            /* Devil selector backdrop */
+            .devil-selector-backdrop {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+            }
+            .devil-selector-backdrop.active {
+                display: block;
+            }
+
+            /* Devil selector - compact bottom sheet on mobile */
             .devil-selector {
                 position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
+                bottom: 48px !important; /* Above footer */
+                left: 8px !important;
+                right: 8px !important;
                 top: auto !important;
-                width: 100% !important;
-                max-width: 100% !important;
+                width: auto !important;
+                max-width: calc(100% - 16px) !important;
                 z-index: 1001 !important;
                 margin: 0 !important;
-                padding: 16px 16px 32px !important;
-                animation: mobileSlideUp 0.3s ease !important;
-                background: #1a1a1f !important;
-                border: none !important;
-                border-radius: 20px 20px 0 0 !important;
-                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5) !important;
-                transform: none !important;
+                padding: 12px 12px 14px !important;
+                background: rgba(25, 25, 35, 0.98) !important;
+                backdrop-filter: blur(20px) !important;
+                border: 1px solid rgba(239, 68, 68, 0.2) !important;
+                border-radius: 16px !important;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
+                transform: translateY(20px) !important;
                 display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-            }
-            /* Add drag handle */
-            .devil-selector::before {
-                content: '';
-                width: 36px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 2px;
-                margin: 0 auto 12px;
-            }
-
-            @keyframes mobileSlideUp {
-                from { transform: translateY(100%); }
-                to { transform: translateY(0); }
-            }
-
-            .devil-selector-option {
-                padding: 14px 16px !important;
-                font-size: 15px !important;
-                white-space: normal !important;
-                text-align: left !important;
-                min-height: 50px !important;
-                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
                 align-items: center !important;
-                border-radius: 12px !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                margin: 0 !important;
+                gap: 6px !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                transition: transform 0.2s ease, opacity 0.2s ease, visibility 0.2s ease !important;
             }
-
-            .devil-selector-option .ai-dot {
-                width: 10px !important;
-                height: 10px !important;
-                margin-right: 12px !important;
-                flex-shrink: 0;
+            .devil-selector.active {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+                visibility: visible !important;
             }
 
             .devil-selector-title {
-                font-size: 1rem !important;
+                width: 100% !important;
+                font-size: 0.65rem !important;
                 text-align: center !important;
-                margin-bottom: 16px !important;
-                padding-bottom: 12px !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                margin-bottom: 6px !important;
+                padding: 0 !important;
+                color: rgba(239, 68, 68, 0.7) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
+                border-bottom: none !important;
             }
 
-            /* Backdrop for devil selector on mobile */
-            .devil-selector.active::before {
-                content: '';
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.7);
-                z-index: -1;
-                animation: fadeIn 0.2s ease;
+            .devil-selector-option {
+                padding: 6px 10px !important;
+                font-size: 0.7rem !important;
+                white-space: nowrap !important;
+                text-align: center !important;
+                min-height: auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border-radius: 16px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                margin: 0 !important;
+                gap: 5px !important;
+                transition: all 0.15s ease !important;
+                color: rgba(255, 255, 255, 0.8) !important;
+            }
+            .devil-selector-option:active {
+                transform: scale(0.95) !important;
+                background: rgba(239, 68, 68, 0.2) !important;
+            }
+            .devil-selector-option.selected {
+                background: rgba(239, 68, 68, 0.15) !important;
+                border-color: rgba(239, 68, 68, 0.3) !important;
+                color: #f87171 !important;
             }
 
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+            .devil-selector-option .ai-dot {
+                width: 6px !important;
+                height: 6px !important;
+                margin-right: 0 !important;
+                flex-shrink: 0;
             }
 
             /* Upgrade button - 36px balanced size */
@@ -5461,9 +5564,73 @@
                 display: none !important;
             }
 
-            /* Context toggle hidden */
+            /* Context toggle - Compact pill style on mobile */
             .context-toggle {
-                display: none;
+                display: flex !important;
+                padding: 6px 12px !important;
+                border-radius: 20px !important;
+                gap: 5px !important;
+                font-size: 0.65rem !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                margin-top: 8px !important;
+            }
+            .context-toggle svg {
+                width: 12px !important;
+                height: 12px !important;
+            }
+            .context-toggle span {
+                font-size: 0.65rem !important;
+            }
+
+            /* Context input area mobile */
+            .context-input-container {
+                padding: 10px !important;
+                border-radius: 12px !important;
+                margin-top: 8px !important;
+            }
+            .context-input {
+                font-size: 13px !important;
+                min-height: 50px !important;
+            }
+
+            /* Mobile Devil Button - symmetrical with submit button */
+            .mobile-devil-btn {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+                min-height: 42px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                flex-shrink: 0;
+                position: relative;
+                z-index: 10;
+                -webkit-tap-highlight-color: rgba(239, 68, 68, 0.3);
+                touch-action: manipulation;
+            }
+            .mobile-devil-btn .devil-emoji {
+                font-size: 1.2rem;
+                opacity: 0.7;
+                transition: all 0.2s ease;
+                pointer-events: none;
+            }
+            .mobile-devil-btn:active {
+                transform: scale(0.92);
+                background: rgba(239, 68, 68, 0.15);
+            }
+            .mobile-devil-btn.active {
+                background: rgba(239, 68, 68, 0.25);
+                border-color: rgba(239, 68, 68, 0.5);
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            }
+            .mobile-devil-btn.active .devil-emoji {
+                opacity: 1;
             }
 
             /* Footer - single row, proper spacing */
@@ -5619,21 +5786,35 @@
                 overflow-y: auto !important;
             }
             .dossier-header {
-                gap: 12px !important;
+                gap: 10px !important;
                 margin-bottom: 16px !important;
                 padding-bottom: 12px !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
             }
             .dossier-icon {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 1rem !important;
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                min-height: 36px !important;
+                font-size: 0.9rem !important;
+                flex-shrink: 0 !important;
+            }
+            .dossier-icon svg {
+                width: 18px !important;
+                height: 18px !important;
             }
             .dossier-title {
-                font-size: 1.25rem !important;
+                font-size: 1rem !important;
+                line-height: 1.2 !important;
+                flex: 1 !important;
+                min-width: 0 !important;
             }
             .dossier-verdict {
-                font-size: 0.7rem !important;
+                font-size: 0.65rem !important;
                 padding: 3px 8px !important;
+                flex-shrink: 0 !important;
+                white-space: nowrap !important;
             }
             .dossier-body {
                 font-size: 0.95rem !important;
@@ -5867,6 +6048,16 @@
             .omni-submit {
                 width: 36px;
                 height: 36px;
+            }
+
+            .mobile-devil-btn {
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                min-height: 36px !important;
+            }
+            .mobile-devil-btn .devil-emoji {
+                font-size: 1rem !important;
             }
 
             .site-footer {
@@ -6561,35 +6752,43 @@
                 <span>Devil's Advocate</span>
                 <span class="devil-selected-indicator" id="devilSelectedIndicator"></span>
             </label>
-            <!-- AI Selector Popup -->
-            <div class="devil-selector" id="devilSelector">
-                <div class="devil-selector-title">Choose Devil's Advocate</div>
-                <div class="devil-selector-option selected" data-ai="random" onclick="selectDevilAI('random', this)">
-                    <span class="ai-dot random"></span>
-                    <span>Random (Recommended)</span>
-                </div>
-                <div class="devil-selector-option" data-ai="openai" onclick="selectDevilAI('openai', this)">
-                    <span class="ai-dot openai"></span>
-                    <span>GPT-4</span>
-                </div>
-                <div class="devil-selector-option" data-ai="gemini" onclick="selectDevilAI('gemini', this)">
-                    <span class="ai-dot gemini"></span>
-                    <span>Gemini</span>
-                </div>
-                <div class="devil-selector-option" data-ai="claude" onclick="selectDevilAI('claude', this)">
-                    <span class="ai-dot claude"></span>
-                    <span>Claude</span>
-                </div>
-                <div class="devil-selector-option" data-ai="grok" onclick="selectDevilAI('grok', this)">
-                    <span class="ai-dot grok"></span>
-                    <span>Grok</span>
-                </div>
+        </div>
+
+        <!-- Devil Selector Backdrop (for mobile) -->
+        <div class="devil-selector-backdrop" id="devilSelectorBackdrop" onclick="closeDevilSelector()"></div>
+
+        <!-- AI Selector Popup (moved outside devil-toggle for mobile visibility) -->
+        <div class="devil-selector" id="devilSelector">
+            <div class="devil-selector-title">Pick the Devil</div>
+            <div class="devil-selector-option selected" data-ai="random" onclick="selectDevilAI('random', this)">
+                <span class="ai-dot random"></span>
+                <span>Random</span>
+            </div>
+            <div class="devil-selector-option" data-ai="openai" onclick="selectDevilAI('openai', this)">
+                <span class="ai-dot openai"></span>
+                <span>GPT</span>
+            </div>
+            <div class="devil-selector-option" data-ai="gemini" onclick="selectDevilAI('gemini', this)">
+                <span class="ai-dot gemini"></span>
+                <span>Gemini</span>
+            </div>
+            <div class="devil-selector-option" data-ai="claude" onclick="selectDevilAI('claude', this)">
+                <span class="ai-dot claude"></span>
+                <span>Claude</span>
+            </div>
+            <div class="devil-selector-option" data-ai="grok" onclick="selectDevilAI('grok', this)">
+                <span class="ai-dot grok"></span>
+                <span>Grok</span>
             </div>
         </div>
 
         <!-- Omni-Bar Input -->
         <div class="omni-bar-container">
             <form class="omni-bar" id="debateForm">
+                <!-- Mobile Devil Button -->
+                <button type="button" class="mobile-devil-btn" id="mobileDevilBtn">
+                    <span class="devil-emoji">😈</span>
+                </button>
                 <input
                     type="text"
                     class="omni-input"
@@ -6681,6 +6880,19 @@
         <a href="/terms.html">Terms</a>
         <a href="/disclaimer.html">Disclaimer</a>
         <a href="/">Classic View</a>
+        <!-- Mobile Progress Indicator (shown during debate) -->
+        <div class="footer-progress" id="footerProgress">
+            <div class="footer-ai-dots">
+                <div class="footer-ai-dot gpt" id="footerDotGpt"></div>
+                <div class="footer-ai-dot gemini" id="footerDotGemini"></div>
+                <div class="footer-ai-dot claude" id="footerDotClaude"></div>
+                <div class="footer-ai-dot grok" id="footerDotGrok"></div>
+            </div>
+            <div class="footer-progress-text" id="footerProgressText">Consulting AI Council...</div>
+            <div class="footer-progress-bar">
+                <div class="footer-progress-fill" id="footerProgressFill"></div>
+            </div>
+        </div>
     </footer>
 
     <!-- Verdict Overlay -->
@@ -7319,6 +7531,7 @@
         // ============================================
 
         let selectedDevilAI = 'random'; // Default to random
+        let devilSelectorJustOpened = false; // Flag to prevent immediate close
 
         // Show/hide selector when toggle is clicked
         devilAdvocate.addEventListener('change', function() {
@@ -7333,7 +7546,12 @@
 
         // Close selector when clicking outside
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('.devil-toggle')) {
+            // Skip if selector was just opened (prevents immediate close on mobile)
+            if (devilSelectorJustOpened) {
+                devilSelectorJustOpened = false;
+                return;
+            }
+            if (!e.target.closest('.devil-toggle') && !e.target.closest('.mobile-devil-btn') && !e.target.closest('.devil-selector')) {
                 devilSelector.classList.remove('active');
             }
         });
@@ -7348,12 +7566,31 @@
             });
             element.classList.add('selected');
 
+            // Enable devil mode
+            const checkbox = document.getElementById('devilAdvocate');
+            checkbox.checked = true;
+            checkbox.dispatchEvent(new Event('change'));
+
+            // Update mobile button state
+            const mobileBtn = document.getElementById('mobileDevilBtn');
+            if (mobileBtn) mobileBtn.classList.add('active');
+
             // Update indicator
             updateDevilIndicator();
 
+            // Get AI name for toast
+            const aiNames = {
+                'random': 'Random AI',
+                'openai': 'GPT-4',
+                'gemini': 'Gemini',
+                'claude': 'Claude',
+                'grok': 'Grok'
+            };
+            showToast(`😈 ${aiNames[aiId] || 'AI'} will play Devil's Advocate`, 'info');
+
             // Close selector after selection
             setTimeout(() => {
-                devilSelector.classList.remove('active');
+                closeDevilSelector();
             }, 200);
         }
 
@@ -7949,6 +8186,90 @@
         }
 
         // ============================================
+        // FOOTER PROGRESS (Mobile)
+        // ============================================
+
+        let footerCurrentRound = 0;
+        let footerTotalRounds = 3;
+        let roundCompletedAIs = 0;
+        const totalAIs = 4;
+
+        function resetFooterProgress() {
+            footerCurrentRound = 0;
+            roundCompletedAIs = 0;
+            const fill = document.getElementById('footerProgressFill');
+            const text = document.getElementById('footerProgressText');
+            if (fill) fill.style.width = '0%';
+            if (text) text.textContent = 'Consulting AI Council...';
+            ['Gpt', 'Gemini', 'Claude', 'Grok'].forEach(ai => {
+                const dot = document.getElementById('footerDot' + ai);
+                if (dot) dot.classList.remove('active', 'done');
+            });
+        }
+
+        function startFooterRound(round, totalRounds) {
+            footerCurrentRound = round;
+            footerTotalRounds = totalRounds;
+            roundCompletedAIs = 0;
+            // Reset dots for new round
+            ['Gpt', 'Gemini', 'Claude', 'Grok'].forEach(ai => {
+                const dot = document.getElementById('footerDot' + ai);
+                if (dot) dot.classList.remove('active', 'done');
+            });
+            updateFooterProgressBar();
+        }
+
+        function updateFooterAI(llmId, status) {
+            const aiMap = {
+                'openai': 'Gpt',
+                'gemini': 'Gemini',
+                'claude': 'Claude',
+                'grok': 'Grok'
+            };
+            const dotId = aiMap[llmId];
+            if (!dotId) return;
+
+            const dot = document.getElementById('footerDot' + dotId);
+            if (!dot) return;
+
+            if (status === 'active') {
+                dot.classList.add('active');
+                dot.classList.remove('done');
+            } else if (status === 'done') {
+                dot.classList.remove('active');
+                dot.classList.add('done');
+                roundCompletedAIs++;
+                updateFooterProgressBar();
+            }
+        }
+
+        function updateFooterProgressBar() {
+            const fill = document.getElementById('footerProgressFill');
+            const text = document.getElementById('footerProgressText');
+
+            // Calculate overall progress: (completed rounds + current round progress) / total rounds
+            const roundProgress = roundCompletedAIs / totalAIs;
+            const overallProgress = ((footerCurrentRound - 1) + roundProgress) / footerTotalRounds;
+
+            if (fill) {
+                const percent = Math.round(overallProgress * 100);
+                fill.style.width = percent + '%';
+            }
+            if (text) {
+                if (footerCurrentRound === 0) {
+                    text.textContent = 'Consulting AI Council...';
+                } else {
+                    text.textContent = `Round ${footerCurrentRound}/${footerTotalRounds} · ${roundCompletedAIs}/${totalAIs} AIs`;
+                }
+            }
+        }
+
+        function setFooterStatus(message) {
+            const text = document.getElementById('footerProgressText');
+            if (text) text.textContent = message;
+        }
+
+        // ============================================
         // SSE CONNECTION
         // ============================================
 
@@ -7962,6 +8283,8 @@
                     statusText.textContent = 'Council Convened';
                     statusPhase.textContent = 'All models initializing...';
                     setCoreState('thinking');
+                    resetFooterProgress();
+                    setFooterStatus('Council convening...');
 
                     // Show devil's advocate badge if enabled
                     try {
@@ -7981,6 +8304,7 @@
                     updateRoundDot(data.round - 1, 'active');
                     updateStreamRound(data.round);
                     setCoreState('debating');
+                    startFooterRound(data.round, data.totalRounds);
 
                     // Add system message for round
                     if (data.round === 1) {
@@ -7995,6 +8319,7 @@
                 sseConnection.addEventListener('llm_start', (e) => {
                     const data = JSON.parse(e.data);
                     setNodeActive(data.llmId, true);
+                    updateFooterAI(data.llmId, 'active');
                 });
 
                 sseConnection.addEventListener('llm_complete', (e) => {
@@ -8002,6 +8327,7 @@
 
                     // Deactivate the node (stop spinning)
                     setNodeActive(data.llmId, false);
+                    updateFooterAI(data.llmId, 'done');
 
                     // Add to live debate stream
                     if (data.result) {
@@ -8022,12 +8348,16 @@
                 sseConnection.addEventListener('synthesis_start', () => {
                     statusText.textContent = 'Synthesizing Verdict';
                     statusPhase.textContent = 'Generating action plan...';
+                    setFooterStatus('Synthesizing verdict...');
+                    const fill = document.getElementById('footerProgressFill');
+                    if (fill) fill.style.width = '100%';
                 });
 
                 sseConnection.addEventListener('debate_complete', () => {
                     setCoreState('consensus');
                     statusText.textContent = 'Complete';
                     statusPhase.textContent = 'Tap to view results';
+                    setFooterStatus('✓ Verdict ready!');
                 });
 
                 sseConnection.onerror = () => resolve(false);
@@ -8062,6 +8392,7 @@
             showStream();
             currentRound = 1;
             resetRoundDots();
+            resetFooterProgress();
             setCoreState('thinking');
             statusText.textContent = devilMode ? 'Engaging Devil\'s Advocate...' : 'Initiating...';
             statusPhase.textContent = 'Connecting to neural network';
@@ -9065,6 +9396,70 @@
             toggle.classList.toggle('open');
             container.classList.toggle('open');
         }
+
+        // Close devil selector
+        function closeDevilSelector() {
+            const selector = document.getElementById('devilSelector');
+            const backdrop = document.getElementById('devilSelectorBackdrop');
+            selector.classList.remove('active');
+            if (backdrop) backdrop.classList.remove('active');
+        }
+
+        // Mobile Devil Button (in input bar)
+        function toggleMobileDevilBtn() {
+            const checkbox = document.getElementById('devilAdvocate');
+            const mobileBtn = document.getElementById('mobileDevilBtn');
+            const selector = document.getElementById('devilSelector');
+            const backdrop = document.getElementById('devilSelectorBackdrop');
+
+            if (checkbox.checked) {
+                // Already on - turn off
+                checkbox.checked = false;
+                mobileBtn.classList.remove('active');
+                closeDevilSelector();
+                checkbox.dispatchEvent(new Event('change'));
+                showToast('😈 Devil\'s Advocate disabled', 'info');
+            } else {
+                // Show selector to pick the devil
+                setTimeout(function() {
+                    devilSelectorJustOpened = true;
+                    selector.classList.add('active');
+                    if (backdrop) backdrop.classList.add('active');
+                }, 50);
+            }
+        }
+
+        // Add event listener for mobile devil button
+        (function() {
+            function setupMobileDevilBtn() {
+                const mobileDevilBtn = document.getElementById('mobileDevilBtn');
+                if (mobileDevilBtn) {
+                    let lastTap = 0;
+                    mobileDevilBtn.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const now = Date.now();
+                        if (now - lastTap < 300) return;
+                        lastTap = now;
+                        toggleMobileDevilBtn();
+                    }, { passive: false });
+
+                    mobileDevilBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (!('ontouchend' in window)) {
+                            toggleMobileDevilBtn();
+                        }
+                    });
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupMobileDevilBtn);
+            } else {
+                setupMobileDevilBtn();
+            }
+        })();
 
         // ============================================
         // USAGE STATS

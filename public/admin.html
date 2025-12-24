@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ConsensusAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #030304;
+            --bg-void: #000000;
+            --glass-surface: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --core-primary: #6366f1;
+            --core-secondary: #8b5cf6;
+            --text-primary: #ededed;
+            --text-secondary: #a1a1aa;
+            --text-muted: #666666;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --ai-gpt: #10a37f;
+            --ai-gemini: #4285f4;
+            --ai-claude: #d97706;
+            --ai-grok: #f97316;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--core-primary), var(--core-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--core-primary);
+        }
+
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stat-card .value.money {
+            color: var(--success);
+        }
+
+        .stat-card .value.warning {
+            color: var(--warning);
+        }
+
+        .stat-card .sub {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .section {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 .badge {
+            font-size: 0.75rem;
+            background: var(--core-primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        /* Provider costs */
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .provider-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .provider-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .provider-icon.gpt { background: rgba(16, 163, 127, 0.2); }
+        .provider-icon.gemini { background: rgba(66, 133, 244, 0.2); }
+        .provider-icon.claude { background: rgba(217, 119, 6, 0.2); }
+        .provider-icon.grok { background: rgba(249, 115, 22, 0.2); }
+
+        .provider-info {
+            flex: 1;
+        }
+
+        .provider-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .provider-cost {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .provider-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Users table */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .users-table th {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .users-table tr:hover td {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tier-badge.free { background: var(--glass-border); color: var(--text-secondary); }
+        .tier-badge.pro { background: rgba(99, 102, 241, 0.2); color: var(--core-primary); }
+        .tier-badge.owner { background: rgba(234, 179, 8, 0.2); color: var(--warning); }
+
+        /* Activity chart */
+        .chart-container {
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--core-primary), var(--core-secondary));
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+        }
+
+        .chart-bar .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-void);
+            border: 1px solid var(--glass-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .chart-bar:hover .tooltip {
+            opacity: 1;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            padding-top: 8px;
+        }
+
+        /* API Health */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .health-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .health-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .health-dot.healthy { background: var(--success); }
+        .health-dot.warning { background: var(--warning); }
+        .health-dot.error { background: var(--danger); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Warnings */
+        .warnings-container {
+            margin-bottom: 24px;
+        }
+
+        .warning-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .warning-card.critical {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+        }
+
+        .warning-card.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--warning);
+        }
+
+        .warning-card.info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--core-primary);
+        }
+
+        .warning-icon {
+            font-size: 1.2rem;
+        }
+
+        .warning-text {
+            flex: 1;
+        }
+
+        .warning-text strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .warning-text span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Budget meter */
+        .budget-meter {
+            margin-top: 10px;
+        }
+
+        .budget-bar {
+            height: 8px;
+            background: var(--glass-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .budget-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .budget-fill.safe { background: var(--success); }
+        .budget-fill.warning { background: var(--warning); }
+        .budget-fill.danger { background: var(--danger); }
+
+        .budget-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Refresh button */
+        .refresh-btn {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--core-primary);
+            color: var(--text-primary);
+        }
+
+        /* Config grid */
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .config-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .config-item .name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .config-item .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+
+        .config-item .status.ok { color: var(--success); }
+        .config-item .status.warning { color: var(--warning); }
+        .config-item .status.error { color: var(--danger); }
+        .config-item .status.missing { color: var(--text-muted); }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.ok { background: var(--success); }
+        .status-dot.warning { background: var(--warning); }
+        .status-dot.error { background: var(--danger); }
+        .status-dot.missing { background: var(--text-muted); }
+
+        /* Alerts section */
+        .alerts-section {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .alert-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .alert-card.critical {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+        }
+
+        .alert-card.warning {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--warning);
+        }
+
+        .alert-card.info {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid var(--core-primary);
+        }
+
+        .alert-icon {
+            font-size: 1.3rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .alert-content span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Errors list */
+        .errors-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .error-item {
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--danger);
+        }
+
+        .error-item .error-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .error-item .error-type {
+            font-weight: 600;
+            color: var(--danger);
+        }
+
+        .error-item .error-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .error-item .error-message {
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .error-item .error-context {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .error-item .error-context span {
+            background: var(--glass-surface);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .no-errors {
+            text-align: center;
+            padding: 30px;
+            color: var(--success);
+            font-size: 0.9rem;
+        }
+
+        .no-errors::before {
+            content: '✓';
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card .value {
+                font-size: 1.5rem;
+            }
+
+            .users-table {
+                font-size: 0.85rem;
+            }
+
+            .users-table th,
+            .users-table td {
+                padding: 8px 10px;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button class="refresh-btn" onclick="loadData()">Refresh</button>
+                <a href="/" class="back-link">&larr; Back to App</a>
+            </div>
+        </header>
+
+        <div id="error" class="error-message" style="display: none;"></div>
+
+        <!-- User Issue Alerts Section -->
+        <div class="section alerts-section" id="alertsSection" style="display: none;">
+            <h2>Live Alerts <span class="badge" id="alertsBadge">0</span></h2>
+            <div id="alertsContainer"></div>
+        </div>
+
+        <!-- Configuration Status -->
+        <div class="section">
+            <h2>Service Configuration</h2>
+            <div class="config-grid" id="configGrid">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Warnings Section -->
+        <div class="warnings-container" id="warningsContainer" style="display: none;"></div>
+
+        <!-- Budget Overview -->
+        <div class="section" id="budgetSection" style="display: none;">
+            <h2>Monthly Budget</h2>
+            <div class="budget-meter">
+                <div class="budget-bar">
+                    <div class="budget-fill" id="budgetFill"></div>
+                </div>
+                <div class="budget-labels">
+                    <span id="budgetSpent">$0.00 spent</span>
+                    <span id="budgetRemaining">$100.00 remaining</span>
+                </div>
+            </div>
+            <div style="margin-top: 12px; font-size: 0.85rem; color: var(--text-secondary);">
+                <span id="budgetProjection"></span>
+            </div>
+        </div>
+
+        <!-- Overview Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="label">Total Debates</div>
+                <div class="value" id="totalDebates">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total Cost</div>
+                <div class="value money" id="totalCost">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Today's Debates</div>
+                <div class="value" id="todayDebates">-</div>
+                <div class="sub" id="todayCost"></div>
+            </div>
+            <div class="stat-card">
+                <div class="label">This Month</div>
+                <div class="value" id="monthDebates">-</div>
+                <div class="sub" id="monthCost"></div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Unique Users</div>
+                <div class="value" id="uniqueUsers">-</div>
+            </div>
+        </div>
+
+        <!-- API Health -->
+        <div class="section">
+            <h2>API Health</h2>
+            <div class="health-grid" id="healthGrid">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Cost by Provider -->
+        <div class="section">
+            <h2>Cost by Provider <span class="badge">Last 30 days</span></h2>
+            <div class="provider-grid" id="providerGrid">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Daily Activity Chart -->
+        <div class="section">
+            <h2>Daily Activity <span class="badge">Last 7 days</span></h2>
+            <div class="chart-container" id="activityChart">
+                <div class="loading">Loading...</div>
+            </div>
+            <div class="chart-labels" id="chartLabels"></div>
+        </div>
+
+        <!-- Recent Errors -->
+        <div class="section">
+            <h2>Recent Errors <span class="badge" id="errorsBadge">0</span></h2>
+            <div class="errors-list" id="errorsList">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Top Users -->
+        <div class="section">
+            <h2>Top Users <span class="badge">By usage</span></h2>
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Tier</th>
+                        <th>Debates</th>
+                        <th>Cost</th>
+                        <th>Last Active</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable">
+                    <tr><td colspan="5" class="loading">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const providerIcons = {
+            openai: '🤖',
+            gemini: '💎',
+            claude: '🔶',
+            grok: '🔴'
+        };
+
+        const providerNames = {
+            openai: 'GPT',
+            gemini: 'Gemini',
+            claude: 'Claude',
+            grok: 'Grok'
+        };
+
+        async function loadData() {
+            try {
+                // Load stats
+                const statsRes = await fetch('/api/admin/stats');
+                if (!statsRes.ok) {
+                    if (statsRes.status === 403) {
+                        showError('Access denied. Admin access required.');
+                        return;
+                    }
+                    throw new Error('Failed to load stats');
+                }
+                const stats = await statsRes.json();
+                renderStats(stats);
+
+                // Load health
+                const healthRes = await fetch('/api/health');
+                const health = await healthRes.json();
+                renderHealth(health);
+
+                // Load users
+                const usersRes = await fetch('/api/admin/users?limit=10');
+                if (usersRes.ok) {
+                    const users = await usersRes.json();
+                    renderUsers(users);
+                }
+
+                // Load warnings and budget
+                const warningsRes = await fetch('/api/admin/warnings?budget=100');
+                if (warningsRes.ok) {
+                    const data = await warningsRes.json();
+                    renderWarnings(data.warnings);
+                    renderBudget(data.budget);
+                }
+
+                // Load config status
+                const configRes = await fetch('/api/admin/config');
+                if (configRes.ok) {
+                    const config = await configRes.json();
+                    renderConfig(config);
+                }
+
+                // Load alerts
+                const alertsRes = await fetch('/api/admin/alerts');
+                if (alertsRes.ok) {
+                    const alerts = await alertsRes.json();
+                    renderAlerts(alerts);
+                }
+
+                // Load recent errors
+                const errorsRes = await fetch('/api/admin/errors?limit=15');
+                if (errorsRes.ok) {
+                    const errors = await errorsRes.json();
+                    renderErrors(errors);
+                }
+
+                hideError();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function renderConfig(config) {
+            const grid = document.getElementById('configGrid');
+            const items = [];
+
+            // Database
+            const dbStatus = config.database?.connected ? 'ok' : (config.database?.configured ? 'warning' : 'missing');
+            items.push(`
+                <div class="config-item">
+                    <div class="name">🗄️ Database</div>
+                    <div class="status ${dbStatus}">
+                        <span class="status-dot ${dbStatus}"></span>
+                        ${config.database?.connected ? 'Connected' : (config.database?.configured ? 'Configured but not connected' : 'Not configured')}
+                    </div>
+                </div>
+            `);
+
+            // Stripe
+            const stripeOk = config.stripe?.configured && config.stripe?.webhookSecret;
+            const stripeStatus = stripeOk ? 'ok' : (config.stripe?.configured ? 'warning' : 'missing');
+            items.push(`
+                <div class="config-item">
+                    <div class="name">💳 Stripe</div>
+                    <div class="status ${stripeStatus}">
+                        <span class="status-dot ${stripeStatus}"></span>
+                        ${stripeOk ? 'Fully configured' : (config.stripe?.configured ? 'Missing webhook secret' : 'Not configured')}
+                    </div>
+                </div>
+            `);
+
+            // Sentry
+            const sentryStatus = config.sentry?.configured ? 'ok' : 'missing';
+            items.push(`
+                <div class="config-item">
+                    <div class="name">🔍 Sentry</div>
+                    <div class="status ${sentryStatus}">
+                        <span class="status-dot ${sentryStatus}"></span>
+                        ${config.sentry?.configured ? `Active (${config.sentry.environment})` : 'Not configured'}
+                    </div>
+                </div>
+            `);
+
+            // Auth (Clerk)
+            const authStatus = config.auth?.configured ? 'ok' : 'missing';
+            items.push(`
+                <div class="config-item">
+                    <div class="name">🔐 Clerk Auth</div>
+                    <div class="status ${authStatus}">
+                        <span class="status-dot ${authStatus}"></span>
+                        ${config.auth?.configured ? 'Configured' : 'Not configured'}
+                    </div>
+                </div>
+            `);
+
+            // AI Providers
+            for (const [id, ai] of Object.entries(config.aiProviders || {})) {
+                const aiStatus = ai.configured ? 'ok' : 'error';
+                items.push(`
+                    <div class="config-item">
+                        <div class="name">${providerIcons[id] || '🤖'} ${ai.name}</div>
+                        <div class="status ${aiStatus}">
+                            <span class="status-dot ${aiStatus}"></span>
+                            ${ai.configured ? 'API Key set' : 'Missing API key'}
+                        </div>
+                    </div>
+                `);
+            }
+
+            // Environment
+            items.push(`
+                <div class="config-item">
+                    <div class="name">⚙️ Environment</div>
+                    <div class="status ${config.environment?.nodeEnv === 'production' ? 'ok' : 'warning'}">
+                        <span class="status-dot ${config.environment?.nodeEnv === 'production' ? 'ok' : 'warning'}"></span>
+                        ${config.environment?.nodeEnv || 'development'}
+                    </div>
+                </div>
+            `);
+
+            grid.innerHTML = items.join('');
+        }
+
+        function renderAlerts(alerts) {
+            const section = document.getElementById('alertsSection');
+            const container = document.getElementById('alertsContainer');
+            const badge = document.getElementById('alertsBadge');
+
+            if (!alerts || alerts.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            badge.textContent = alerts.length;
+
+            const icons = { critical: '🚨', warning: '⚠️', info: 'ℹ️' };
+            const titles = {
+                high_error_rate: 'High Error Rate',
+                elevated_error_rate: 'Elevated Error Rate',
+                repeated_error: 'Repeated Error Pattern',
+                api_circuit_open: 'API Circuit Breaker Open',
+                api_failures: 'API Failures Detected',
+                potential_churn: 'Potential Subscription Churn'
+            };
+
+            container.innerHTML = alerts.map(a => `
+                <div class="alert-card ${a.severity}">
+                    <div class="alert-icon">${icons[a.severity] || '⚠️'}</div>
+                    <div class="alert-content">
+                        <strong>${titles[a.type] || a.type}</strong>
+                        <span>${a.message}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderErrors(errors) {
+            const container = document.getElementById('errorsList');
+            const badge = document.getElementById('errorsBadge');
+
+            badge.textContent = errors.length;
+
+            if (!errors || errors.length === 0) {
+                container.innerHTML = '<div class="no-errors">No errors recorded</div>';
+                return;
+            }
+
+            container.innerHTML = errors.map(e => `
+                <div class="error-item">
+                    <div class="error-header">
+                        <span class="error-type">${e.type || 'Error'}</span>
+                        <span class="error-time">${formatTimeAgo(e.timestamp)}</span>
+                    </div>
+                    <div class="error-message">${escapeHtml(e.message)}</div>
+                    <div class="error-context">
+                        ${e.context?.endpoint ? `<span>📍 ${e.context.endpoint}</span>` : ''}
+                        ${e.context?.userId ? `<span>👤 ${truncateUserId(e.context.userId)}</span>` : ''}
+                        ${e.context?.method ? `<span>🔧 ${e.context.method}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatTimeAgo(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+
+            if (diff < 60) return `${diff}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function renderWarnings(warnings) {
+            const container = document.getElementById('warningsContainer');
+            if (!warnings || warnings.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            const icons = { critical: '🚨', warning: '⚠️', info: 'ℹ️' };
+
+            container.innerHTML = warnings.map(w => `
+                <div class="warning-card ${w.severity}">
+                    <div class="warning-icon">${icons[w.severity] || '⚠️'}</div>
+                    <div class="warning-text">
+                        <strong>${providerNames[w.provider] || w.provider}</strong>
+                        <span>${w.message}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderBudget(budget) {
+            const section = document.getElementById('budgetSection');
+            if (!budget || budget.error) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+
+            const percent = Math.min(budget.percentUsed || 0, 100);
+            const fill = document.getElementById('budgetFill');
+            fill.style.width = percent + '%';
+            fill.className = 'budget-fill ' + (percent > 80 ? 'danger' : percent > 50 ? 'warning' : 'safe');
+
+            document.getElementById('budgetSpent').textContent = '$' + (budget.currentSpend?.toFixed(2) || '0.00') + ' spent';
+            document.getElementById('budgetRemaining').textContent = '$' + (budget.remaining?.toFixed(2) || '0.00') + ' remaining';
+
+            const projection = document.getElementById('budgetProjection');
+            if (budget.projectedOverBudget) {
+                projection.innerHTML = `<span style="color: var(--danger);">⚠️ Projected to exceed budget by $${(budget.projectedMonthEnd - budget.monthlyBudget).toFixed(2)}</span>`;
+            } else {
+                projection.textContent = `Daily average: $${budget.dailyAverage?.toFixed(4) || '0.00'}`;
+            }
+        }
+
+        function renderStats(stats) {
+            document.getElementById('totalDebates').textContent = stats.overall?.totalDebates?.toLocaleString() || '0';
+            document.getElementById('totalCost').textContent = '$' + (stats.overall?.totalCost?.toFixed(4) || '0.00');
+            document.getElementById('uniqueUsers').textContent = stats.overall?.uniqueUsers?.toLocaleString() || '0';
+
+            document.getElementById('todayDebates').textContent = stats.today?.debates?.toLocaleString() || '0';
+            document.getElementById('todayCost').textContent = '$' + (stats.today?.cost?.toFixed(4) || '0.00') + ' spent';
+
+            document.getElementById('monthDebates').textContent = stats.thisMonth?.debates?.toLocaleString() || '0';
+            document.getElementById('monthCost').textContent = '$' + (stats.thisMonth?.cost?.toFixed(4) || '0.00') + ' spent';
+
+            // Provider costs
+            const providerGrid = document.getElementById('providerGrid');
+            if (stats.costByProvider && Object.keys(stats.costByProvider).length > 0) {
+                providerGrid.innerHTML = Object.entries(stats.costByProvider).map(([provider, data]) => `
+                    <div class="provider-card">
+                        <div class="provider-icon ${provider}">${providerIcons[provider] || '?'}</div>
+                        <div class="provider-info">
+                            <div class="provider-name">${providerNames[provider] || provider}</div>
+                            <div class="provider-cost">$${data.cost?.toFixed(4) || '0.00'}</div>
+                            <div class="provider-meta">${data.tokens?.toLocaleString() || 0} tokens | ${data.requests || 0} requests</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                providerGrid.innerHTML = '<div style="color: var(--text-muted);">No cost data yet</div>';
+            }
+
+            // Activity chart
+            const chartContainer = document.getElementById('activityChart');
+            const chartLabels = document.getElementById('chartLabels');
+            if (stats.dailyActivity && stats.dailyActivity.length > 0) {
+                const maxDebates = Math.max(...stats.dailyActivity.map(d => d.debates), 1);
+                const reversed = [...stats.dailyActivity].reverse();
+
+                chartContainer.innerHTML = reversed.map(day => {
+                    const height = Math.max((day.debates / maxDebates) * 100, 5);
+                    const date = new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' });
+                    return `
+                        <div class="chart-bar" style="height: ${height}%">
+                            <div class="tooltip">
+                                <strong>${date}</strong><br>
+                                ${day.debates} debates<br>
+                                $${day.cost.toFixed(4)}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                chartLabels.innerHTML = `
+                    <span>${new Date(reversed[0]?.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                    <span>${new Date(reversed[reversed.length-1]?.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                `;
+            } else {
+                chartContainer.innerHTML = '<div style="color: var(--text-muted);">No activity data yet</div>';
+                chartLabels.innerHTML = '';
+            }
+        }
+
+        function renderHealth(health) {
+            const grid = document.getElementById('healthGrid');
+            if (health.apis && health.apis.length > 0) {
+                grid.innerHTML = health.apis.map(api => {
+                    const isHealthy = api.health?.healthy !== false;
+                    const state = api.health?.state || 'unknown';
+                    const dotClass = isHealthy ? 'healthy' : (state === 'half_open' ? 'warning' : 'error');
+                    return `
+                        <div class="health-item">
+                            <div class="health-dot ${dotClass}"></div>
+                            <div>
+                                <div style="font-weight: 600;">${api.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">${state}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                grid.innerHTML = '<div style="color: var(--text-muted);">No API data</div>';
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTable');
+            if (users && users.length > 0) {
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td style="font-family: monospace; font-size: 0.85rem;">${truncateUserId(user.userId)}</td>
+                        <td><span class="tier-badge ${user.tier}">${user.tier}</span></td>
+                        <td>${user.totalDebates}</td>
+                        <td style="color: var(--success);">$${user.totalCost?.toFixed(4) || '0.00'}</td>
+                        <td style="color: var(--text-muted); font-size: 0.85rem;">${formatDate(user.lastDebate)}</td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="color: var(--text-muted);">No users found</td></tr>';
+            }
+        }
+
+        function truncateUserId(userId) {
+            if (!userId) return '-';
+            if (userId.length > 20) {
+                return userId.substring(0, 8) + '...' + userId.substring(userId.length - 8);
+            }
+            return userId;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'Never';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 7) return `${days} days ago`;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        // Load data on page load
+        loadData();
+
+        // Auto-refresh every 60 seconds
+        setInterval(loadData, 60000);
+    </script>
+</body>
+</html>

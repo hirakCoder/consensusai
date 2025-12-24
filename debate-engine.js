@@ -8,6 +8,7 @@ const { getConfiguredClients } = require('./llm-clients');
 const { getRound1Prompt, getDebateRoundPrompt, getSynthesisPrompt, detectQuestionType, getDevilsAdvocateInstruction } = require('./prompts');
 const reporter = require('./reporter');
 const apiResilience = require('./api-resilience');
+const admin = require('./admin');
 
 class DebateEngine {
   constructor(options = {}) {
@@ -51,9 +52,11 @@ class DebateEngine {
     }
 
     this.totalCost = 0;
+    this.costByProvider = { openai: 0, gemini: 0, claude: 0, grok: 0 };
     this.rounds = [];
     this.question = '';
     this.context = '';
+    this.userId = options.userId || null; // Track user for cost attribution
     this.onProgress = null; // Progress callback
 
     // Token tracking
@@ -180,6 +183,14 @@ class DebateEngine {
       };
 
       this.totalCost += result.cost;
+
+      // Track cost by provider
+      if (this.costByProvider[client.id] !== undefined) {
+        this.costByProvider[client.id] += result.cost;
+      }
+
+      // Record to admin tracking (async, don't await)
+      admin.recordApiCost(client.id, result.cost, inputTokens + outputTokens).catch(() => {});
 
       // Track tokens
       this.tokenUsage.totalInputTokens += inputTokens;
@@ -613,7 +624,15 @@ class DebateEngine {
       totalCost: this.totalCost
     });
 
+    // Update user cost tracking (async, don't await)
+    if (this.userId) {
+      admin.updateUserCost(this.userId, this.costByProvider).catch(() => {});
+    }
+
     reporter.printFinalDecision(report);
+
+    // Add cost breakdown to report
+    report.costByProvider = this.costByProvider;
 
     return report;
   }

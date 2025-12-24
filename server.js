@@ -242,6 +242,8 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, { url: checkoutSession.url });
     } catch (error) {
       console.error('Checkout error:', error);
+      const admin = require('./admin');
+      admin.logError(error, { endpoint: '/api/stripe/checkout', method: 'POST', userId });
       sendJson(res, { error: 'Failed to create checkout session' }, 500);
     }
     return;
@@ -271,6 +273,8 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, { url: portalSession.url });
     } catch (error) {
       console.error('Portal error:', error);
+      const admin = require('./admin');
+      admin.logError(error, { endpoint: '/api/stripe/portal', method: 'POST', userId });
       sendJson(res, { error: 'Failed to create portal session' }, 500);
     }
     return;
@@ -406,6 +410,144 @@ const server = http.createServer(async (req, res) => {
         health: health[c.id] || { state: 'unknown', healthy: true }
       }))
     });
+    return;
+  }
+
+  // ============================================
+  // ADMIN ENDPOINTS (owner only)
+  // ============================================
+
+  // Admin: Get platform statistics
+  if (pathname === '/api/admin/stats') {
+    // Check if user is owner
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const stats = await admin.getPlatformStats();
+    sendJson(res, stats);
+    return;
+  }
+
+  // Admin: Get top users
+  if (pathname === '/api/admin/users') {
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const limit = parseInt(url.searchParams.get('limit')) || 20;
+    const users = await admin.getTopUsers(limit);
+    sendJson(res, users);
+    return;
+  }
+
+  // Admin: Get cost trend
+  if (pathname === '/api/admin/costs') {
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const days = parseInt(url.searchParams.get('days')) || 30;
+    const trend = await admin.getCostTrend(days);
+    sendJson(res, trend);
+    return;
+  }
+
+  // Admin: Get warnings and budget status
+  if (pathname === '/api/admin/warnings') {
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const monthlyBudget = parseInt(url.searchParams.get('budget')) || 100;
+    const [warnings, budget] = await Promise.all([
+      admin.getCreditWarnings(),
+      admin.getBudgetEstimate(monthlyBudget)
+    ]);
+    sendJson(res, { warnings, budget });
+    return;
+  }
+
+  // Admin: Get configuration status for all services
+  if (pathname === '/api/admin/config') {
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const configStatus = await admin.getConfigStatus();
+    sendJson(res, configStatus);
+    return;
+  }
+
+  // Admin: Get recent errors
+  if (pathname === '/api/admin/errors') {
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const limit = parseInt(parsedUrl.query.limit) || 20;
+    const errors = admin.getRecentErrors(limit);
+    sendJson(res, errors);
+    return;
+  }
+
+  // Admin: Get user issue alerts
+  if (pathname === '/api/admin/alerts') {
+    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
+                        req.socket?.remoteAddress === '::1' ||
+                        req.headers.host?.includes('localhost');
+
+    if (!isOwner && !isLocalhost) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    const admin = require('./admin');
+    const alerts = await admin.getUserIssueAlerts();
+    sendJson(res, alerts);
     return;
   }
 
@@ -569,7 +711,8 @@ const server = http.createServer(async (req, res) => {
         selectedAIs: activeAIs,
         personas: personas || {},
         devilAdvocate: body.devilAdvocate || false,
-        devilAdvocateAI: body.devilAdvocateAI || null
+        devilAdvocateAI: body.devilAdvocateAI || null,
+        userId: userId  // Track costs per user
       });
       const startTime = Date.now();
 
@@ -686,6 +829,14 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, result);
     } catch (error) {
       console.error('Debate API error:', error);
+      // Log to admin tracking
+      const admin = require('./admin');
+      admin.logError(error, {
+        endpoint: '/api/debate',
+        method: 'POST',
+        userId,
+        userAgent: req.headers['user-agent']
+      });
       sentry.captureException(error, {
         tags: { endpoint: 'debate' },
         extra: { question: req.body?.question }
@@ -798,6 +949,8 @@ const server = http.createServer(async (req, res) => {
       res.end(pdfBuffer);
     } catch (error) {
       console.error('PDF generation error:', error);
+      const admin = require('./admin');
+      admin.logError(error, { endpoint: '/api/pdf', method: 'GET', userId });
       sentry.captureException(error, { tags: { endpoint: 'pdf' } });
       sendJson(res, { error: 'Failed to generate PDF' }, 500);
     }
