@@ -79,19 +79,23 @@ function detectQuestionType(question) {
     return 'howto';
   }
 
-  // Comparison questions: "Who/Which is better", "A vs B", "A or B", "compare"
-  if (/\bvs\.?\b|\bversus\b/.test(q) ||
-      /who is (the )?(better|greater|more|best)|which is (the )?(better|greater|more|best)/.test(q) ||
-      /compare\b|comparing\b|comparison\b/.test(q) ||
-      /\bor\b.*\bbetter\b|\bbetter\b.*\bor\b/.test(q) ||
-      /who would win|which would you (choose|pick|prefer)/.test(q)) {
-    return 'comparison';
+  // "Best X" questions - treat as recommendation FIRST (e.g., "what is the best headphone")
+  // These are asking for recommendations, NOT comparisons (no specific alternatives mentioned)
+  if (/\b(what|which)\b.*(is|are) (the )?best\b/.test(q) &&
+      !/\bvs\.?\b|\bversus\b|\bor\b.*\bor\b|\bcompare\b/.test(q)) {
+    return 'recommendation';
+  }
+  if (/\bbest\b.*(for|to use|option|choice|pick)/.test(q)) {
+    return 'recommendation';
   }
 
-  // "Best X" questions - treat as recommendation (e.g., "what is the best headphone")
-  if (/\b(what|which)\b.*(is|are) (the )?best\b/.test(q) ||
-      /\bbest\b.*(for|to use|option|choice|pick)/.test(q)) {
-    return 'recommendation';
+  // Comparison questions: MUST have specific alternatives (A vs B, A or B, compare A and B)
+  if (/\bvs\.?\b|\bversus\b/.test(q) ||
+      /compare\b|comparing\b|comparison\b/.test(q) ||
+      /\bor\b.*\b(better|best)\b|\b(better|best)\b.*\bor\b/.test(q) ||
+      /who would win|which would you (choose|pick|prefer)/.test(q) ||
+      /\b(between|among)\b.*(which|what|who)/.test(q)) {
+    return 'comparison';
   }
 
   // Recommendation questions - expanded to catch more open-ended requests
