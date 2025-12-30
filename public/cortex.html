@@ -5478,6 +5478,19 @@
             verdictOverlay.classList.remove('active');
             // Also hide the post-debate UI elements
             hidePostDebateUI();
+            // Reset the debate stream and UI to clean state
+            hideStream();
+            setCoreState('ready');
+            statusText.textContent = 'Ask the Council';
+            statusPhase.textContent = 'Enter your question below';
+            resetRoundDots();
+            // Show template chips and devil toggle again
+            const templateChips = document.getElementById('templateChips');
+            templateChips.style.display = 'grid';
+            templateChips.style.opacity = '1';
+            document.getElementById('devilToggle').style.opacity = '1';
+            document.getElementById('devilToggle').style.pointerEvents = 'auto';
+            document.getElementById('contextToggle').style.display = 'flex';
         }
 
         function newDebate() {

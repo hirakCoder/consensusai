@@ -137,12 +137,20 @@ function getRound1Prompt(question, context) {
   let decisionFormat;
 
   if (questionType === 'comparison') {
-    decisionGuidance = `COMPARISON QUESTION DETECTED!
-For comparison questions like "Who is better: A vs B?":
-- Your "decision" should be the NAME of your choice (e.g., "PELE", "MARADONA", "MESSI", "RONALDO")
-- If truly equal/different strengths, use "BOTH" or "EQUAL"
-- Do NOT use YES/NO for comparisons - name your pick!`;
-    decisionFormat = `"decision": "NAME OF YOUR CHOICE (e.g., the person, team, product you think is better)"`;
+    decisionGuidance = `🏆 COMPARISON QUESTION DETECTED! 🏆
+⚠️ CRITICAL: This is comparing options, NOT a yes/no question!
+⚠️ DO NOT RESPOND WITH "YES", "NO", OR "CONDITIONAL" - THOSE ARE WRONG!
+
+Your "decision" field MUST contain the NAME of your chosen winner:
+- For "Messi vs Ronaldo": decision should be "MESSI" or "RONALDO"
+- For "iPhone vs Android": decision should be "IPHONE" or "ANDROID"
+- For "Sony vs Bose": decision should be "SONY" or "BOSE"
+
+If truly equal, use "BOTH EQUAL" - but prefer picking a winner!
+
+WRONG: decision: "YES" or decision: "NO" or decision: "CONDITIONAL"
+RIGHT: decision: "MESSI" or decision: "SONY" or decision: "IPHONE"`;
+    decisionFormat = `"decision": "THE NAME OF YOUR PICK (e.g., 'MESSI', 'SONY', 'IPHONE' - pick one!)"`;
   } else if (questionType === 'planning') {
     decisionGuidance = `PLANNING/ITINERARY QUESTION DETECTED!
 This is a planning request, NOT a yes/no question.
@@ -168,13 +176,21 @@ This is asking for information, NOT a yes/no question.
 - Do NOT use YES/NO - provide the actual information!`;
     decisionFormat = `"decision": "BRIEF ANSWER (the key fact or finding)"`;
   } else if (questionType === 'recommendation') {
-    decisionGuidance = `RECOMMENDATION QUESTION DETECTED!
-This is asking for recommendations, NOT a yes/no question.
-- Your "decision" should be your TOP RECOMMENDATION (e.g., "Watch Breaking Bad" or "Buy the Sony XM5")
-- Your "position" should list your top 3-5 specific picks with reasons
-- Be SPECIFIC - name exact products, movies, places, etc.
-- Do NOT just say YES - give the actual recommendation!`;
-    decisionFormat = `"decision": "YOUR TOP RECOMMENDATION (specific name/title)"`;
+    decisionGuidance = `🎯 RECOMMENDATION QUESTION DETECTED! 🎯
+⚠️ CRITICAL: This is asking for recommendations, NOT a yes/no question!
+⚠️ DO NOT RESPOND WITH "YES", "NO", OR "CONDITIONAL" - THOSE ARE WRONG!
+
+Your "decision" field MUST contain the SPECIFIC NAME of your #1 recommendation:
+- For headphones: "Sony WH-1000XM5" or "Apple AirPods Pro 2"
+- For movies: "The Shawshank Redemption" or "Inception"
+- For laptops: "MacBook Pro M3" or "ThinkPad X1 Carbon"
+
+Your "position" should list your top 3-5 specific picks with brief reasons.
+Be SPECIFIC - name exact products, movies, places, etc.
+
+WRONG: decision: "YES" or decision: "NO" or decision: "CONDITIONAL"
+RIGHT: decision: "Sony WH-1000XM5" or decision: "MacBook Pro 14-inch"`;
+    decisionFormat = `"decision": "THE EXACT NAME OF YOUR #1 PICK (e.g., 'Sony WH-1000XM5', 'MacBook Pro', 'The Godfather')"`;
   } else if (questionType === 'general') {
     decisionGuidance = `GENERAL QUESTION DETECTED!
 Provide a clear, direct answer to the question.
