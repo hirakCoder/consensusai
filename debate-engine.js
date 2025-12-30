@@ -360,35 +360,49 @@ class DebateEngine {
       return { reached: false, type: 'insufficient', decisions: {} };
     }
 
-    // Normalize decision to uppercase and handle variations
+    // Detect question type to decide how to handle decisions
+    const questionType = detectQuestionType(this.question);
+    const isYesNoQuestion = questionType === 'decision';
+
+    // Normalize decision for YES/NO questions only
     const normalizeDecision = (decision) => {
       if (!decision) return 'UNKNOWN';
       const d = decision.toUpperCase().trim();
-      // Map common variations
-      if (d.includes('YES') || d.includes('PROCEED') || d.includes('APPROVE') || d.includes('RECOMMEND') || d.includes('SUPPORT')) return 'YES';
+
+      // For non-yes/no questions, keep the original decision (product name, etc.)
+      if (!isYesNoQuestion) {
+        return d;
+      }
+
+      // Only normalize for actual yes/no decision questions
+      if (d.includes('YES') || d.includes('PROCEED') || d.includes('APPROVE') || d.includes('SUPPORT')) return 'YES';
       if (d.includes('NO') || d.includes('REJECT') || d.includes('DECLINE') || d.includes('AGAINST') || d.includes('AVOID')) return 'NO';
       if (d.includes('CONDITIONAL') || d.includes('IF') || d.includes('DEPENDS') || d.includes('MAYBE') || d.includes('CONSIDER')) return 'CONDITIONAL';
       if (d.includes('WAIT') || d.includes('DELAY') || d.includes('MORE INFO') || d.includes('HOLD') || d.includes('PAUSE')) return 'WAIT';
       if (d.includes('ALTERNATIVE') || d.includes('DIFFERENT') || d.includes('NEITHER') || d.includes('OTHER')) return 'ALTERNATIVE';
       if (d.includes('MAINTAIN') || d.includes('STAY') || d.includes('KEEP') || d.includes('CONTINUE')) return 'CONDITIONAL';
-      // If nothing matched, return CONDITIONAL as safe fallback (most nuanced)
+      // If nothing matched for yes/no questions, return CONDITIONAL
       return 'CONDITIONAL';
     };
 
-    // Group by structured decision (not free-form position)
+    // Group by decision
     const decisionGroups = {};
     for (const response of validResponses) {
       const decision = normalizeDecision(response.decision);
+      // Store original decision for display
       if (!decisionGroups[decision]) {
         decisionGroups[decision] = [];
       }
-      decisionGroups[decision].push(response);
+      decisionGroups[decision].push({
+        ...response,
+        originalDecision: response.decision // Keep original for display
+      });
     }
 
     const totalVoters = validResponses.length;
     const groupCounts = Object.entries(decisionGroups)
       .map(([decision, responses]) => ({
-        decision,
+        decision: responses[0].originalDecision || decision, // Use original case for display
         position: responses[0].position, // Keep first position for display
         count: responses.length,
         responses,
