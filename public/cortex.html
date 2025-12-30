@@ -1203,6 +1203,22 @@
         }
 
         /* Quick Template Chips */
+        .char-counter {
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            padding-right: 4px;
+        }
+
+        .char-counter.warning {
+            color: #f59e0b;
+        }
+
+        .char-counter.limit {
+            color: #ef4444;
+        }
+
         .template-chips {
             display: grid;
             grid-template-columns: repeat(4, auto);
@@ -4249,6 +4265,7 @@
                     <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
             </form>
+            <div class="char-counter" id="charCounter">0 / 500</div>
             <!-- Quick Template Chips -->
             <div class="template-chips" id="templateChips">
                 <div class="template-chip" onclick="useTemplate('Should I invest in Bitcoin right now?', this)">
@@ -4599,19 +4616,19 @@
                     <svg class="upgrade-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span class="upgrade-feature-text">Premium AI models (GPT-4o, Claude 3.5, Gemini Pro)</span>
+                    <span class="upgrade-feature-text">Premium AI models (GPT-4.1, Claude Opus 4, Gemini 2.5 Pro, Grok 4)</span>
                 </div>
                 <div class="upgrade-feature">
                     <svg class="upgrade-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span class="upgrade-feature-text">Priority processing & faster responses</span>
+                    <span class="upgrade-feature-text">Devil's Advocate mode</span>
                 </div>
                 <div class="upgrade-feature">
                     <svg class="upgrade-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span class="upgrade-feature-text">Export debates as PDF reports</span>
+                    <span class="upgrade-feature-text">Email support</span>
                 </div>
             </div>
             <div class="upgrade-pricing">
@@ -5181,6 +5198,15 @@
                 const result = await res.json();
                 closeSSE();
 
+                // Check for rate limit / upgrade required
+                if (result.limitReached || result.upgradeRequired) {
+                    setCoreState('ready');
+                    submitBtn.disabled = false;
+                    showUpgradeModal();
+                    showToast(result.error || 'Daily limit reached. Upgrade to Pro for unlimited debates!', 'warning');
+                    return;
+                }
+
                 if (result.error) throw new Error(result.error);
 
                 currentResult = result;
@@ -5213,7 +5239,23 @@
         // Input effects
         input.addEventListener('input', () => {
             setLightsActive(input.value.length > 0);
+            updateCharCounter();
         });
+
+        // Character counter
+        function updateCharCounter() {
+            const counter = document.getElementById('charCounter');
+            const len = input.value.length;
+            const max = 500;
+            counter.textContent = `${len} / ${max}`;
+
+            counter.classList.remove('warning', 'limit');
+            if (len >= max) {
+                counter.classList.add('limit');
+            } else if (len >= max * 0.8) {
+                counter.classList.add('warning');
+            }
+        }
 
         input.addEventListener('blur', () => {
             if (!input.value) setLightsActive(false);
@@ -6141,7 +6183,14 @@
                 if (!authData.authenticated) {
                     showToast('Please sign in to upgrade to Pro', 'warning');
                     document.getElementById('upgradeOverlay').classList.remove('active');
-                    // Could trigger sign-in modal here
+                    // Trigger sign-in modal
+                    if (clerkInstance) {
+                        const returnUrl = window.location.pathname + '?upgrade=true';
+                        clerkInstance.openSignIn({
+                            afterSignInUrl: returnUrl,
+                            afterSignUpUrl: returnUrl
+                        });
+                    }
                     return;
                 }
 
@@ -6473,6 +6522,17 @@
 
         // Initialize auth
         initAuth();
+
+        // Check for upgrade param in URL - show upgrade modal
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('upgrade') === 'true') {
+            // Small delay to let page load
+            setTimeout(() => {
+                showUpgradeModal();
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }, 300);
+        }
 
         // Focus input on load
         setTimeout(() => input.focus(), 500);

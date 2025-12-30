@@ -450,6 +450,7 @@
           <li>Budget model tier</li>
           <li>Consensus analysis</li>
           <li>Devil's Advocate mode</li>
+          <li>Debate history</li>
           <li class="disabled">Premium AI models</li>
           <li class="disabled">Unlimited debates</li>
         </ul>
@@ -471,8 +472,8 @@
           <li>Premium model tier</li>
           <li>Consensus analysis</li>
           <li>Devil's Advocate mode</li>
-          <li>Full debate history</li>
-          <li>Priority support</li>
+          <li>Debate history</li>
+          <li>Email support</li>
         </ul>
         <a href="/" class="cta-btn primary" onclick="handleUpgrade()">Upgrade to Pro</a>
       </div>
@@ -502,8 +503,8 @@
           </tr>
           <tr>
             <td>Debate History</td>
-            <td>7 days</td>
-            <td>Unlimited</td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
           </tr>
           <tr>
             <td>Devil's Advocate Mode</td>
@@ -516,7 +517,7 @@
             <td><span class="check">&#10003;</span></td>
           </tr>
           <tr>
-            <td>Priority Support</td>
+            <td>Email Support</td>
             <td><span class="cross">&#10005;</span></td>
             <td><span class="check">&#10003;</span></td>
           </tr>
@@ -570,8 +571,8 @@
 
   <script>
     function handleUpgrade() {
-      // Redirect to main app where the upgrade modal will handle auth + Stripe
-      window.location.href = '/?upgrade=true';
+      // Redirect to cortex app where the upgrade modal handles Stripe checkout
+      window.location.href = '/cortex.html?upgrade=true';
     }
   </script>
 </body>

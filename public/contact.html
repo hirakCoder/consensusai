@@ -489,7 +489,7 @@
         </div>
         <div class="faq-item">
           <h4>What's included in the Free plan?</h4>
-          <p>Free users get 10 debates per day using our budget AI tier. Upgrade to Pro for unlimited debates and premium models.</p>
+          <p>Free users get 3 debates per day using our budget AI tier. Upgrade to Pro for unlimited debates and premium models.</p>
         </div>
         <div class="faq-item">
           <h4>Can I cancel my subscription?</h4>
@@ -512,35 +512,44 @@
   </footer>
 
   <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
       const btn = document.getElementById('submitBtn');
       const successMsg = document.getElementById('successMessage');
+      const form = this;
 
       btn.disabled = true;
       btn.textContent = 'Sending...';
 
-      // Simulate form submission (replace with actual endpoint)
-      setTimeout(() => {
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          body: JSON.stringify(Object.fromEntries(formData)),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to send message');
+        }
+
         successMsg.classList.add('show');
-        this.reset();
-        btn.disabled = false;
-        btn.textContent = 'Send Message';
+        form.reset();
 
         // Hide success message after 5 seconds
         setTimeout(() => {
           successMsg.classList.remove('show');
         }, 5000);
-      }, 1000);
 
-      // TODO: Replace with actual form submission
-      // const formData = new FormData(this);
-      // fetch('/api/contact', {
-      //   method: 'POST',
-      //   body: JSON.stringify(Object.fromEntries(formData)),
-      //   headers: { 'Content-Type': 'application/json' }
-      // }).then(...)
+      } catch (error) {
+        alert(error.message || 'Failed to send message. Please try again.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
     });
   </script>
 </body>
