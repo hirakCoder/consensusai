@@ -3984,18 +3984,19 @@
             }
         }
 
-        /* Live Debate Stats Bar */
+        /* Live Debate Stats Bar - Centered at top */
         .debate-stats {
             position: absolute;
-            top: 10px;
-            right: 20px;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            gap: 16px;
+            gap: 20px;
             background: rgba(15, 15, 20, 0.9);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            padding: 8px 16px;
+            border-radius: 12px;
+            padding: 10px 24px;
             opacity: 0;
             pointer-events: none;
             transition: all 0.5s ease;
