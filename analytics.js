@@ -170,6 +170,83 @@ function trackPageView(userId, data) {
   });
 }
 
+// ============================================
+// Conversion Funnel Events
+// ============================================
+
+/**
+ * Track user signup (from Clerk webhook or first auth)
+ */
+function trackSignup(userId, data = {}) {
+  track(userId, 'user_signed_up', {
+    method: data.method || 'email', // 'email', 'google', 'github'
+    referrer: data.referrer,
+    landing_page: data.landingPage,
+  });
+
+  // Also identify the user
+  identify(userId, {
+    signup_date: new Date().toISOString(),
+    email: data.email,
+    tier: 'free',
+  });
+}
+
+/**
+ * Track first debate (important for activation)
+ */
+function trackFirstDebate(userId, data = {}) {
+  track(userId, 'first_debate_completed', {
+    time_to_first_debate_ms: data.timeToFirstDebate,
+    question_type: data.questionType,
+    consensus_reached: data.consensusReached,
+  });
+}
+
+/**
+ * Track returning user (session after first day)
+ */
+function trackReturningUser(userId, data = {}) {
+  track(userId, 'user_returned', {
+    days_since_signup: data.daysSinceSignup,
+    total_debates: data.totalDebates,
+    current_tier: data.tier,
+  });
+}
+
+/**
+ * Track limit reached (conversion opportunity)
+ */
+function trackLimitReached(userId, data = {}) {
+  track(userId, 'daily_limit_reached', {
+    debates_completed: data.debatesCompleted || 3,
+    current_tier: data.tier || 'free',
+    time_of_day: new Date().getHours(),
+  });
+}
+
+/**
+ * Track upgrade modal shown
+ */
+function trackUpgradeModalShown(userId, data = {}) {
+  track(userId, 'upgrade_modal_shown', {
+    trigger: data.trigger || 'limit_reached', // 'limit_reached', 'premium_feature', 'cta_click'
+    current_tier: data.tier || 'free',
+  });
+}
+
+/**
+ * Track subscription cancelled (churn)
+ */
+function trackSubscriptionCancelled(userId, data = {}) {
+  track(userId, 'subscription_cancelled', {
+    plan: data.plan || 'pro',
+    subscription_duration_days: data.durationDays,
+    total_debates: data.totalDebates,
+    reason: data.reason,
+  });
+}
+
 /**
  * Flush pending events (call before shutdown)
  */
@@ -194,4 +271,11 @@ module.exports = {
   trackDebateShared,
   trackTierChanged,
   trackPageView,
+  // Conversion funnel events
+  trackSignup,
+  trackFirstDebate,
+  trackReturningUser,
+  trackLimitReached,
+  trackUpgradeModalShown,
+  trackSubscriptionCancelled,
 };

@@ -31,6 +31,10 @@ const pdfGenerator = require('./pdf-generator');
 
 const PORT = process.env.PORT || 3000;
 
+// In-memory storage for contact form submissions and rate limiting
+const contactSubmissions = [];
+const contactRateLimits = new Map();
+
 // MIME types
 const mimeTypes = {
   '.html': 'text/html',
@@ -459,15 +463,83 @@ const server = http.createServer(async (req, res) => {
   // ADMIN ENDPOINTS (owner only)
   // ============================================
 
-  // Admin: Get platform statistics
-  if (pathname === '/api/admin/stats') {
-    // Check if user is owner
+  // Helper function to check admin access
+  const checkAdminAccess = async (req, userId) => {
+    // Check if user is owner via usage.js
     const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
+    if (isOwner) return true;
+
+    // Check localhost access
     const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
                         req.socket?.remoteAddress === '::1' ||
                         req.headers.host?.includes('localhost');
+    if (isLocalhost) return true;
 
-    if (!isOwner && !isLocalhost) {
+    // Check if authenticated user has admin email domain
+    const session = await auth.verifySession(req);
+    if (session?.email) {
+      const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+      const adminDomains = (process.env.ADMIN_DOMAINS || '').split(',').map(d => d.trim().toLowerCase());
+      const userEmail = session.email.toLowerCase();
+
+      // Check exact email match
+      if (adminEmails.includes(userEmail)) return true;
+
+      // Check domain match
+      const userDomain = userEmail.split('@')[1];
+      if (adminDomains.includes(userDomain)) return true;
+    }
+
+    return false;
+  };
+
+  // Admin: Claim admin access (first authenticated user or via secret)
+  if (pathname === '/api/admin/claim' && req.method === 'POST') {
+    const session = await auth.verifySession(req);
+    if (!session?.userId) {
+      sendJson(res, { error: 'Must be authenticated to claim admin access' }, 401);
+      return;
+    }
+
+    const body = await parseBody(req);
+    const adminSecret = process.env.ADMIN_SECRET || process.env.OWNER_SECRET;
+
+    // If ADMIN_SECRET is set, require it
+    if (adminSecret && body.secret !== adminSecret) {
+      sendJson(res, { error: 'Invalid admin secret' }, 403);
+      return;
+    }
+
+    // Set user as owner
+    usage.setOwner(session.userId);
+    console.log(`[ADMIN] User ${session.userId} (${session.email}) claimed admin access`);
+
+    sendJson(res, {
+      success: true,
+      message: 'Admin access granted',
+      userId: session.userId,
+      email: session.email
+    });
+    return;
+  }
+
+  // Admin: Check current admin status
+  if (pathname === '/api/admin/status') {
+    const hasAccess = await checkAdminAccess(req, userId);
+    const session = await auth.verifySession(req);
+    sendJson(res, {
+      isAdmin: hasAccess,
+      userId: userId,
+      email: session?.email || null,
+      authenticated: !!session?.userId
+    });
+    return;
+  }
+
+  // Admin: Get platform statistics
+  if (pathname === '/api/admin/stats') {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -480,12 +552,8 @@ const server = http.createServer(async (req, res) => {
 
   // Admin: Get top users
   if (pathname === '/api/admin/users') {
-    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
-    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
-                        req.socket?.remoteAddress === '::1' ||
-                        req.headers.host?.includes('localhost');
-
-    if (!isOwner && !isLocalhost) {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -499,12 +567,8 @@ const server = http.createServer(async (req, res) => {
 
   // Admin: Get cost trend
   if (pathname === '/api/admin/costs') {
-    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
-    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
-                        req.socket?.remoteAddress === '::1' ||
-                        req.headers.host?.includes('localhost');
-
-    if (!isOwner && !isLocalhost) {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -518,12 +582,8 @@ const server = http.createServer(async (req, res) => {
 
   // Admin: Get warnings and budget status
   if (pathname === '/api/admin/warnings') {
-    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
-    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
-                        req.socket?.remoteAddress === '::1' ||
-                        req.headers.host?.includes('localhost');
-
-    if (!isOwner && !isLocalhost) {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -540,12 +600,8 @@ const server = http.createServer(async (req, res) => {
 
   // Admin: Get configuration status for all services
   if (pathname === '/api/admin/config') {
-    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
-    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
-                        req.socket?.remoteAddress === '::1' ||
-                        req.headers.host?.includes('localhost');
-
-    if (!isOwner && !isLocalhost) {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -558,12 +614,8 @@ const server = http.createServer(async (req, res) => {
 
   // Admin: Get recent errors
   if (pathname === '/api/admin/errors') {
-    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
-    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
-                        req.socket?.remoteAddress === '::1' ||
-                        req.headers.host?.includes('localhost');
-
-    if (!isOwner && !isLocalhost) {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -577,12 +629,8 @@ const server = http.createServer(async (req, res) => {
 
   // Admin: Get user issue alerts
   if (pathname === '/api/admin/alerts') {
-    const isOwner = usage.isOwner ? usage.isOwner(userId) : false;
-    const isLocalhost = req.socket?.remoteAddress === '127.0.0.1' ||
-                        req.socket?.remoteAddress === '::1' ||
-                        req.headers.host?.includes('localhost');
-
-    if (!isOwner && !isLocalhost) {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
       sendJson(res, { error: 'Unauthorized' }, 403);
       return;
     }
@@ -590,6 +638,106 @@ const server = http.createServer(async (req, res) => {
     const admin = require('./admin');
     const alerts = await admin.getUserIssueAlerts();
     sendJson(res, alerts);
+    return;
+  }
+
+  // Contact form submission
+  if (pathname === '/api/contact' && req.method === 'POST') {
+    try {
+      const body = await parseBody(req);
+      const { name, email, subject, message } = body;
+
+      // Basic validation
+      if (!name || !email || !message) {
+        sendJson(res, { error: 'Name, email, and message are required' }, 400);
+        return;
+      }
+
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        sendJson(res, { error: 'Invalid email format' }, 400);
+        return;
+      }
+
+      // Rate limiting - max 5 submissions per IP per hour
+      const clientIP = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress;
+      const rateLimitKey = `contact_${clientIP}`;
+      const rateLimit = contactRateLimits.get(rateLimitKey) || { count: 0, resetTime: Date.now() + 3600000 };
+
+      if (Date.now() > rateLimit.resetTime) {
+        rateLimit.count = 0;
+        rateLimit.resetTime = Date.now() + 3600000;
+      }
+
+      if (rateLimit.count >= 5) {
+        sendJson(res, { error: 'Too many submissions. Please try again later.' }, 429);
+        return;
+      }
+
+      rateLimit.count++;
+      contactRateLimits.set(rateLimitKey, rateLimit);
+
+      // Store contact submission
+      const submission = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 9),
+        name: name.trim().substring(0, 100),
+        email: email.trim().toLowerCase().substring(0, 100),
+        subject: (subject || 'General Inquiry').substring(0, 200),
+        message: message.trim().substring(0, 5000),
+        timestamp: new Date().toISOString(),
+        ip: clientIP,
+        userAgent: req.headers['user-agent']?.substring(0, 500)
+      };
+
+      // Store in database if available, otherwise in memory
+      if (db.isConnected && db.isConnected()) {
+        await db.query(`
+          INSERT INTO contact_submissions (id, name, email, subject, message, timestamp, ip, user_agent)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `, [submission.id, submission.name, submission.email, submission.subject, submission.message, submission.timestamp, submission.ip, submission.userAgent]);
+      } else {
+        // Fallback: store in memory (will be lost on restart)
+        contactSubmissions.push(submission);
+        // Keep only last 100 submissions in memory
+        if (contactSubmissions.length > 100) {
+          contactSubmissions.shift();
+        }
+      }
+
+      // Log for admin visibility
+      console.log(`[CONTACT] New submission from ${submission.email}: ${submission.subject}`);
+
+      sendJson(res, { success: true, message: 'Thank you! Your message has been received.' });
+      return;
+    } catch (error) {
+      console.error('Contact form error:', error);
+      admin.logError(error, { endpoint: '/api/contact', method: 'POST' });
+      sendJson(res, { error: 'Failed to submit message. Please try again.' }, 500);
+      return;
+    }
+  }
+
+  // Get contact submissions (admin only)
+  if (pathname === '/api/admin/contacts') {
+    const hasAccess = await checkAdminAccess(req, userId);
+    if (!hasAccess) {
+      sendJson(res, { error: 'Unauthorized' }, 403);
+      return;
+    }
+
+    try {
+      let submissions = [];
+      if (db.isConnected && db.isConnected()) {
+        const result = await db.query('SELECT * FROM contact_submissions ORDER BY timestamp DESC LIMIT 100');
+        submissions = result.rows;
+      } else {
+        submissions = [...contactSubmissions].reverse();
+      }
+      sendJson(res, { submissions });
+    } catch (error) {
+      sendJson(res, { submissions: [...contactSubmissions].reverse() });
+    }
     return;
   }
 
@@ -686,7 +834,25 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/debate' && req.method === 'POST') {
     try {
       const body = await parseBody(req);
-      const { question, context, tier, debateId: clientDebateId, selectedAIs, personas } = body;
+      const { question, context, tier, debateId: clientDebateId, selectedAIs, personas, website, form_loaded_at } = body;
+
+      // Bot protection: Honeypot check (bots fill hidden fields)
+      if (website) {
+        console.log(`[Bot Protection] Honeypot triggered from IP: ${req.headers['x-forwarded-for'] || req.socket?.remoteAddress}`);
+        sendJson(res, { error: 'Request blocked' }, 403);
+        return;
+      }
+
+      // Bot protection: Timing check (bots submit too fast)
+      if (form_loaded_at) {
+        const loadTime = parseInt(form_loaded_at);
+        const timeSinceLoad = Date.now() - loadTime;
+        if (timeSinceLoad < 1500) { // Less than 1.5 seconds - likely a bot
+          console.log(`[Bot Protection] Too fast submission (${timeSinceLoad}ms) from IP: ${req.headers['x-forwarded-for'] || req.socket?.remoteAddress}`);
+          sendJson(res, { error: 'Please wait a moment before submitting' }, 429);
+          return;
+        }
+      }
 
       if (!question) {
         sendJson(res, { error: 'Question is required' }, 400);

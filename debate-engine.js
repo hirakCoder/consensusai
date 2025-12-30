@@ -561,12 +561,28 @@ class DebateEngine {
     if (finalConsensus && !isYesNoQuestion) {
       // For non-yes/no questions, ALWAYS replace generic YES/NO with appropriate labels
       // "What is the best app idea?" should show "RECOMMENDED" not "YES"
-      const currentDecision = (finalConsensus.decision || '').toUpperCase();
+      const currentDecision = (finalConsensus.decision || '').toUpperCase().trim();
       const isGenericDecision = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN'].includes(currentDecision);
 
       if (isGenericDecision) {
-        // Use the appropriate label for this question type
-        finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
+        // For recommendation/comparison questions, try to extract specific recommendation from position
+        if ((questionType === 'recommendation' || questionType === 'comparison') && finalConsensus.position) {
+          // Extract first meaningful item (handle numbered lists like "1. Sony WH-1000XM5")
+          const position = finalConsensus.position;
+          const cleanPosition = position.replace(/^\d+\.\s*/, '').replace(/^[-•]\s*/, '');
+          // Get first sentence (handle product names with periods/abbreviations)
+          const firstItem = cleanPosition.split(/[,;]|\.\s+(?=[A-Z])/)[0]?.trim();
+
+          // Use specific recommendation if it's reasonable length and looks like a recommendation
+          if (firstItem && firstItem.length >= 3 && firstItem.length <= 100 && !['yes', 'no', 'conditional'].includes(firstItem.toLowerCase())) {
+            finalConsensus.decision = firstItem;
+          } else {
+            finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
+          }
+        } else {
+          // Use the appropriate label for this question type
+          finalConsensus.decision = typeLabels[questionType] || 'ANSWERED';
+        }
         finalConsensus.questionType = questionType;
       }
       // If decision is something specific (like "PS5" for comparison), keep it

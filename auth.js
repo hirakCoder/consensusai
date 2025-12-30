@@ -69,10 +69,22 @@ async function verifySession(req) {
       secretKey: CLERK_SECRET_KEY,
     });
 
+    let email = payload.email;
+
+    // If email not in token, fetch from Clerk API
+    if (!email && clerkClient && payload.sub) {
+      try {
+        const user = await clerkClient.users.getUser(payload.sub);
+        email = user.emailAddresses?.[0]?.emailAddress;
+      } catch (e) {
+        console.error('Failed to fetch user email:', e.message);
+      }
+    }
+
     return {
       userId: payload.sub,
       sessionId: payload.sid,
-      email: payload.email,
+      email: email,
       metadata: payload.public_metadata || {}
     };
   } catch (error) {

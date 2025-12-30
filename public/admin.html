@@ -620,11 +620,27 @@
         <header>
             <h1>Admin Dashboard</h1>
             <div style="display: flex; gap: 12px; align-items: center;">
+                <div id="userInfo" style="display: none; font-size: 0.85rem; color: var(--text-secondary);"></div>
+                <button class="refresh-btn" id="signInBtn" onclick="signIn()" style="display: none;">Sign In</button>
+                <button class="refresh-btn" id="signOutBtn" onclick="signOut()" style="display: none;">Sign Out</button>
                 <button class="refresh-btn" onclick="loadData()">Refresh</button>
                 <a href="/" class="back-link">&larr; Back to App</a>
             </div>
         </header>
 
+        <!-- Auth Required Screen -->
+        <div id="authRequired" style="display: none; text-align: center; padding: 60px 20px;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">🔐</div>
+            <h2 style="margin-bottom: 16px; color: var(--text-primary);">Authentication Required</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                Please sign in to access the admin dashboard. Only authorized administrators can view this page.
+            </p>
+            <button onclick="signIn()" style="background: linear-gradient(135deg, var(--core-primary), var(--core-secondary)); color: white; border: none; padding: 14px 32px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s;">
+                Sign In with Clerk
+            </button>
+        </div>
+
+        <div id="dashboardContent">
         <div id="error" class="error-message" style="display: none;"></div>
 
         <!-- User Issue Alerts Section -->
@@ -738,9 +754,14 @@
                 </tbody>
             </table>
         </div>
+        </div> <!-- end dashboardContent -->
     </div>
 
     <script>
+        // Clerk configuration
+        const CLERK_PUBLISHABLE_KEY = 'pk_test_Y29vbC1tYWxhbXV0ZS05MC5jbGVyay5hY2NvdW50cy5kZXYk';
+        let clerk = null;
+
         const providerIcons = {
             openai: '🤖',
             gemini: '💎',
@@ -755,13 +776,154 @@
             grok: 'Grok'
         };
 
-        async function loadData() {
+        // Initialize Clerk
+        async function initClerk() {
+            return new Promise((resolve) => {
+                if (window.Clerk) {
+                    clerk = window.Clerk;
+                    resolve(clerk);
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+                script.crossOrigin = 'anonymous';
+                script.setAttribute('data-clerk-publishable-key', CLERK_PUBLISHABLE_KEY);
+                script.onload = async () => {
+                    // Wait a bit for Clerk to initialize
+                    await new Promise(r => setTimeout(r, 100));
+                    clerk = window.Clerk;
+                    if (clerk) {
+                        await clerk.load();
+                    }
+                    resolve(clerk);
+                };
+                script.onerror = () => {
+                    console.error('Failed to load Clerk');
+                    resolve(null);
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // Sign in with Clerk
+        async function signIn() {
+            if (!clerk) {
+                alert('Authentication system not loaded. Please refresh the page.');
+                return;
+            }
+            clerk.openSignIn({
+                afterSignInUrl: window.location.href,
+                afterSignUpUrl: window.location.href
+            });
+        }
+
+        // Sign out
+        async function signOut() {
+            if (clerk) {
+                await clerk.signOut();
+                window.location.reload();
+            }
+        }
+
+        // Update UI based on auth state
+        function updateAuthUI() {
+            const signInBtn = document.getElementById('signInBtn');
+            const signOutBtn = document.getElementById('signOutBtn');
+            const userInfo = document.getElementById('userInfo');
+            const authRequired = document.getElementById('authRequired');
+            const dashboardContent = document.getElementById('dashboardContent');
+
+            if (clerk && clerk.user) {
+                // User is signed in
+                signInBtn.style.display = 'none';
+                signOutBtn.style.display = 'block';
+                userInfo.style.display = 'block';
+                userInfo.textContent = clerk.user.primaryEmailAddress?.emailAddress || clerk.user.id;
+                authRequired.style.display = 'none';
+                dashboardContent.style.display = 'block';
+                return true;
+            } else {
+                // User is not signed in
+                signInBtn.style.display = 'block';
+                signOutBtn.style.display = 'none';
+                userInfo.style.display = 'none';
+                authRequired.style.display = 'block';
+                dashboardContent.style.display = 'none';
+                return false;
+            }
+        }
+
+        async function checkAdminStatus() {
             try {
+                const res = await fetch('/api/admin/status');
+                return await res.json();
+            } catch (e) {
+                return { isAdmin: false, authenticated: false };
+            }
+        }
+
+        async function claimAdminAccess() {
+            const secret = prompt('Enter admin secret phrase:') || '';
+            if (!secret) {
+                alert('Admin secret is required.');
+                return;
+            }
+            try {
+                const headers = await getAuthHeaders();
+                const res = await fetch('/api/admin/claim', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({ secret })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Admin access granted! Reloading...');
+                    window.location.reload();
+                } else {
+                    alert(data.error || 'Failed to claim admin access');
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        // Get auth headers for API requests
+        async function getAuthHeaders() {
+            if (clerk && clerk.session) {
+                try {
+                    const token = await clerk.session.getToken();
+                    return {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    };
+                } catch (e) {
+                    console.error('Failed to get auth token:', e);
+                }
+            }
+            return { 'Content-Type': 'application/json' };
+        }
+
+        async function loadData() {
+            // Check if user is signed in first
+            if (!updateAuthUI()) {
+                return; // User not signed in, show auth screen
+            }
+
+            try {
+                const headers = await getAuthHeaders();
+                // Check admin status first
+                const status = await checkAdminStatus();
+
                 // Load stats
-                const statsRes = await fetch('/api/admin/stats');
+                const statsRes = await fetch('/api/admin/stats', { headers });
                 if (!statsRes.ok) {
                     if (statsRes.status === 403) {
-                        showError('Access denied. Admin access required.');
+                        const userEmail = clerk?.user?.primaryEmailAddress?.emailAddress || 'Unknown';
+                        let msg = 'Access denied. Admin access required.';
+                        msg += `<br><br>You are logged in as: <strong>${userEmail}</strong><br><br>`;
+                        msg += '<button onclick="claimAdminAccess()" style="padding:10px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-size:14px;">Claim Admin Access</button>';
+                        showError(msg, true);
                         return;
                     }
                     throw new Error('Failed to load stats');
@@ -770,19 +932,19 @@
                 renderStats(stats);
 
                 // Load health
-                const healthRes = await fetch('/api/health');
+                const healthRes = await fetch('/api/health', { headers });
                 const health = await healthRes.json();
                 renderHealth(health);
 
                 // Load users
-                const usersRes = await fetch('/api/admin/users?limit=10');
+                const usersRes = await fetch('/api/admin/users?limit=10', { headers });
                 if (usersRes.ok) {
                     const users = await usersRes.json();
                     renderUsers(users);
                 }
 
                 // Load warnings and budget
-                const warningsRes = await fetch('/api/admin/warnings?budget=100');
+                const warningsRes = await fetch('/api/admin/warnings?budget=100', { headers });
                 if (warningsRes.ok) {
                     const data = await warningsRes.json();
                     renderWarnings(data.warnings);
@@ -790,21 +952,21 @@
                 }
 
                 // Load config status
-                const configRes = await fetch('/api/admin/config');
+                const configRes = await fetch('/api/admin/config', { headers });
                 if (configRes.ok) {
                     const config = await configRes.json();
                     renderConfig(config);
                 }
 
                 // Load alerts
-                const alertsRes = await fetch('/api/admin/alerts');
+                const alertsRes = await fetch('/api/admin/alerts', { headers });
                 if (alertsRes.ok) {
                     const alerts = await alertsRes.json();
                     renderAlerts(alerts);
                 }
 
                 // Load recent errors
-                const errorsRes = await fetch('/api/admin/errors?limit=15');
+                const errorsRes = await fetch('/api/admin/errors?limit=15', { headers });
                 if (errorsRes.ok) {
                     const errors = await errorsRes.json();
                     renderErrors(errors);
@@ -1142,9 +1304,13 @@
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
 
-        function showError(message) {
+        function showError(message, isHtml = false) {
             const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
+            if (isHtml) {
+                errorDiv.innerHTML = message;
+            } else {
+                errorDiv.textContent = message;
+            }
             errorDiv.style.display = 'block';
         }
 
@@ -1152,11 +1318,40 @@
             document.getElementById('error').style.display = 'none';
         }
 
-        // Load data on page load
-        loadData();
+        // Initialize app
+        async function initApp() {
+            // Hide dashboard content until auth is checked
+            document.getElementById('dashboardContent').style.display = 'none';
 
-        // Auto-refresh every 60 seconds
-        setInterval(loadData, 60000);
+            // Load Clerk
+            await initClerk();
+
+            // Check auth state and load data if authenticated
+            if (clerk) {
+                // Listen for auth changes
+                clerk.addListener((event) => {
+                    if (event.user) {
+                        updateAuthUI();
+                        loadData();
+                    } else {
+                        updateAuthUI();
+                    }
+                });
+            }
+
+            // Initial load
+            loadData();
+        }
+
+        // Start the app
+        initApp();
+
+        // Auto-refresh every 60 seconds (only if authenticated)
+        setInterval(() => {
+            if (clerk && clerk.user) {
+                loadData();
+            }
+        }, 60000);
     </script>
 </body>
 </html>

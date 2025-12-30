@@ -94,9 +94,12 @@ function detectQuestionType(question) {
     return 'recommendation';
   }
 
-  // Recommendation questions
+  // Recommendation questions - expanded to catch more open-ended requests
   if (/what (should|would|can|could) (i|we|you)|recommend|suggestion/.test(q) ||
-      /best .*(to watch|to buy|to read|to play|to visit|to try)/.test(q)) {
+      /best .*(to watch|to buy|to read|to play|to visit|to try)/.test(q) ||
+      /\b(ideas?|suggestions?|recommendations?|options?|alternatives?)\b/.test(q) ||
+      /\bgive me\b|\blist\b.*(some|a few|several)|\bwhat are (some|the|good)/.test(q) ||
+      /\b(suggest|brainstorm|help me (find|choose|pick|decide))\b/.test(q)) {
     return 'recommendation';
   }
 

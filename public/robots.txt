@@ -9,4 +9,4 @@ Disallow: /api/
 Disallow: /success.html
 
 # Sitemap
-Sitemap: https://consensusai.app/sitemap.xml
+Sitemap: https://consensusai.live/sitemap.xml
