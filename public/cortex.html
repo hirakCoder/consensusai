@@ -3786,12 +3786,332 @@
         }
 
         /* ============================================
+           NEURAL DEBATE ARENA - Award-Winning Effects
+           ============================================ */
+
+        /* Mesh Gradient Background Layer */
+        .neural-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .cortex-arena.debating .neural-bg {
+            opacity: 1;
+        }
+
+        .neural-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(16, 163, 127, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(66, 133, 244, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 60%);
+            animation: meshFlow 20s ease-in-out infinite;
+        }
+
+        @keyframes meshFlow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(-5%, 5%) rotate(2deg); }
+            50% { transform: translate(5%, -5%) rotate(-2deg); }
+            75% { transform: translate(-3%, -3%) rotate(1deg); }
+        }
+
+        /* Particle Field */
+        .particle-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+        }
+
+        .cortex-arena.debating .particle-field {
+            opacity: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: particleFloat 15s linear infinite;
+        }
+
+        .particle:nth-child(odd) {
+            background: rgba(16, 163, 127, 0.5);
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(3n) {
+            background: rgba(66, 133, 244, 0.5);
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(4n) {
+            background: rgba(217, 119, 6, 0.4);
+            animation-duration: 22s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100%) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(80%) translateX(10px) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(-80%) translateX(-10px) scale(1);
+            }
+            100% {
+                transform: translateY(-100%) translateX(0) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Neural Connection Paths - Enhanced */
+        .neural-paths {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .neural-paths svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .neural-path {
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .neural-path.active {
+            opacity: 1;
+            animation: pathPulse 2s ease-in-out infinite;
+        }
+
+        .neural-path.gpt { stroke: url(#gradGpt); }
+        .neural-path.gemini { stroke: url(#gradGemini); }
+        .neural-path.claude { stroke: url(#gradClaude); }
+        .neural-path.grok { stroke: url(#gradGrok); }
+
+        @keyframes pathPulse {
+            0%, 100% { stroke-width: 2; filter: drop-shadow(0 0 3px currentColor); }
+            50% { stroke-width: 3; filter: drop-shadow(0 0 8px currentColor); }
+        }
+
+        /* Data Flow Dots on Paths */
+        .flow-dot {
+            fill: white;
+            opacity: 0;
+        }
+
+        .flow-dot.active {
+            opacity: 1;
+            animation: flowMove 2s linear infinite;
+        }
+
+        @keyframes flowMove {
+            0% { offset-distance: 0%; }
+            100% { offset-distance: 100%; }
+        }
+
+        /* Energy Ring around Core */
+        .energy-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .cortex-arena.debating .energy-ring {
+            opacity: 1;
+            animation: ringExpand 3s ease-out infinite;
+        }
+
+        .energy-ring:nth-child(2) { animation-delay: 1s; }
+        .energy-ring:nth-child(3) { animation-delay: 2s; }
+
+        @keyframes ringExpand {
+            0% {
+                width: 160px;
+                height: 160px;
+                opacity: 0.8;
+                border-color: rgba(99, 102, 241, 0.5);
+            }
+            100% {
+                width: 350px;
+                height: 350px;
+                opacity: 0;
+                border-color: rgba(99, 102, 241, 0);
+            }
+        }
+
+        /* Live Debate Stats Bar */
+        .debate-stats {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 24px;
+            background: rgba(15, 15, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            z-index: 100;
+        }
+
+        .cortex-arena.debating .debate-stats {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-family: var(--font-hero);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-value.highlight {
+            color: var(--core-primary);
+            transform: scale(1.1);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .stat-bar {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--core-primary), var(--core-secondary));
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* AI Node Speaking Indicator */
+        .ai-node.speaking::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: speakingPulse 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes speakingPulse {
+            from { transform: translateX(-50%) scale(0.8); opacity: 0.5; }
+            to { transform: translateX(-50%) scale(1.2); opacity: 1; }
+        }
+
+        /* AI Node Orbit Animation (when debating) */
+        .cortex-arena.debating .ai-node {
+            animation: nodeOrbit 30s linear infinite, node-pulse 3s ease-in-out infinite;
+        }
+
+        .cortex-arena.debating .node-gpt { animation-delay: 0s, 0s; }
+        .cortex-arena.debating .node-gemini { animation-delay: -7.5s, -0.75s; }
+        .cortex-arena.debating .node-claude { animation-delay: -15s, -1.5s; }
+        .cortex-arena.debating .node-grok { animation-delay: -22.5s, -2.25s; }
+
+        /* Subtle orbit wobble */
+        @keyframes nodeOrbit {
+            0% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-3px) translateX(2px); }
+            50% { transform: translateY(0) translateX(0); }
+            75% { transform: translateY(3px) translateX(-2px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        /* ============================================
            RESPONSIVE
            ============================================ */
 
         @media (max-width: 768px) {
             .cortex-arena {
                 height: 350px;
+                padding-top: 20px;
+            }
+
+            /* Disable heavy animations on mobile */
+            .neural-bg,
+            .particle-field,
+            .energy-ring {
+                display: none !important;
+            }
+
+            /* Simpler node animation on mobile */
+            .cortex-arena.debating .ai-node {
+                animation: node-pulse 3s ease-in-out infinite;
+            }
+
+            /* Hide stats bar on mobile - too cluttered */
+            .debate-stats {
+                display: none !important;
             }
 
             .core-orb {
@@ -4157,6 +4477,39 @@
     <div class="cortex-app">
         <!-- The Arena -->
         <div class="cortex-arena" id="arena">
+            <!-- Neural Background Effects -->
+            <div class="neural-bg"></div>
+
+            <!-- Particle Field -->
+            <div class="particle-field" id="particleField"></div>
+
+            <!-- Energy Rings -->
+            <div class="energy-ring"></div>
+            <div class="energy-ring"></div>
+            <div class="energy-ring"></div>
+
+            <!-- Live Debate Stats Bar -->
+            <div class="debate-stats" id="debateStats">
+                <div class="stat-item">
+                    <span class="stat-value" id="statRound">1</span>
+                    <span class="stat-label">Round</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statTime">0s</span>
+                    <span class="stat-label">Elapsed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="statActive">4</span>
+                    <span class="stat-label">Active AIs</span>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-bar">
+                        <div class="stat-bar-fill" id="statProgress" style="width: 0%"></div>
+                    </div>
+                    <span class="stat-label">Progress</span>
+                </div>
+            </div>
+
             <!-- Live Debate Stream (left side during debate) -->
             <div class="debate-stream" id="debateStream">
                 <div class="stream-header-bar">
@@ -4765,11 +5118,128 @@
         function showStream() {
             debateStream.classList.add('active');
             arena.classList.add('debating');
+            startNeuralEffects();
         }
 
         function hideStream() {
             debateStream.classList.remove('active');
             arena.classList.remove('debating');
+            stopNeuralEffects();
+        }
+
+        // ============================================
+        // NEURAL ARENA EFFECTS
+        // ============================================
+
+        let debateStartTime = null;
+        let debateTimer = null;
+        let currentDebateRound = 1;
+        let particlesGenerated = false;
+
+        function startNeuralEffects() {
+            debateStartTime = Date.now();
+            currentDebateRound = 1;
+
+            // Generate particles (only once)
+            if (!particlesGenerated) {
+                generateParticles();
+                particlesGenerated = true;
+            }
+
+            // Start timer
+            updateDebateTimer();
+            debateTimer = setInterval(updateDebateTimer, 1000);
+
+            // Reset stats
+            updateDebateStats(1, 0, 4, 0);
+        }
+
+        function stopNeuralEffects() {
+            if (debateTimer) {
+                clearInterval(debateTimer);
+                debateTimer = null;
+            }
+            debateStartTime = null;
+
+            // Clear speaking indicators
+            document.querySelectorAll('.ai-node.speaking').forEach(node => {
+                node.classList.remove('speaking');
+            });
+        }
+
+        function generateParticles() {
+            const field = document.getElementById('particleField');
+            if (!field) return;
+
+            // Check for reduced motion preference
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                particle.style.transform = `scale(${0.5 + Math.random() * 0.5})`;
+                field.appendChild(particle);
+            }
+        }
+
+        function updateDebateTimer() {
+            if (!debateStartTime) return;
+
+            const elapsed = Math.floor((Date.now() - debateStartTime) / 1000);
+            const statTime = document.getElementById('statTime');
+            if (statTime) {
+                if (elapsed < 60) {
+                    statTime.textContent = `${elapsed}s`;
+                } else {
+                    const mins = Math.floor(elapsed / 60);
+                    const secs = elapsed % 60;
+                    statTime.textContent = `${mins}m ${secs}s`;
+                }
+            }
+        }
+
+        function updateDebateStats(round, elapsed, activeAIs, progress) {
+            const statRound = document.getElementById('statRound');
+            const statActive = document.getElementById('statActive');
+            const statProgress = document.getElementById('statProgress');
+
+            if (statRound) {
+                statRound.textContent = round;
+                if (round > currentDebateRound) {
+                    statRound.classList.add('highlight');
+                    setTimeout(() => statRound.classList.remove('highlight'), 500);
+                    currentDebateRound = round;
+                }
+            }
+
+            if (statActive) statActive.textContent = activeAIs;
+            if (statProgress) statProgress.style.width = `${progress}%`;
+        }
+
+        function setNodeSpeaking(llmId) {
+            // Map llmId to node class
+            const nodeMap = {
+                'openai': 'node-gpt',
+                'gemini': 'node-gemini',
+                'claude': 'node-claude',
+                'grok': 'node-grok'
+            };
+
+            // Clear previous speaking
+            document.querySelectorAll('.ai-node.speaking').forEach(node => {
+                node.classList.remove('speaking');
+            });
+
+            // Set new speaking
+            const nodeClass = nodeMap[llmId];
+            if (nodeClass) {
+                const node = document.querySelector(`.${nodeClass}`);
+                if (node) node.classList.add('speaking');
+            }
         }
 
         function updateStreamRound(round) {
@@ -5085,6 +5555,10 @@
                     updateStreamRound(data.round);
                     setCoreState('debating');
 
+                    // Update neural arena stats
+                    const progress = Math.round((data.round / data.totalRounds) * 100);
+                    updateDebateStats(data.round, 0, 4, progress);
+
                     // Add system message for round
                     if (data.round === 1) {
                         addSystemMessage('ROUND 1: Initial Analysis');
@@ -5098,6 +5572,7 @@
                 sseConnection.addEventListener('llm_start', (e) => {
                     const data = JSON.parse(e.data);
                     setNodeActive(data.llmId, true);
+                    setNodeSpeaking(data.llmId);
                 });
 
                 sseConnection.addEventListener('llm_complete', (e) => {
