@@ -486,16 +486,48 @@
             margin-bottom: 32px;
         }
 
-        .demo-placeholder {
-            background: var(--glass-surface);
-            border: 2px dashed var(--glass-border);
-            border-radius: 20px;
-            padding: 80px 40px;
-            color: var(--text-muted);
+        .demo-video-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                0 0 60px rgba(99, 102, 241, 0.15);
+            background: #000;
         }
 
-        .demo-placeholder p {
-            margin-bottom: 0;
+        .demo-video-wrapper video {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+
+        .demo-video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .demo-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 2;
         }
 
         /* ============================================
@@ -1031,8 +1063,12 @@
         <div class="demo-container">
             <h2>See It In Action</h2>
             <p>Watch how 4 AI models debate and reach consensus on real questions</p>
-            <div class="demo-placeholder">
-                <p>Demo GIF/Video placeholder - Add your product demo here<br><small>(Record a ~15s GIF showing a debate in action)</small></p>
+            <div class="demo-video-wrapper">
+                <span class="demo-badge">LIVE DEMO</span>
+                <video autoplay loop muted playsinline>
+                    <source src="/demo.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
         </div>
     </section>
