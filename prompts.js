@@ -85,22 +85,24 @@ function detectQuestionType(question) {
       !/\bvs\.?\b|\bversus\b|\bor\b.*\bor\b|\bcompare\b/.test(q)) {
     return 'recommendation';
   }
-  if (/\bbest\b.*(for|to use|option|choice|pick)/.test(q)) {
+  if (/\bbest\b.*(for|to use|option|choice|pick|way to|to learn|to invest|to do)/.test(q)) {
     return 'recommendation';
   }
 
   // Comparison questions: MUST have specific alternatives (A vs B, A or B, compare A and B)
   if (/\bvs\.?\b|\bversus\b/.test(q) ||
       /compare\b|comparing\b|comparison\b/.test(q) ||
-      /\bor\b.*\b(better|best)\b|\b(better|best)\b.*\bor\b/.test(q) ||
+      /\bor\b.*\b(better|best|which)\b|\b(better|best)\b.*\bor\b/.test(q) ||
       /who would win|which would you (choose|pick|prefer)/.test(q) ||
-      /\b(between|among)\b.*(which|what|who)/.test(q)) {
+      /\b(between|among)\b.*(better|best|choose|pick)/.test(q) ||
+      /\b(which|what).*(better|best)\b.*\b(between|among)\b/.test(q)) {
     return 'comparison';
   }
 
   // Recommendation questions - expanded to catch more open-ended requests
   if (/what (should|would|can|could) (i|we|you)|recommend|suggestion/.test(q) ||
-      /best .*(to watch|to buy|to read|to play|to visit|to try)/.test(q) ||
+      /which\b.*(should|would|can|could) (i|we|you) (buy|get|choose|pick|use)/.test(q) ||
+      /best .*(to watch|to buy|to read|to play|to visit|to try|to invest)/.test(q) ||
       /\b(ideas?|suggestions?|recommendations?|options?|alternatives?)\b/.test(q) ||
       /\bgive me\b|\blist\b.*(some|a few|several)|\bwhat are (some|the|good)/.test(q) ||
       /\b(suggest|brainstorm|help me (find|choose|pick|decide))\b/.test(q)) {
