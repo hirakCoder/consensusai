@@ -370,7 +370,14 @@ class DebateEngine {
       const d = decision.toUpperCase().trim();
 
       // For non-yes/no questions, keep the original decision (product name, etc.)
+      // BUT filter out meta-statements that don't actually answer the question
       if (!isYesNoQuestion) {
+        // Detect meta-statements like "Maintain original position", "Same as before", etc.
+        const isMetaStatement = /\b(MAINTAIN|SAME|UNCHANGED|ORIGINAL|POSITION|PREVIOUS|BEFORE)\b/i.test(d) &&
+                                !/\b(ORIGINAL RECIPE|ORIGINAL FORMULA|ORIGINAL VERSION|SAME BRAND)\b/i.test(d); // Allow legitimate uses
+        if (isMetaStatement) {
+          return 'META_STATEMENT'; // Mark for filtering
+        }
         return d;
       }
 
@@ -389,6 +396,10 @@ class DebateEngine {
     const decisionGroups = {};
     for (const response of validResponses) {
       const decision = normalizeDecision(response.decision);
+      // Skip meta-statements when grouping - they shouldn't count as votes
+      if (decision === 'META_STATEMENT') {
+        continue;
+      }
       // Store original decision for display
       if (!decisionGroups[decision]) {
         decisionGroups[decision] = [];
@@ -399,7 +410,15 @@ class DebateEngine {
       });
     }
 
-    const totalVoters = validResponses.length;
+    // Count valid voters (excluding meta-statements)
+    const metaStatementCount = validResponses.filter(r => normalizeDecision(r.decision) === 'META_STATEMENT').length;
+    const totalVoters = validResponses.length - metaStatementCount;
+
+    // If all responses are meta-statements, fall back to using all responses
+    if (totalVoters === 0) {
+      return { reached: false, type: 'split', decisions: [] };
+    }
+
     const groupCounts = Object.entries(decisionGroups)
       .map(([decision, responses]) => ({
         decision: responses[0].originalDecision || decision, // Use original case for display
@@ -576,9 +595,13 @@ class DebateEngine {
       // For non-yes/no questions, ALWAYS replace generic YES/NO with appropriate labels
       // "What is the best app idea?" should show "RECOMMENDED" not "YES"
       const currentDecision = (finalConsensus.decision || '').toUpperCase().trim();
-      const isGenericDecision = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN'].includes(currentDecision);
 
-      if (isGenericDecision) {
+      // Detect generic decisions AND meta-statements that don't answer the actual question
+      // Meta-statements like "Maintain original position", "Same as before", "Unchanged" are NOT valid verdicts
+      const isGenericDecision = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN'].includes(currentDecision);
+      const isMetaStatement = /\b(MAINTAIN|SAME|UNCHANGED|ORIGINAL|POSITION|PREVIOUS|BEFORE|KEEP|STAY)\b/i.test(currentDecision);
+
+      if (isGenericDecision || isMetaStatement) {
         // For recommendation/comparison questions, try to extract specific recommendation from position
         if ((questionType === 'recommendation' || questionType === 'comparison') && finalConsensus.position) {
           // Extract first meaningful item (handle numbered lists like "1. Sony WH-1000XM5")

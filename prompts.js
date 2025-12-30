@@ -282,9 +282,10 @@ Focus on clear step-by-step instructions in your position.`;
 Provide detailed information in your reasoning.`;
     decisionFormat = `"decision": "BRIEF ANSWER (key fact)"`;
   } else if (questionType === 'recommendation') {
-    decisionGuidance = `RECOMMENDATION QUESTION - Your "decision" should be your TOP PICK (specific name).
-Example: "Watch Breaking Bad" or "Buy the Sony WH-1000XM5"`;
-    decisionFormat = `"decision": "YOUR TOP RECOMMENDATION"`;
+    decisionGuidance = `RECOMMENDATION QUESTION - Your "decision" MUST be the SPECIFIC NAME of your top pick.
+⚠️ NEVER say "maintain original position", "same as before", or "unchanged" - ALWAYS restate the actual product/item name!
+Example: If your pick is still Sony headphones, say "Sony WH-1000XM5", NOT "maintain original position"`;
+    decisionFormat = `"decision": "THE SPECIFIC PRODUCT/ITEM NAME (e.g., 'Anker Soundcore Life Q30', NOT 'maintain position')"`;
   } else if (questionType === 'decision') {
     decisionGuidance = `YES/NO DECISION QUESTION:
 - "YES" - Proceed, do it, approve, accept
