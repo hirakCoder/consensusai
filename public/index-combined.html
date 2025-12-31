@@ -10018,7 +10018,17 @@
                 }
             } catch (error) {
                 console.error('Upgrade error:', error);
-                showToast('Failed to start checkout. Please try again.', 'error');
+                // Show specific error messages
+                let errorMsg = 'Failed to start checkout. Please try again.';
+                const errText = error.message?.toLowerCase() || '';
+                if (errText.includes('authentication') || errText.includes('sign in') || errText.includes('401')) {
+                    errorMsg = 'Please sign in to upgrade to Pro.';
+                } else if (errText.includes('not configured') || errText.includes('stripe')) {
+                    errorMsg = 'Payment system is not configured yet. Please try again later.';
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+                showToast(errorMsg, 'error');
                 ctaBtn.disabled = false;
                 ctaBtn.textContent = originalText;
             }
