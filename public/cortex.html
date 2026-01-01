@@ -4091,9 +4091,85 @@
            ============================================ */
 
         @media (max-width: 768px) {
+            /* ============================================
+               MOBILE HEADER & TOP BAR
+               ============================================ */
+
+            /* Auth container - simplify on mobile */
+            .auth-container {
+                top: 10px;
+                left: 10px;
+                z-index: 110;
+            }
+
+            .auth-btn {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+
+            .user-menu {
+                padding: 4px 10px 4px 4px;
+            }
+
+            .user-avatar {
+                width: 24px;
+                height: 24px;
+                font-size: 0.6rem;
+            }
+
+            .user-name {
+                display: none; /* Hide name on mobile */
+            }
+
+            .user-tier {
+                font-size: 0.55rem;
+                padding: 2px 4px;
+            }
+
+            /* Top bar right - stack and simplify */
+            .top-bar-right {
+                top: 10px;
+                right: 10px;
+                gap: 6px;
+                flex-wrap: wrap;
+                max-width: 200px;
+                justify-content: flex-end;
+            }
+
+            /* Hide non-essential elements on mobile */
+            .tier-selector,
+            .usage-indicator,
+            .devil-toggle,
+            .ai-settings-btn {
+                display: none !important;
+            }
+
+            .upgrade-btn {
+                padding: 6px 10px;
+                font-size: 0.65rem;
+            }
+
+            .upgrade-btn svg {
+                display: none;
+            }
+
+            .history-toggle {
+                width: 32px;
+                height: 32px;
+            }
+
+            .history-toggle svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* ============================================
+               MOBILE ARENA
+               ============================================ */
+
             .cortex-arena {
-                height: 350px;
-                padding-top: 20px;
+                height: 300px;
+                padding-top: 60px; /* Space for header */
                 min-height: auto;
             }
 
@@ -4101,53 +4177,338 @@
             .neural-bg,
             .particle-field,
             .energy-ring,
-            .debate-stats {
+            .debate-stats,
+            .debate-stream {
                 display: none !important;
             }
 
             /* Disable node animations on mobile to prevent overlap */
             .cortex-arena.debating .ai-node {
-                animation: none;
+                animation: none !important;
+            }
+
+            .core-container {
+                width: 250px;
+                height: 250px;
             }
 
             .core-orb {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
+            }
+
+            .core-text {
+                font-size: 0.7rem;
             }
 
             .ai-node {
+                width: 36px;
+                height: 36px;
+            }
+
+            .ai-node svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .node-name {
+                font-size: 0.5rem;
+                bottom: -14px;
+            }
+
+            .node-gpt, .node-gemini { top: 10px; }
+            .node-claude, .node-grok { bottom: 30px; }
+            .node-gpt, .node-claude { left: 20px; }
+            .node-gemini, .node-grok { right: 20px; }
+
+            .thought-card {
+                display: none !important;
+            }
+
+            .arena-status {
+                bottom: -50px;
+            }
+
+            .status-text {
+                font-size: 0.85rem;
+            }
+
+            .status-phase {
+                font-size: 0.65rem;
+            }
+
+            /* ============================================
+               MOBILE INPUT BAR
+               ============================================ */
+
+            .omni-bar-container {
+                bottom: 50px;
+            }
+
+            .omni-bar {
+                width: calc(100% - 24px);
+                padding: 6px 6px 6px 16px;
+                border-radius: 24px;
+                gap: 8px;
+            }
+
+            .omni-input {
+                font-size: 0.9rem;
+            }
+
+            .omni-submit {
                 width: 40px;
                 height: 40px;
             }
 
-            .node-gpt, .node-gemini { top: 20px; }
-            .node-claude, .node-grok { bottom: 20px; }
-            .node-gpt, .node-claude { left: 40px; }
-            .node-gemini, .node-grok { right: 40px; }
-
-            .thought-card {
-                max-width: 160px;
-                font-size: 0.75rem;
+            .omni-submit svg {
+                width: 16px;
+                height: 16px;
             }
 
-            .omni-bar {
-                width: calc(100% - 40px);
+            .status-lights {
+                display: none;
+            }
+
+            .char-counter {
+                font-size: 0.65rem;
+            }
+
+            .template-chips {
+                width: calc(100vw - 24px);
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+                margin-top: 10px;
+            }
+
+            .template-chip {
+                padding: 5px 10px;
+                font-size: 0.7rem;
+            }
+
+            .context-toggle {
+                font-size: 0.7rem;
+                margin-top: 8px;
+            }
+
+            .context-input {
+                width: calc(100vw - 24px);
+                font-size: 0.8rem;
+                padding: 10px 12px;
+            }
+
+            /* ============================================
+               MOBILE FOOTER
+               ============================================ */
+
+            .site-footer {
+                padding: 10px 15px;
+                font-size: 0.6rem;
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            /* ============================================
+               MOBILE VERDICT PANEL
+               ============================================ */
+
+            .verdict-overlay {
+                padding: 20px 10px;
             }
 
             .verdict-panel {
-                padding: 32px 24px;
+                padding: 24px 16px;
+                border-radius: 16px;
+            }
+
+            .verdict-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .consensus-badge {
+                padding: 8px 14px;
+                font-size: 0.75rem;
+            }
+
+            .confidence-display {
+                text-align: left;
+            }
+
+            .confidence-value {
+                font-size: 1.5rem;
             }
 
             .verdict-decision {
-                font-size: 2.25rem;
+                font-size: 1.75rem;
+                line-height: 1.2;
             }
 
             .verdict-question {
-                font-size: 0.875rem;
+                font-size: 0.8rem;
+            }
+
+            .spectrum-container {
+                margin: 24px 0;
+            }
+
+            .spectrum-avatar {
+                width: 26px;
+                height: 26px;
+                font-size: 0.55rem;
+            }
+
+            .ai-agreement-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .ai-response-card {
+                padding: 12px;
+            }
+
+            .ai-resp-name {
+                font-size: 0.7rem;
+            }
+
+            .ai-resp-verdict {
+                font-size: 0.6rem;
+            }
+
+            .ai-resp-summary {
+                font-size: 0.75rem;
             }
 
             .action-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .action-box {
+                padding: 16px;
+                min-height: auto;
+            }
+
+            .verdict-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .verdict-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+
+            .verdict-close {
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+            }
+
+            /* ============================================
+               MOBILE MODALS & DRAWERS
+               ============================================ */
+
+            .upgrade-modal {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+
+            .upgrade-modal-title {
+                font-size: 1.25rem;
+            }
+
+            .upgrade-price {
+                font-size: 2rem;
+            }
+
+            .history-drawer {
+                width: 100%;
+                right: -100%;
+            }
+
+            .tactical-drawer {
+                padding: 24px 16px;
+            }
+
+            .drawer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .glass-dossier {
+                width: 95vw;
+                padding: 24px 16px;
+            }
+
+            .timeline-scrubber {
+                width: calc(100% - 32px);
+                bottom: 160px;
+            }
+
+            .tactical-handle {
+                bottom: 110px;
+                padding: 10px 16px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .auth-container {
+                top: 8px;
+                left: 8px;
+            }
+
+            .top-bar-right {
+                top: 8px;
+                right: 8px;
+                max-width: 140px;
+            }
+
+            .upgrade-btn {
+                padding: 5px 8px;
+                font-size: 0.6rem;
+            }
+
+            .cortex-arena {
+                height: 260px;
+                padding-top: 50px;
+            }
+
+            .core-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .core-orb {
+                width: 70px;
+                height: 70px;
+            }
+
+            .ai-node {
+                width: 32px;
+                height: 32px;
+            }
+
+            .node-gpt, .node-gemini { top: 5px; }
+            .node-claude, .node-grok { bottom: 25px; }
+            .node-gpt, .node-claude { left: 15px; }
+            .node-gemini, .node-grok { right: 15px; }
+
+            .template-chips {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .template-chip {
+                font-size: 0.65rem;
+                padding: 4px 8px;
+            }
+
+            .verdict-decision {
+                font-size: 1.5rem;
             }
         }
     </style>
