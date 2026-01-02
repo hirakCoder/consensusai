@@ -4580,6 +4580,42 @@
                 color: #fff !important;
             }
 
+            /* Mobile AI Selector - appears when Challenger is active */
+            .mobile-ai-selector {
+                display: none;
+                width: 100%;
+                padding: 0 16px 8px 16px;
+            }
+
+            .mobile-ai-selector.active {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .mobile-ai-chip {
+                padding: 8px 14px;
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.12);
+                border-radius: 16px;
+                color: rgba(255,255,255,0.7);
+                font-size: 0.75rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .mobile-ai-chip.selected {
+                background: rgba(239, 68, 68, 0.2);
+                border-color: rgba(239, 68, 68, 0.5);
+                color: #fff;
+            }
+
+            .mobile-ai-chip:active {
+                transform: scale(0.95);
+            }
+
             .mobile-option-icon {
                 font-size: 1rem !important;
             }
@@ -5353,6 +5389,14 @@
                     <span class="mobile-option-text">Constraints</span>
                 </button>
             </div>
+            <!-- Mobile AI Selector - shows when Challenger active -->
+            <div class="mobile-ai-selector" id="mobileAiSelector">
+                <button class="mobile-ai-chip selected" data-ai="random">Random</button>
+                <button class="mobile-ai-chip" data-ai="openai">GPT</button>
+                <button class="mobile-ai-chip" data-ai="gemini">Gemini</button>
+                <button class="mobile-ai-chip" data-ai="claude">Claude</button>
+                <button class="mobile-ai-chip" data-ai="grok">Grok</button>
+            </div>
             <!-- Context Input (Expandable - Hidden by default) -->
             <button class="context-toggle desktop-only" id="contextToggle" onclick="toggleContext()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -5740,29 +5784,46 @@
         // MOBILE DEVIL'S ADVOCATE SYNC
         // ============================================
         const mobileDevilAdvocate = document.getElementById('mobileDevilAdvocate');
-        const mobileDevilAI = document.getElementById('mobileDevilAI');
+        const mobileAiSelector = document.getElementById('mobileAiSelector');
         const mobileContextBtn = document.getElementById('mobileContextToggle');
 
-        if (mobileDevilAdvocate) {
-            // Sync mobile toggle with desktop toggle
+        if (mobileDevilAdvocate && mobileAiSelector) {
+            // Sync mobile toggle with desktop toggle and show/hide AI selector
             mobileDevilAdvocate.addEventListener('change', () => {
                 devilAdvocate.checked = mobileDevilAdvocate.checked;
                 devilAdvocate.dispatchEvent(new Event('change'));
+                // Show/hide AI selector
+                mobileAiSelector.classList.toggle('active', mobileDevilAdvocate.checked);
             });
             // Keep them in sync if desktop changes
             devilAdvocate.addEventListener('change', () => {
                 mobileDevilAdvocate.checked = devilAdvocate.checked;
+                mobileAiSelector.classList.toggle('active', devilAdvocate.checked);
             });
-        }
 
-        // Sync mobile AI selector with desktop
-        if (mobileDevilAI && devilAdvocateAI) {
-            mobileDevilAI.addEventListener('change', () => {
-                devilAdvocateAI.value = mobileDevilAI.value;
+            // Handle AI chip selection
+            mobileAiSelector.querySelectorAll('.mobile-ai-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    // Remove selected from all chips
+                    mobileAiSelector.querySelectorAll('.mobile-ai-chip').forEach(c => c.classList.remove('selected'));
+                    // Add selected to clicked chip
+                    chip.classList.add('selected');
+                    // Sync with desktop dropdown
+                    const aiValue = chip.dataset.ai;
+                    if (devilAdvocateAI) {
+                        devilAdvocateAI.value = aiValue;
+                    }
+                });
             });
-            devilAdvocateAI.addEventListener('change', () => {
-                mobileDevilAI.value = devilAdvocateAI.value;
-            });
+
+            // Sync desktop dropdown changes to mobile chips
+            if (devilAdvocateAI) {
+                devilAdvocateAI.addEventListener('change', () => {
+                    mobileAiSelector.querySelectorAll('.mobile-ai-chip').forEach(c => c.classList.remove('selected'));
+                    const chip = mobileAiSelector.querySelector(`[data-ai="${devilAdvocateAI.value}"]`);
+                    if (chip) chip.classList.add('selected');
+                });
+            }
         }
 
         // Toggle open class on mobile context button
