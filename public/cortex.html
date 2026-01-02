@@ -4090,320 +4090,588 @@
            RESPONSIVE
            ============================================ */
 
+        /* ============================================
+           MOBILE-FIRST DESIGN - Apple HIG Compliant
+           Based on ChatGPT/Claude Mobile Patterns
+           ============================================ */
+
+        /* Respect user motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
         @media (max-width: 768px) {
             /* ============================================
-               MOBILE HEADER & TOP BAR - AGGRESSIVE CLEANUP
+               MOBILE HEADER - Compact & Accessible
+               Height: 56px (Apple HIG standard)
                ============================================ */
 
-            /* Auth container - minimal on mobile */
+            /* Auth container - left side */
             .auth-container {
-                position: fixed !important;
-                top: 8px !important;
-                left: 8px !important;
-                z-index: 200 !important;
+                position: fixed;
+                top: 12px;
+                left: 12px;
+                z-index: 150;
             }
 
             .auth-btn {
-                padding: 5px 10px !important;
-                font-size: 0.65rem !important;
+                /* 44pt minimum touch target */
+                min-width: 44px;
+                min-height: 44px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+                font-weight: 600;
+                border-radius: 22px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .auth-btn-signin {
+                background: transparent;
+                border: 1.5px solid var(--glass-border);
+            }
+
+            .auth-btn-signup {
+                background: var(--core-primary);
+                margin-left: 8px;
             }
 
             .user-menu {
-                padding: 3px 8px 3px 3px !important;
+                min-height: 44px;
+                padding: 6px 12px 6px 6px;
+                border-radius: 22px;
             }
 
             .user-avatar {
-                width: 22px !important;
-                height: 22px !important;
-                font-size: 0.55rem !important;
+                width: 32px;
+                height: 32px;
+                font-size: 0.75rem;
             }
 
             .user-name {
-                display: none !important;
+                display: none;
             }
 
             .user-tier {
-                font-size: 0.5rem !important;
-                padding: 1px 3px !important;
+                font-size: 0.65rem;
+                padding: 3px 8px;
+                border-radius: 10px;
             }
 
-            /* Top bar right - minimal, single row */
+            /* Top bar right - Actions row */
             .top-bar-right {
-                position: fixed !important;
-                top: 8px !important;
-                right: 8px !important;
-                gap: 4px !important;
-                flex-wrap: nowrap !important;
-                z-index: 200 !important;
+                position: fixed;
+                top: 12px;
+                right: 12px;
+                gap: 8px;
+                z-index: 150;
+                flex-wrap: nowrap;
             }
 
-            /* HIDE ALL non-essential elements on mobile */
+            /* Reorganize for mobile - keep key features visible */
             .tier-selector,
-            .usage-indicator,
-            .devil-toggle,
-            .ai-settings-btn,
-            .ai-settings-panel,
-            .thought-card,
-            .conflict-laser,
-            .conflict-lines-svg,
-            .energy-ring,
-            .neural-bg,
-            .particle-field,
-            .debate-stats,
-            .debate-stream,
-            .stream-container,
-            .round-dots {
-                display: none !important;
-                visibility: hidden !important;
-                opacity: 0 !important;
-                pointer-events: none !important;
+            .ai-settings-btn {
+                display: none;
+            }
+
+            /* Usage indicator - compact pill */
+            .usage-indicator {
+                padding: 8px 12px;
+                font-size: 0.7rem;
+                border-radius: 20px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
+
+            .usage-indicator span:first-child {
+                display: none; /* Hide "Free tier:" label */
             }
 
             .upgrade-btn {
-                padding: 4px 8px !important;
-                font-size: 0.6rem !important;
+                /* 44pt touch target */
+                min-width: 44px;
+                min-height: 44px;
+                padding: 10px 14px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                border-radius: 22px;
             }
 
             .upgrade-btn svg {
-                display: none !important;
+                width: 14px;
+                height: 14px;
+                margin-right: 4px;
             }
 
             .history-toggle {
-                width: 28px !important;
-                height: 28px !important;
+                /* 44pt touch target */
+                width: 44px;
+                height: 44px;
+                border-radius: 22px;
             }
 
             .history-toggle svg {
-                width: 12px !important;
-                height: 12px !important;
+                width: 18px;
+                height: 18px;
             }
 
             /* ============================================
-               MOBILE ARENA - CENTERED & CLEAN
+               MOBILE ARENA - Centered & Balanced
                ============================================ */
 
             .cortex-app {
-                padding-top: 50px !important;
-                min-height: 100vh !important;
-                overflow-x: hidden !important;
+                min-height: 100vh;
+                min-height: 100dvh;
+                padding-top: 70px; /* Below header */
+                padding-bottom: env(safe-area-inset-bottom, 20px);
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .cortex-arena {
-                height: auto !important;
-                min-height: 280px !important;
-                padding: 20px 10px 80px 10px !important;
-                margin-top: 0 !important;
-                overflow: visible !important;
+                position: relative;
+                width: 100%;
+                min-height: 320px;
+                padding: 20px 16px 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 0;
             }
 
-            /* Disable ALL animations on mobile */
-            .cortex-arena * {
-                animation-duration: 0s !important;
+            /* Subtle background effects - performance optimized */
+            .neural-bg,
+            .particle-field {
+                opacity: 0.3;
             }
 
-            .cortex-arena.debating .ai-node {
-                animation: none !important;
+            /* Energy rings - subtle on mobile */
+            .energy-ring {
+                opacity: 0.2;
+                animation-duration: 8s; /* Slower for battery */
             }
 
-            /* Disable spinning ring on active nodes */
-            .ai-node.active::before,
-            .ai-node.active::after {
-                display: none !important;
-            }
-
-            .core-container {
-                width: 220px !important;
-                height: 220px !important;
-                margin: 0 auto !important;
-            }
-
-            .core-orb {
-                width: 70px !important;
-                height: 70px !important;
-            }
-
-            .core-text {
-                font-size: 0.65rem !important;
-            }
-
-            .ai-node {
-                width: 32px !important;
-                height: 32px !important;
-            }
-
-            .ai-node svg {
-                width: 14px !important;
-                height: 14px !important;
-            }
-
-            .node-name {
-                font-size: 0.45rem !important;
-                bottom: -12px !important;
-            }
-
-            /* Fixed node positions - corners of container */
-            .node-gpt { top: 15px !important; left: 15px !important; }
-            .node-gemini { top: 15px !important; right: 15px !important; }
-            .node-claude { bottom: 35px !important; left: 15px !important; }
-            .node-grok { bottom: 35px !important; right: 15px !important; }
-
-            .arena-status {
-                position: relative !important;
-                bottom: auto !important;
-                left: auto !important;
-                transform: none !important;
-                margin-top: 15px !important;
-                text-align: center !important;
-            }
-
-            .status-text {
-                font-size: 0.8rem !important;
-            }
-
-            .status-phase {
-                font-size: 0.6rem !important;
-            }
-
-            /* ============================================
-               MOBILE INPUT BAR - BOTTOM FIXED
-               ============================================ */
-
-            .omni-bar-container {
-                position: fixed !important;
-                bottom: 45px !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                width: 100% !important;
-                padding: 0 10px !important;
-                box-sizing: border-box !important;
-            }
-
-            .omni-bar {
-                width: 100% !important;
-                max-width: none !important;
-                padding: 6px 6px 6px 14px !important;
-                border-radius: 20px !important;
-                gap: 6px !important;
-            }
-
-            .omni-input {
-                font-size: 0.85rem !important;
-            }
-
-            .omni-submit {
-                width: 36px !important;
-                height: 36px !important;
-                flex-shrink: 0 !important;
-            }
-
-            .omni-submit svg {
-                width: 14px !important;
-                height: 14px !important;
-            }
-
-            .status-lights {
-                display: none !important;
-            }
-
-            .char-counter {
-                display: none !important;
-            }
-
-            /* Hide template chips on mobile - too cluttered */
-            .template-chips {
-                display: none !important;
-            }
-
-            .context-toggle {
-                display: none !important;
-            }
-
-            .context-input {
-                display: none !important;
-            }
-
-            /* ============================================
-               MOBILE FOOTER
-               ============================================ */
-
-            .site-footer {
-                padding: 10px 15px;
-                font-size: 0.6rem;
+            /* Debate stats - horizontal compact bar */
+            .debate-stats {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                width: 100%;
+                max-width: 340px;
+                padding: 8px 16px;
+                margin-bottom: 16px;
+                border-radius: 16px;
                 gap: 12px;
                 flex-wrap: wrap;
                 justify-content: center;
             }
 
+            .stat-item {
+                flex: 0 0 auto;
+            }
+
+            .stat-value {
+                font-size: 0.85rem;
+            }
+
+            .stat-label {
+                font-size: 0.6rem;
+            }
+
+            /* Debate stream - bottom sheet style */
+            .debate-stream {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-width: 100%;
+                height: 50vh;
+                max-height: 400px;
+                border-radius: 20px 20px 0 0;
+                z-index: 120;
+                transform: translateY(100%);
+                transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            }
+
+            .debate-stream.active {
+                transform: translateY(0);
+            }
+
+            /* Core container - properly sized */
+            .core-container {
+                width: 260px;
+                height: 260px;
+                margin: 0 auto;
+                flex-shrink: 0;
+            }
+
+            .core-orb {
+                width: 90px;
+                height: 90px;
+            }
+
+            .core-text {
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+
+            /* AI Nodes - 44pt touch targets */
+            .ai-node {
+                width: 44px;
+                height: 44px;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .ai-node svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .node-name {
+                font-size: 0.55rem;
+                font-weight: 600;
+                bottom: -16px;
+                white-space: nowrap;
+            }
+
+            /* Node positions - optimized for 260px container */
+            .node-gpt { top: 20px; left: 20px; }
+            .node-gemini { top: 20px; right: 20px; }
+            .node-claude { bottom: 40px; left: 20px; }
+            .node-grok { bottom: 40px; right: 20px; }
+
+            /* Subtle pulse animation on mobile */
+            .cortex-arena.debating .ai-node {
+                animation: mobile-pulse 2s ease-in-out infinite;
+            }
+
+            @keyframes mobile-pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+
+            /* Active node - subtle glow instead of spinning ring */
+            .ai-node.active::before {
+                animation: none;
+                border: none;
+                background: currentColor;
+                opacity: 0.15;
+                filter: blur(8px);
+            }
+
+            .ai-node.active::after {
+                display: none;
+            }
+
+            /* Thought cards - horizontal scroll */
+            .thought-card {
+                max-width: 280px;
+                font-size: 0.75rem;
+                padding: 10px 14px;
+            }
+
+            /* Conflict visualization - simplified */
+            .conflict-laser,
+            .conflict-lines-svg {
+                opacity: 0.4;
+            }
+
+            /* Arena status - below orb */
+            .arena-status {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                transform: none;
+                margin-top: 20px;
+                text-align: center;
+                width: 100%;
+            }
+
+            .status-text {
+                font-size: 1rem;
+                font-weight: 600;
+            }
+
+            .status-phase {
+                font-size: 0.75rem;
+                margin-top: 4px;
+            }
+
+            .round-dots {
+                margin-top: 12px;
+            }
+
+            /* Devil's advocate - compact toggle */
+            .devil-toggle {
+                position: fixed;
+                bottom: 160px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 100;
+                background: var(--glass-surface);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 20px;
+                padding: 8px 16px;
+            }
+
+            .devil-toggle label {
+                font-size: 0.75rem;
+                gap: 8px;
+            }
+
+            .devil-toggle .devil-icon {
+                font-size: 1rem;
+            }
+
+            .devil-ai-selector {
+                margin-top: 8px;
+            }
+
             /* ============================================
-               MOBILE VERDICT PANEL
+               MOBILE INPUT BAR - Sticky Bottom
+               iOS-style with safe area support
+               ============================================ */
+
+            .omni-bar-container {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+                background: linear-gradient(to top, var(--bg-deep) 80%, transparent);
+                z-index: 140;
+            }
+
+            .omni-bar {
+                width: 100%;
+                max-width: 100%;
+                padding: 8px 8px 8px 16px;
+                border-radius: 24px;
+                gap: 8px;
+                background: rgba(20, 20, 25, 0.95);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+            }
+
+            .omni-input {
+                font-size: 16px; /* Prevents iOS zoom on focus */
+                padding: 8px 0;
+                min-height: 24px;
+            }
+
+            .omni-input::placeholder {
+                font-size: 0.9rem;
+            }
+
+            /* Submit button - 44pt touch target */
+            .omni-submit {
+                width: 44px;
+                height: 44px;
+                border-radius: 22px;
+                flex-shrink: 0;
+            }
+
+            .omni-submit svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Status lights - compact row */
+            .status-lights {
+                display: flex;
+                gap: 4px;
+                padding: 0 8px;
+            }
+
+            .status-light {
+                width: 8px;
+                height: 8px;
+            }
+
+            .char-counter {
+                display: none; /* Save space */
+            }
+
+            /* Template chips - horizontal scroll */
+            .template-chips {
+                display: flex;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                gap: 8px;
+                padding: 8px 0;
+                margin-top: 8px;
+                width: 100%;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .template-chips::-webkit-scrollbar {
+                display: none;
+            }
+
+            .template-chip {
+                flex: 0 0 auto;
+                scroll-snap-align: start;
+                min-height: 44px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+                border-radius: 22px;
+                white-space: nowrap;
+            }
+
+            .template-chip span {
+                font-size: 1rem;
+            }
+
+            /* Context toggle - simplified */
+            .context-toggle {
+                min-height: 44px;
+                font-size: 0.8rem;
+                margin-top: 8px;
+                padding: 10px 16px;
+            }
+
+            .context-input {
+                width: 100%;
+                font-size: 16px; /* Prevents iOS zoom */
+                padding: 12px 16px;
+                border-radius: 16px;
+                margin-top: 8px;
+            }
+
+            /* ============================================
+               MOBILE FOOTER - Minimal
+               ============================================ */
+
+            .site-footer {
+                position: relative;
+                padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+                font-size: 0.65rem;
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+                background: var(--bg-deep);
+            }
+
+            .footer-links {
+                gap: 16px;
+            }
+
+            .footer-links a {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            /* ============================================
+               MOBILE VERDICT PANEL - Fullscreen Modal
+               iOS-style presentation
                ============================================ */
 
             .verdict-overlay {
-                padding: 20px 10px;
+                padding: 0;
+                align-items: flex-end;
             }
 
             .verdict-panel {
-                padding: 24px 16px;
-                border-radius: 16px;
+                width: 100%;
+                max-width: 100%;
+                max-height: 90vh;
+                padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+                border-radius: 24px 24px 0 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .verdict-header {
                 flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
+                gap: 16px;
+                align-items: center;
+                text-align: center;
             }
 
             .consensus-badge {
-                padding: 8px 14px;
-                font-size: 0.75rem;
+                padding: 10px 20px;
+                font-size: 0.8rem;
+                border-radius: 20px;
             }
 
             .confidence-display {
-                text-align: left;
+                text-align: center;
             }
 
             .confidence-value {
-                font-size: 1.5rem;
+                font-size: 2rem;
+                font-weight: 700;
             }
 
             .verdict-decision {
-                font-size: 1.75rem;
-                line-height: 1.2;
+                font-size: 1.5rem;
+                line-height: 1.3;
+                font-weight: 700;
             }
 
             .verdict-question {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
+                opacity: 0.7;
             }
 
             .spectrum-container {
-                margin: 24px 0;
+                margin: 20px 0;
+                padding: 16px;
             }
 
             .spectrum-avatar {
-                width: 26px;
-                height: 26px;
-                font-size: 0.55rem;
+                width: 32px;
+                height: 32px;
+                font-size: 0.65rem;
             }
 
+            /* AI responses - 2 column grid on mobile */
             .ai-agreement-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
             }
 
             .ai-response-card {
-                padding: 12px;
+                padding: 14px;
+                border-radius: 16px;
+            }
+
+            .ai-resp-avatar {
+                width: 36px;
+                height: 36px;
             }
 
             .ai-resp-name {
-                font-size: 0.7rem;
+                font-size: 0.75rem;
+                font-weight: 600;
             }
 
             .ai-resp-verdict {
-                font-size: 0.6rem;
+                font-size: 0.65rem;
+                padding: 4px 10px;
+                border-radius: 12px;
             }
 
             .ai-resp-summary {
-                font-size: 0.75rem;
+                font-size: 0.8rem;
+                line-height: 1.4;
             }
 
             .action-grid {
@@ -4413,60 +4681,139 @@
 
             .action-box {
                 padding: 16px;
+                border-radius: 16px;
                 min-height: auto;
+            }
+
+            .action-box h4 {
+                font-size: 0.85rem;
+            }
+
+            .action-box p {
+                font-size: 0.75rem;
             }
 
             .verdict-actions {
                 flex-direction: column;
-                gap: 10px;
+                gap: 12px;
+                margin-top: 20px;
             }
 
             .verdict-btn {
                 width: 100%;
+                min-height: 50px;
                 justify-content: center;
-                padding: 12px 20px;
+                padding: 14px 24px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                border-radius: 25px;
             }
 
             .verdict-close {
-                top: 12px;
-                right: 12px;
-                width: 32px;
-                height: 32px;
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                width: 44px;
+                height: 44px;
+                border-radius: 22px;
+                background: var(--glass-surface);
             }
 
             /* ============================================
-               MOBILE MODALS & DRAWERS
+               MOBILE MODALS & DRAWERS - iOS Style
                ============================================ */
 
             .upgrade-modal {
-                padding: 24px 20px;
-                border-radius: 16px;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 28px 24px calc(28px + env(safe-area-inset-bottom, 0px));
+                border-radius: 24px 24px 0 0;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
             }
 
             .upgrade-modal-title {
-                font-size: 1.25rem;
+                font-size: 1.5rem;
+                font-weight: 700;
             }
 
             .upgrade-price {
-                font-size: 2rem;
+                font-size: 2.5rem;
+                font-weight: 700;
             }
 
+            .upgrade-features li {
+                font-size: 0.9rem;
+                padding: 12px 0;
+            }
+
+            .upgrade-btn {
+                min-height: 50px;
+                font-size: 1rem;
+                border-radius: 25px;
+            }
+
+            /* History drawer - bottom sheet */
             .history-drawer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
                 width: 100%;
-                right: -100%;
+                max-height: 80vh;
+                border-radius: 24px 24px 0 0;
+                transform: translateY(100%);
+                transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            }
+
+            .history-drawer.open {
+                transform: translateY(0);
+            }
+
+            .history-drawer-header {
+                padding: 20px;
+                border-bottom: 1px solid var(--glass-border);
+            }
+
+            .history-drawer-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+            }
+
+            .history-drawer-close {
+                width: 44px;
+                height: 44px;
+            }
+
+            .history-drawer-content {
+                padding: 16px;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .history-item {
+                padding: 16px;
+                border-radius: 16px;
+                margin-bottom: 12px;
             }
 
             .tactical-drawer {
-                padding: 24px 16px;
+                padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+                border-radius: 24px 24px 0 0;
             }
 
             .drawer-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
             .glass-dossier {
-                width: 95vw;
-                padding: 24px 16px;
+                width: 100%;
+                max-width: 100%;
+                padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+                border-radius: 24px 24px 0 0;
             }
 
             .timeline-scrubber {
@@ -4480,110 +4827,221 @@
             }
         }
 
-        /* Extra small screens (iPhone SE, small phones) */
+        /* ============================================
+           EXTRA SMALL SCREENS (iPhone SE, iPhone Mini)
+           320px-480px - Maintain 44pt touch targets
+           ============================================ */
         @media (max-width: 480px) {
+            /* Header - tighter but accessible */
             .auth-container {
-                top: 5px !important;
-                left: 5px !important;
+                top: 8px;
+                left: 8px;
             }
 
             .auth-btn {
-                padding: 4px 8px !important;
-                font-size: 0.6rem !important;
+                /* Still 44pt minimum */
+                min-width: 44px;
+                min-height: 44px;
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+
+            /* Only show Sign In on very small screens */
+            .auth-btn-signup {
+                display: none;
             }
 
             .top-bar-right {
-                top: 5px !important;
-                right: 5px !important;
+                top: 8px;
+                right: 8px;
+                gap: 6px;
+            }
+
+            /* Hide usage indicator on small screens */
+            .usage-indicator {
+                display: none;
             }
 
             .upgrade-btn {
-                padding: 3px 6px !important;
-                font-size: 0.55rem !important;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 8px 12px;
+                font-size: 0.7rem;
             }
 
             .history-toggle {
-                width: 24px !important;
-                height: 24px !important;
+                /* Maintain 44pt touch target */
+                width: 44px;
+                height: 44px;
+            }
+
+            /* Arena - compact but visible */
+            .cortex-app {
+                padding-top: 60px;
             }
 
             .cortex-arena {
-                min-height: 240px !important;
-                padding: 15px 8px 70px 8px !important;
+                min-height: 280px;
+                padding: 16px 12px 90px;
             }
 
             .core-container {
-                width: 180px !important;
-                height: 180px !important;
+                width: 220px;
+                height: 220px;
             }
 
             .core-orb {
-                width: 60px !important;
-                height: 60px !important;
+                width: 80px;
+                height: 80px;
             }
 
             .core-text {
-                font-size: 0.55rem !important;
+                font-size: 0.7rem;
             }
 
+            /* AI Nodes - 44pt touch targets maintained */
             .ai-node {
-                width: 28px !important;
-                height: 28px !important;
+                width: 44px;
+                height: 44px;
             }
 
             .ai-node svg {
-                width: 12px !important;
-                height: 12px !important;
+                width: 18px;
+                height: 18px;
             }
 
             .node-name {
-                display: none !important;
+                font-size: 0.5rem;
+                bottom: -14px;
             }
 
-            /* Tighter node positions for small screens */
-            .node-gpt { top: 10px !important; left: 10px !important; }
-            .node-gemini { top: 10px !important; right: 10px !important; }
-            .node-claude { bottom: 30px !important; left: 10px !important; }
-            .node-grok { bottom: 30px !important; right: 10px !important; }
+            /* Optimized node positions */
+            .node-gpt { top: 10px; left: 10px; }
+            .node-gemini { top: 10px; right: 10px; }
+            .node-claude { bottom: 35px; left: 10px; }
+            .node-grok { bottom: 35px; right: 10px; }
 
             .arena-status {
-                margin-top: 10px !important;
+                margin-top: 16px;
             }
 
             .status-text {
-                font-size: 0.7rem !important;
+                font-size: 0.9rem;
             }
 
             .status-phase {
-                font-size: 0.55rem !important;
+                font-size: 0.7rem;
             }
 
+            /* Devil's toggle - smaller but tappable */
+            .devil-toggle {
+                bottom: 140px;
+                padding: 6px 14px;
+            }
+
+            .devil-toggle label {
+                font-size: 0.7rem;
+            }
+
+            /* Input bar - optimized */
             .omni-bar-container {
-                bottom: 40px !important;
-                padding: 0 8px !important;
+                padding: 10px 8px calc(10px + env(safe-area-inset-bottom, 0px));
             }
 
             .omni-bar {
-                padding: 5px 5px 5px 12px !important;
-                border-radius: 18px !important;
+                padding: 6px 6px 6px 14px;
+                border-radius: 22px;
             }
 
             .omni-input {
-                font-size: 0.8rem !important;
+                font-size: 16px; /* Always 16px to prevent iOS zoom */
             }
 
             .omni-submit {
-                width: 32px !important;
-                height: 32px !important;
+                /* Maintain 44pt touch target */
+                width: 44px;
+                height: 44px;
             }
 
+            /* Template chips - horizontal scroll with smaller pills */
+            .template-chips {
+                gap: 6px;
+                padding: 6px 0;
+            }
+
+            .template-chip {
+                min-height: 40px;
+                padding: 8px 14px;
+                font-size: 0.75rem;
+            }
+
+            /* Verdict panel - single column */
             .verdict-decision {
-                font-size: 1.3rem !important;
+                font-size: 1.25rem;
             }
 
+            .ai-agreement-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .verdict-btn {
+                min-height: 48px;
+            }
+
+            /* Footer - minimal */
             .site-footer {
-                font-size: 0.5rem !important;
-                padding: 8px 10px !important;
+                font-size: 0.6rem;
+                padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+                gap: 12px;
+            }
+
+            .footer-links a {
+                min-height: 40px;
+            }
+        }
+
+        /* ============================================
+           LANDSCAPE MOBILE - Optimize for horizontal
+           ============================================ */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .cortex-app {
+                padding-top: 50px;
+            }
+
+            .cortex-arena {
+                min-height: 200px;
+                padding: 10px 16px 80px;
+            }
+
+            .core-container {
+                width: 180px;
+                height: 180px;
+            }
+
+            .core-orb {
+                width: 60px;
+                height: 60px;
+            }
+
+            .ai-node {
+                width: 40px;
+                height: 40px;
+            }
+
+            .node-name {
+                display: none;
+            }
+
+            .arena-status {
+                margin-top: 10px;
+            }
+
+            .devil-toggle {
+                display: none;
+            }
+
+            .template-chips {
+                display: none;
             }
         }
     </style>
