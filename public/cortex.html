@@ -4336,38 +4336,48 @@
                 box-sizing: border-box !important;
             }
 
-            .omni-bar {
+            .omni-bar,
+            form.omni-bar,
+            form#debateForm {
                 width: 100% !important;
                 max-width: 100% !important;
                 display: flex !important;
                 flex-direction: row !important;
+                flex-wrap: nowrap !important;
                 align-items: center !important;
-                gap: 12px !important;
-                padding: 10px 10px 10px 20px !important;
-                border-radius: 28px !important;
-                background: rgba(25, 25, 35, 0.98) !important;
-                border: 1px solid rgba(255,255,255,0.15) !important;
+                justify-content: space-between !important;
+                gap: 10px !important;
+                padding: 8px !important;
+                border-radius: 32px !important;
+                background: rgba(20, 20, 30, 0.95) !important;
+                border: 1px solid rgba(255,255,255,0.12) !important;
                 box-sizing: border-box !important;
             }
 
-            .omni-input {
+            .omni-input,
+            input.omni-input,
+            input#questionInput {
                 flex: 1 1 auto !important;
-                width: calc(100% - 70px) !important;
-                min-width: 200px !important;
+                width: calc(100% - 80px) !important;
+                min-width: 180px !important;
                 max-width: none !important;
-                height: 44px !important;
-                font-size: 16px !important; /* Prevents iOS zoom */
-                padding: 0 12px !important;
-                background: rgba(255,255,255,0.05) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 12px !important;
+                height: 48px !important;
+                font-size: 16px !important;
+                padding: 0 16px !important;
+                background: rgba(40, 40, 55, 0.95) !important;
+                border: 2px solid rgba(139, 92, 246, 0.4) !important;
+                border-radius: 24px !important;
                 outline: none !important;
                 color: #ffffff !important;
                 -webkit-appearance: none !important;
+                -moz-appearance: none !important;
                 appearance: none !important;
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                -webkit-text-fill-color: #ffffff !important;
             }
 
             .omni-input:focus {
@@ -4375,9 +4385,12 @@
                 border-color: rgba(139, 92, 246, 0.5) !important;
             }
 
-            .omni-input::placeholder {
-                color: rgba(255,255,255,0.5) !important;
+            .omni-input::placeholder,
+            input.omni-input::placeholder,
+            input#questionInput::placeholder {
+                color: rgba(255,255,255,0.6) !important;
                 opacity: 1 !important;
+                -webkit-text-fill-color: rgba(255,255,255,0.6) !important;
             }
 
             /* Hide status lights completely */
