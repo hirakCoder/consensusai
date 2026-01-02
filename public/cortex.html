@@ -7137,17 +7137,22 @@
 
             // Decision Hero - show clear verdict
             let decision = consensus.decision || consensus.majority?.decision || 'ANALYSIS COMPLETE';
+            const position = consensus.position || consensus.majority?.position || '';
 
-            // For recommendation/comparison questions, the decision should be the actual recommendation
-            // Check if this looks like a generic decision label for a non-yes/no question
+            // Check question type and handle accordingly
             const questionType = result.finalConsensus?.questionType || result.questionType;
-            const isGenericLabel = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN', 'RECOMMENDED', 'VERDICT', 'ANSWERED'].includes(decision.toUpperCase());
+            const isGenericLabel = ['YES', 'NO', 'CONDITIONAL', 'WAIT', 'ALTERNATIVE', 'UNKNOWN', 'RECOMMENDED', 'VERDICT', 'ANSWERED', 'GUIDE PROVIDED', 'GUIDE_PROVIDED', 'EXPLAINED', 'INFORMATIONAL'].includes(decision.toUpperCase().replace(/\s+/g, ' '));
 
-            // For recommendation questions with generic labels, try to extract the actual recommendation
-            if (isGenericLabel && (questionType === 'recommendation' || questionType === 'comparison')) {
+            // For guide/howto/informational questions, show a better label
+            if (questionType === 'guide' || questionType === 'howto' || questionType === 'informational' ||
+                decision.toUpperCase().includes('GUIDE') || decision.toUpperCase().includes('EXPLAINED')) {
+                // For guides, decision should indicate it's a guide
+                decision = '📋 Guide Ready';
+            }
+            // For recommendation/comparison questions with generic labels, try to extract the actual recommendation
+            else if (isGenericLabel && (questionType === 'recommendation' || questionType === 'comparison')) {
                 // Try to get a specific recommendation from action plan or position
                 const specificRec = result.actionPlan?.decision;
-                const position = consensus.position || consensus.majority?.position || '';
 
                 // If action plan has a specific recommendation, use it
                 if (specificRec && !['YES', 'NO', 'CONDITIONAL', 'RECOMMENDED', 'VERDICT'].includes(specificRec.toUpperCase())) {
