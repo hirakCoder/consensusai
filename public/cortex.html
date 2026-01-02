@@ -1189,17 +1189,18 @@
             }
         }
 
-        /* Debate stage - the actual live view */
+        /* Debate stage - fullscreen immersive live view */
         .debate-stage {
             position: fixed;
             inset: 0;
-            background: var(--bg-deep);
-            z-index: 500;
+            background: linear-gradient(180deg, #0a0a12 0%, #030308 50%, #000 100%);
+            z-index: 1000;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .debate-stage.active {
@@ -1212,18 +1213,26 @@
             align-items: center;
             justify-content: space-between;
             padding: 16px 24px;
-            background: rgba(0,0,0,0.5);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0,0,0,0.6);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .debate-stage-live {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 14px;
-            background: rgba(220, 38, 38, 0.2);
+            padding: 8px 16px;
+            background: rgba(220, 38, 38, 0.15);
             border: 1px solid rgba(220, 38, 38, 0.4);
             border-radius: 20px;
+            animation: stageLivePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes stageLivePulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); }
+            50% { box-shadow: 0 0 25px rgba(220, 38, 38, 0.5); }
         }
 
         .debate-stage-live::before {
@@ -1237,7 +1246,7 @@
         }
 
         .debate-stage-live-text {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #ef4444;
             letter-spacing: 2px;
@@ -1247,50 +1256,151 @@
         .debate-stage-question {
             flex: 1;
             text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-            padding: 0 20px;
+            font-family: var(--font-hero);
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.85);
+            padding: 0 24px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .debate-stage-close {
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
             color: rgba(255,255,255,0.7);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .debate-stage-close:hover {
             background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.25);
             color: #fff;
         }
 
-        .debate-stage-content {
+        .debate-stage-body {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
 
-        .debate-stage-arena {
+        .debate-stage-arena-container {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
         }
 
-        .debate-stage-stream {
-            width: 400px;
-            background: rgba(0,0,0,0.3);
-            border-left: 1px solid rgba(255,255,255,0.06);
+        /* Stream panel on the right */
+        .debate-stage-stream-panel {
+            width: 380px;
+            background: rgba(0,0,0,0.4);
+            border-left: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .stage-stream-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .stage-stream-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            letter-spacing: 0.5px;
+        }
+
+        .stage-stream-round {
+            font-size: 0.7rem;
+            color: var(--core-primary);
+            padding: 4px 10px;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .stage-stream-content {
+            flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 16px;
+        }
+
+        /* Individual response cards in stage */
+        .stage-response-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            animation: responseSlideIn 0.4s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        @keyframes responseSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .stage-response-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .stage-response-ai {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stage-response-ai.gpt { color: #10b981; }
+        .stage-response-ai.gemini { color: #3b82f6; }
+        .stage-response-ai.claude { color: #f59e0b; }
+        .stage-response-ai.grok { color: #ef4444; }
+
+        .stage-response-stance {
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .stage-response-text {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .stage-response-text.streaming::after {
+            content: '▊';
+            animation: cursorBlink 0.8s infinite;
+            color: var(--core-primary);
+        }
+
+        @keyframes cursorBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         /* ============================================
@@ -5007,21 +5117,57 @@
                 font-size: 1.1rem !important;
             }
 
-            /* Mobile debate stage */
+            /* Mobile debate stage - fullscreen immersive */
             .debate-stage-header {
                 padding: 12px 16px !important;
+                gap: 12px !important;
+            }
+
+            .debate-stage-live {
+                padding: 6px 12px !important;
+            }
+
+            .debate-stage-live-text {
+                font-size: 0.65rem !important;
             }
 
             .debate-stage-question {
                 display: none !important;
             }
 
-            .debate-stage-stream {
-                display: none !important;
+            .debate-stage-close {
+                padding: 8px 14px !important;
+                font-size: 0.75rem !important;
             }
 
-            .debate-stage-arena {
+            .debate-stage-body {
+                flex-direction: column !important;
+            }
+
+            .debate-stage-arena-container {
+                flex: 0 0 auto !important;
+                height: 280px !important;
                 padding: 10px !important;
+            }
+
+            .debate-stage-stream-panel {
+                width: 100% !important;
+                flex: 1 !important;
+                border-left: none !important;
+                border-top: 1px solid rgba(255,255,255,0.08) !important;
+            }
+
+            .stage-stream-content {
+                padding: 12px !important;
+            }
+
+            .stage-response-card {
+                padding: 12px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .stage-response-text {
+                font-size: 0.8rem !important;
             }
 
             /* === FOOTER === */
@@ -5260,6 +5406,29 @@
         <div class="live-question">
             <div class="live-question-label">Now Debating</div>
             <div class="live-question-text" id="liveQuestionText"></div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Debate Stage -->
+    <div class="debate-stage" id="debateStage">
+        <div class="debate-stage-header">
+            <div class="debate-stage-live">
+                <span class="debate-stage-live-text">Live</span>
+            </div>
+            <div class="debate-stage-question" id="stageQuestion"></div>
+            <button class="debate-stage-close" onclick="exitDebateStage()">Exit</button>
+        </div>
+        <div class="debate-stage-body">
+            <!-- Arena will be moved here during debate -->
+            <div class="debate-stage-arena-container" id="stageArenaContainer"></div>
+            <!-- Stream responses -->
+            <div class="debate-stage-stream-panel" id="stageStreamPanel">
+                <div class="stage-stream-header">
+                    <span class="stage-stream-title">AI Responses</span>
+                    <span class="stage-stream-round" id="stageStreamRound">Round 1</span>
+                </div>
+                <div class="stage-stream-content" id="stageStreamContent"></div>
+            </div>
         </div>
     </div>
 
@@ -6505,6 +6674,29 @@
             // Scroll to bottom
             debateStream.scrollTop = debateStream.scrollHeight;
 
+            // Also add to stage stream panel
+            if (stageStreamContent) {
+                const stageCard = document.createElement('div');
+                stageCard.className = 'stage-response-card';
+
+                const aiClass = llmId === 'openai' ? 'gpt' : llmId;
+                stageCard.innerHTML = `
+                    <div class="stage-response-header">
+                        <span class="stage-response-ai ${aiClass}">${modelNames[llmId] || llmId.toUpperCase()}</span>
+                        <span class="stage-response-stance">${displayDecision}</span>
+                    </div>
+                    <div class="stage-response-text">${keyArg}</div>
+                `;
+
+                stageStreamContent.appendChild(stageCard);
+                stageStreamContent.scrollTop = stageStreamContent.scrollHeight;
+
+                // Update round display
+                if (stageStreamRound) {
+                    stageStreamRound.textContent = `Round ${round}`;
+                }
+            }
+
             // Highlight node
             highlightNode(llmId);
         }
@@ -6795,16 +6987,23 @@
         // FORM SUBMIT
         // ============================================
 
-        // Cinematic live transition
+        // Cinematic live transition and debate stage
         const liveTransitionOverlay = document.getElementById('liveTransitionOverlay');
         const liveQuestionText = document.getElementById('liveQuestionText');
         const omniBarContainer = document.querySelector('.omni-bar-container');
+        const debateStage = document.getElementById('debateStage');
+        const stageQuestion = document.getElementById('stageQuestion');
+        const stageArenaContainer = document.getElementById('stageArenaContainer');
+        const stageStreamContent = document.getElementById('stageStreamContent');
+        const stageStreamRound = document.getElementById('stageStreamRound');
+        let originalArenaParent = null;
 
         async function showLiveTransition(question) {
             // Set the question text
             liveQuestionText.textContent = question;
+            stageQuestion.textContent = question;
 
-            // Fade out the input bar
+            // Fade out the input bar and main content
             if (omniBarContainer) {
                 omniBarContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
                 omniBarContainer.style.opacity = '0';
@@ -6818,15 +7017,49 @@
             // Hold the LIVE screen for dramatic effect
             await new Promise(r => setTimeout(r, 1800));
 
-            // Fade out the overlay
+            // Fade out the overlay and show debate stage
             liveTransitionOverlay.classList.remove('active');
 
-            // Wait for overlay fade
-            await new Promise(r => setTimeout(r, 500));
+            // Wait for overlay fade, then show debate stage
+            await new Promise(r => setTimeout(r, 400));
+
+            // Move arena into stage
+            originalArenaParent = arena.parentElement;
+            stageArenaContainer.appendChild(arena);
+
+            // Clear previous stream content
+            stageStreamContent.innerHTML = '';
+            stageStreamRound.textContent = 'Round 1';
+
+            // Show the debate stage
+            debateStage.classList.add('active');
         }
+
+        function hideDebateStage() {
+            debateStage.classList.remove('active');
+
+            // Move arena back to original position
+            if (originalArenaParent && arena) {
+                originalArenaParent.appendChild(arena);
+            }
+
+            // Restore input bar
+            if (omniBarContainer) {
+                omniBarContainer.style.opacity = '1';
+                omniBarContainer.style.transform = '';
+            }
+        }
+
+        // Exit debate stage (user clicked Exit button)
+        window.exitDebateStage = function() {
+            hideDebateStage();
+            // Note: This doesn't cancel the debate, it just hides the stage
+            // The verdict will still appear when ready
+        };
 
         function hideLiveTransition() {
             liveTransitionOverlay.classList.remove('active');
+            hideDebateStage();
             // Restore input bar
             if (omniBarContainer) {
                 omniBarContainer.style.opacity = '1';
@@ -7005,6 +7238,9 @@
         }
 
         function showVerdict(result) {
+            // Hide the debate stage when showing verdict
+            hideDebateStage();
+
             // Reset followup section when showing new verdict
             document.getElementById('followupSection').classList.remove('active');
             document.getElementById('followupInput').value = '';
