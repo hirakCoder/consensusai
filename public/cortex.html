@@ -1189,7 +1189,7 @@
             }
         }
 
-        /* Debate stage - fullscreen immersive live view */
+        /* Debate stage - clean fullscreen live view */
         .debate-stage {
             position: fixed;
             inset: 0;
@@ -1212,11 +1212,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 24px;
-            background: rgba(0,0,0,0.6);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            padding: 20px 24px;
         }
 
         .debate-stage-live {
@@ -1253,40 +1249,23 @@
             text-transform: uppercase;
         }
 
-        .debate-stage-question {
-            flex: 1;
-            text-align: center;
-            font-family: var(--font-hero);
-            font-size: 0.95rem;
-            color: rgba(255,255,255,0.85);
-            padding: 0 24px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .debate-stage-close {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 10px;
-            color: rgba(255,255,255,0.7);
+        .debate-stage-round {
             font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .debate-stage-close:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.25);
-            color: #fff;
+        .debate-stage-question-bar {
+            text-align: center;
+            padding: 0 40px 20px;
         }
 
-        .debate-stage-body {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
+        .debate-stage-question-text {
+            font-family: var(--font-hero);
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            line-height: 1.4;
         }
 
         .debate-stage-arena-container {
@@ -1298,109 +1277,15 @@
             position: relative;
         }
 
-        /* Stream panel on the right */
-        .debate-stage-stream-panel {
-            width: 380px;
-            background: rgba(0,0,0,0.4);
-            border-left: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+        .debate-stage-status {
+            padding: 24px;
+            text-align: center;
         }
 
-        .stage-stream-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .stage-stream-title {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: rgba(255,255,255,0.9);
-            letter-spacing: 0.5px;
-        }
-
-        .stage-stream-round {
-            font-size: 0.7rem;
-            color: var(--core-primary);
-            padding: 4px 10px;
-            background: rgba(139, 92, 246, 0.15);
-            border-radius: 12px;
-            font-weight: 500;
-        }
-
-        .stage-stream-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-        }
-
-        /* Individual response cards in stage */
-        .stage-response-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            animation: responseSlideIn 0.4s cubic-bezier(0.2, 0, 0, 1);
-        }
-
-        @keyframes responseSlideIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .stage-response-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .stage-response-ai {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .stage-response-ai.gpt { color: #10b981; }
-        .stage-response-ai.gemini { color: #3b82f6; }
-        .stage-response-ai.claude { color: #f59e0b; }
-        .stage-response-ai.grok { color: #ef4444; }
-
-        .stage-response-stance {
-            font-size: 0.65rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.7);
-        }
-
-        .stage-response-text {
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .stage-response-text.streaming::after {
-            content: '▊';
-            animation: cursorBlink 0.8s infinite;
-            color: var(--core-primary);
-        }
-
-        @keyframes cursorBlink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+        .debate-stage-status-text {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            font-weight: 400;
         }
 
         /* ============================================
@@ -5117,10 +5002,9 @@
                 font-size: 1.1rem !important;
             }
 
-            /* Mobile debate stage - fullscreen immersive */
+            /* Mobile debate stage - clean and simple */
             .debate-stage-header {
-                padding: 12px 16px !important;
-                gap: 12px !important;
+                padding: 16px !important;
             }
 
             .debate-stage-live {
@@ -5131,42 +5015,28 @@
                 font-size: 0.65rem !important;
             }
 
-            .debate-stage-question {
-                display: none !important;
+            .debate-stage-round {
+                font-size: 0.7rem !important;
             }
 
-            .debate-stage-close {
-                padding: 8px 14px !important;
-                font-size: 0.75rem !important;
+            .debate-stage-question-bar {
+                padding: 0 20px 16px !important;
             }
 
-            .debate-stage-body {
-                flex-direction: column !important;
+            .debate-stage-question-text {
+                font-size: 1rem !important;
             }
 
             .debate-stage-arena-container {
-                flex: 0 0 auto !important;
-                height: 280px !important;
+                flex: 1 !important;
                 padding: 10px !important;
             }
 
-            .debate-stage-stream-panel {
-                width: 100% !important;
-                flex: 1 !important;
-                border-left: none !important;
-                border-top: 1px solid rgba(255,255,255,0.08) !important;
+            .debate-stage-status {
+                padding: 16px !important;
             }
 
-            .stage-stream-content {
-                padding: 12px !important;
-            }
-
-            .stage-response-card {
-                padding: 12px !important;
-                margin-bottom: 10px !important;
-            }
-
-            .stage-response-text {
+            .debate-stage-status-text {
                 font-size: 0.8rem !important;
             }
 
@@ -5409,26 +5279,27 @@
         </div>
     </div>
 
-    <!-- Fullscreen Debate Stage -->
+    <!-- Fullscreen Debate Stage - Clean & Simple -->
     <div class="debate-stage" id="debateStage">
+        <!-- Header with LIVE badge -->
         <div class="debate-stage-header">
             <div class="debate-stage-live">
                 <span class="debate-stage-live-text">Live</span>
             </div>
-            <div class="debate-stage-question" id="stageQuestion"></div>
-            <button class="debate-stage-close" onclick="exitDebateStage()">Exit</button>
+            <div class="debate-stage-round" id="stageRoundDisplay">Round 1 of 3</div>
         </div>
-        <div class="debate-stage-body">
-            <!-- Arena will be moved here during debate -->
-            <div class="debate-stage-arena-container" id="stageArenaContainer"></div>
-            <!-- Stream responses -->
-            <div class="debate-stage-stream-panel" id="stageStreamPanel">
-                <div class="stage-stream-header">
-                    <span class="stage-stream-title">AI Responses</span>
-                    <span class="stage-stream-round" id="stageStreamRound">Round 1</span>
-                </div>
-                <div class="stage-stream-content" id="stageStreamContent"></div>
-            </div>
+
+        <!-- Question being debated -->
+        <div class="debate-stage-question-bar">
+            <span class="debate-stage-question-text" id="stageQuestion"></span>
+        </div>
+
+        <!-- Arena centered -->
+        <div class="debate-stage-arena-container" id="stageArenaContainer"></div>
+
+        <!-- Simple status at bottom -->
+        <div class="debate-stage-status" id="stageStatus">
+            <div class="debate-stage-status-text">AIs are deliberating...</div>
         </div>
     </div>
 
@@ -6674,29 +6545,6 @@
             // Scroll to bottom
             debateStream.scrollTop = debateStream.scrollHeight;
 
-            // Also add to stage stream panel
-            if (stageStreamContent) {
-                const stageCard = document.createElement('div');
-                stageCard.className = 'stage-response-card';
-
-                const aiClass = llmId === 'openai' ? 'gpt' : llmId;
-                stageCard.innerHTML = `
-                    <div class="stage-response-header">
-                        <span class="stage-response-ai ${aiClass}">${modelNames[llmId] || llmId.toUpperCase()}</span>
-                        <span class="stage-response-stance">${displayDecision}</span>
-                    </div>
-                    <div class="stage-response-text">${keyArg}</div>
-                `;
-
-                stageStreamContent.appendChild(stageCard);
-                stageStreamContent.scrollTop = stageStreamContent.scrollHeight;
-
-                // Update round display
-                if (stageStreamRound) {
-                    stageStreamRound.textContent = `Round ${round}`;
-                }
-            }
-
             // Highlight node
             highlightNode(llmId);
         }
@@ -6923,13 +6771,19 @@
                     const progress = Math.round((data.round / data.totalRounds) * 100);
                     updateDebateStats(data.round, 0, 4, progress);
 
+                    // Update stage round display
+                    updateStageRound(data.round, data.totalRounds);
+
                     // Add system message for round
                     if (data.round === 1) {
                         addSystemMessage('ROUND 1: Initial Analysis');
+                        updateStageStatus('Round 1: Initial analysis...');
                     } else if (data.round === 2) {
                         addSystemMessage('ROUND 2: Rebuttal Phase');
+                        updateStageStatus('Round 2: Rebuttals...');
                     } else {
                         addSystemMessage(`ROUND ${data.round}: Seeking Consensus`);
+                        updateStageStatus(`Round ${data.round}: Seeking consensus...`);
                     }
                 });
 
@@ -6937,6 +6791,9 @@
                     const data = JSON.parse(e.data);
                     setNodeActive(data.llmId, true);
                     setNodeSpeaking(data.llmId);
+                    // Update stage status
+                    const modelName = modelNames[data.llmId] || data.llmId;
+                    updateStageStatus(`${modelName} is thinking...`);
                 });
 
                 sseConnection.addEventListener('llm_complete', (e) => {
@@ -6949,26 +6806,37 @@
                     if (data.result) {
                         addStreamEntry(data.llmId, data.result, currentRound);
                     }
+
+                    // Update stage status
+                    const modelName = modelNames[data.llmId] || data.llmId;
+                    updateStageStatus(`${modelName} shared their position`);
                 });
 
                 sseConnection.addEventListener('round_complete', (e) => {
                     const data = JSON.parse(e.data);
                     updateRoundDot(data.round - 1, 'completed');
+                    // Update stage round
+                    updateStageRound(data.round + 1);
 
                     if (data.consensus?.reached) {
                         setCoreState('merging');
                         statusText.textContent = 'Consensus Forming';
+                        updateStageStatus('Consensus forming...');
+                    } else {
+                        updateStageStatus('Moving to next round...');
                     }
                 });
 
                 sseConnection.addEventListener('synthesis_start', () => {
                     statusText.textContent = 'Synthesizing Verdict';
                     statusPhase.textContent = 'Generating action plan...';
+                    updateStageStatus('Synthesizing final verdict...');
                 });
 
                 sseConnection.addEventListener('debate_complete', () => {
                     setCoreState('consensus');
                     statusText.textContent = 'Complete';
+                    updateStageStatus('Debate complete!');
                 });
 
                 sseConnection.onerror = () => resolve(false);
@@ -6994,9 +6862,21 @@
         const debateStage = document.getElementById('debateStage');
         const stageQuestion = document.getElementById('stageQuestion');
         const stageArenaContainer = document.getElementById('stageArenaContainer');
-        const stageStreamContent = document.getElementById('stageStreamContent');
-        const stageStreamRound = document.getElementById('stageStreamRound');
+        const stageRoundDisplay = document.getElementById('stageRoundDisplay');
+        const stageStatus = document.getElementById('stageStatus');
         let originalArenaParent = null;
+
+        function updateStageStatus(text) {
+            if (stageStatus) {
+                stageStatus.querySelector('.debate-stage-status-text').textContent = text;
+            }
+        }
+
+        function updateStageRound(round, total = 3) {
+            if (stageRoundDisplay) {
+                stageRoundDisplay.textContent = `Round ${round} of ${total}`;
+            }
+        }
 
         async function showLiveTransition(question) {
             // Set the question text
@@ -7027,9 +6907,9 @@
             originalArenaParent = arena.parentElement;
             stageArenaContainer.appendChild(arena);
 
-            // Clear previous stream content
-            stageStreamContent.innerHTML = '';
-            stageStreamRound.textContent = 'Round 1';
+            // Reset stage UI
+            updateStageRound(1);
+            updateStageStatus('AIs are analyzing your question...');
 
             // Show the debate stage
             debateStage.classList.add('active');
