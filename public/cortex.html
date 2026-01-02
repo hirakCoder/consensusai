@@ -4092,209 +4092,234 @@
 
         @media (max-width: 768px) {
             /* ============================================
-               MOBILE HEADER & TOP BAR
+               MOBILE HEADER & TOP BAR - AGGRESSIVE CLEANUP
                ============================================ */
 
-            /* Auth container - simplify on mobile */
+            /* Auth container - minimal on mobile */
             .auth-container {
-                top: 10px;
-                left: 10px;
-                z-index: 110;
+                position: fixed !important;
+                top: 8px !important;
+                left: 8px !important;
+                z-index: 200 !important;
             }
 
             .auth-btn {
-                padding: 6px 12px;
-                font-size: 0.7rem;
+                padding: 5px 10px !important;
+                font-size: 0.65rem !important;
             }
 
             .user-menu {
-                padding: 4px 10px 4px 4px;
+                padding: 3px 8px 3px 3px !important;
             }
 
             .user-avatar {
-                width: 24px;
-                height: 24px;
-                font-size: 0.6rem;
+                width: 22px !important;
+                height: 22px !important;
+                font-size: 0.55rem !important;
             }
 
             .user-name {
-                display: none; /* Hide name on mobile */
+                display: none !important;
             }
 
             .user-tier {
-                font-size: 0.55rem;
-                padding: 2px 4px;
+                font-size: 0.5rem !important;
+                padding: 1px 3px !important;
             }
 
-            /* Top bar right - stack and simplify */
+            /* Top bar right - minimal, single row */
             .top-bar-right {
-                top: 10px;
-                right: 10px;
-                gap: 6px;
-                flex-wrap: wrap;
-                max-width: 200px;
-                justify-content: flex-end;
+                position: fixed !important;
+                top: 8px !important;
+                right: 8px !important;
+                gap: 4px !important;
+                flex-wrap: nowrap !important;
+                z-index: 200 !important;
             }
 
-            /* Hide non-essential elements on mobile */
+            /* HIDE ALL non-essential elements on mobile */
             .tier-selector,
             .usage-indicator,
             .devil-toggle,
-            .ai-settings-btn {
+            .ai-settings-btn,
+            .ai-settings-panel,
+            .thought-card,
+            .conflict-laser,
+            .conflict-lines-svg,
+            .energy-ring,
+            .neural-bg,
+            .particle-field,
+            .debate-stats,
+            .debate-stream,
+            .stream-container,
+            .round-dots {
                 display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
             }
 
             .upgrade-btn {
-                padding: 6px 10px;
-                font-size: 0.65rem;
+                padding: 4px 8px !important;
+                font-size: 0.6rem !important;
             }
 
             .upgrade-btn svg {
-                display: none;
-            }
-
-            .history-toggle {
-                width: 32px;
-                height: 32px;
-            }
-
-            .history-toggle svg {
-                width: 14px;
-                height: 14px;
-            }
-
-            /* ============================================
-               MOBILE ARENA
-               ============================================ */
-
-            .cortex-arena {
-                height: 300px;
-                padding-top: 60px; /* Space for header */
-                min-height: auto;
-            }
-
-            /* Disable ALL heavy animations on mobile for clean UI */
-            .neural-bg,
-            .particle-field,
-            .energy-ring,
-            .debate-stats,
-            .debate-stream {
                 display: none !important;
             }
 
-            /* Disable node animations on mobile to prevent overlap */
+            .history-toggle {
+                width: 28px !important;
+                height: 28px !important;
+            }
+
+            .history-toggle svg {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            /* ============================================
+               MOBILE ARENA - CENTERED & CLEAN
+               ============================================ */
+
+            .cortex-app {
+                padding-top: 50px !important;
+                min-height: 100vh !important;
+                overflow-x: hidden !important;
+            }
+
+            .cortex-arena {
+                height: auto !important;
+                min-height: 280px !important;
+                padding: 20px 10px 80px 10px !important;
+                margin-top: 0 !important;
+                overflow: visible !important;
+            }
+
+            /* Disable ALL animations on mobile */
+            .cortex-arena * {
+                animation-duration: 0s !important;
+            }
+
             .cortex-arena.debating .ai-node {
                 animation: none !important;
             }
 
-            .core-container {
-                width: 250px;
-                height: 250px;
-            }
-
-            .core-orb {
-                width: 80px;
-                height: 80px;
-            }
-
-            .core-text {
-                font-size: 0.7rem;
-            }
-
-            .ai-node {
-                width: 36px;
-                height: 36px;
-            }
-
-            .ai-node svg {
-                width: 16px;
-                height: 16px;
-            }
-
-            .node-name {
-                font-size: 0.5rem;
-                bottom: -14px;
-            }
-
-            .node-gpt, .node-gemini { top: 10px; }
-            .node-claude, .node-grok { bottom: 30px; }
-            .node-gpt, .node-claude { left: 20px; }
-            .node-gemini, .node-grok { right: 20px; }
-
-            .thought-card {
+            /* Disable spinning ring on active nodes */
+            .ai-node.active::before,
+            .ai-node.active::after {
                 display: none !important;
             }
 
+            .core-container {
+                width: 220px !important;
+                height: 220px !important;
+                margin: 0 auto !important;
+            }
+
+            .core-orb {
+                width: 70px !important;
+                height: 70px !important;
+            }
+
+            .core-text {
+                font-size: 0.65rem !important;
+            }
+
+            .ai-node {
+                width: 32px !important;
+                height: 32px !important;
+            }
+
+            .ai-node svg {
+                width: 14px !important;
+                height: 14px !important;
+            }
+
+            .node-name {
+                font-size: 0.45rem !important;
+                bottom: -12px !important;
+            }
+
+            /* Fixed node positions - corners of container */
+            .node-gpt { top: 15px !important; left: 15px !important; }
+            .node-gemini { top: 15px !important; right: 15px !important; }
+            .node-claude { bottom: 35px !important; left: 15px !important; }
+            .node-grok { bottom: 35px !important; right: 15px !important; }
+
             .arena-status {
-                bottom: -50px;
+                position: relative !important;
+                bottom: auto !important;
+                left: auto !important;
+                transform: none !important;
+                margin-top: 15px !important;
+                text-align: center !important;
             }
 
             .status-text {
-                font-size: 0.85rem;
+                font-size: 0.8rem !important;
             }
 
             .status-phase {
-                font-size: 0.65rem;
+                font-size: 0.6rem !important;
             }
 
             /* ============================================
-               MOBILE INPUT BAR
+               MOBILE INPUT BAR - BOTTOM FIXED
                ============================================ */
 
             .omni-bar-container {
-                bottom: 50px;
+                position: fixed !important;
+                bottom: 45px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                width: 100% !important;
+                padding: 0 10px !important;
+                box-sizing: border-box !important;
             }
 
             .omni-bar {
-                width: calc(100% - 24px);
-                padding: 6px 6px 6px 16px;
-                border-radius: 24px;
-                gap: 8px;
+                width: 100% !important;
+                max-width: none !important;
+                padding: 6px 6px 6px 14px !important;
+                border-radius: 20px !important;
+                gap: 6px !important;
             }
 
             .omni-input {
-                font-size: 0.9rem;
+                font-size: 0.85rem !important;
             }
 
             .omni-submit {
-                width: 40px;
-                height: 40px;
+                width: 36px !important;
+                height: 36px !important;
+                flex-shrink: 0 !important;
             }
 
             .omni-submit svg {
-                width: 16px;
-                height: 16px;
+                width: 14px !important;
+                height: 14px !important;
             }
 
             .status-lights {
-                display: none;
+                display: none !important;
             }
 
             .char-counter {
-                font-size: 0.65rem;
+                display: none !important;
             }
 
+            /* Hide template chips on mobile - too cluttered */
             .template-chips {
-                width: calc(100vw - 24px);
-                grid-template-columns: repeat(2, 1fr);
-                gap: 6px;
-                margin-top: 10px;
-            }
-
-            .template-chip {
-                padding: 5px 10px;
-                font-size: 0.7rem;
+                display: none !important;
             }
 
             .context-toggle {
-                font-size: 0.7rem;
-                margin-top: 8px;
+                display: none !important;
             }
 
             .context-input {
-                width: calc(100vw - 24px);
-                font-size: 0.8rem;
-                padding: 10px 12px;
+                display: none !important;
             }
 
             /* ============================================
@@ -4455,60 +4480,110 @@
             }
         }
 
-        /* Extra small screens */
+        /* Extra small screens (iPhone SE, small phones) */
         @media (max-width: 480px) {
             .auth-container {
-                top: 8px;
-                left: 8px;
+                top: 5px !important;
+                left: 5px !important;
+            }
+
+            .auth-btn {
+                padding: 4px 8px !important;
+                font-size: 0.6rem !important;
             }
 
             .top-bar-right {
-                top: 8px;
-                right: 8px;
-                max-width: 140px;
+                top: 5px !important;
+                right: 5px !important;
             }
 
             .upgrade-btn {
-                padding: 5px 8px;
-                font-size: 0.6rem;
+                padding: 3px 6px !important;
+                font-size: 0.55rem !important;
+            }
+
+            .history-toggle {
+                width: 24px !important;
+                height: 24px !important;
             }
 
             .cortex-arena {
-                height: 260px;
-                padding-top: 50px;
+                min-height: 240px !important;
+                padding: 15px 8px 70px 8px !important;
             }
 
             .core-container {
-                width: 200px;
-                height: 200px;
+                width: 180px !important;
+                height: 180px !important;
             }
 
             .core-orb {
-                width: 70px;
-                height: 70px;
+                width: 60px !important;
+                height: 60px !important;
+            }
+
+            .core-text {
+                font-size: 0.55rem !important;
             }
 
             .ai-node {
-                width: 32px;
-                height: 32px;
+                width: 28px !important;
+                height: 28px !important;
             }
 
-            .node-gpt, .node-gemini { top: 5px; }
-            .node-claude, .node-grok { bottom: 25px; }
-            .node-gpt, .node-claude { left: 15px; }
-            .node-gemini, .node-grok { right: 15px; }
-
-            .template-chips {
-                grid-template-columns: 1fr 1fr;
+            .ai-node svg {
+                width: 12px !important;
+                height: 12px !important;
             }
 
-            .template-chip {
-                font-size: 0.65rem;
-                padding: 4px 8px;
+            .node-name {
+                display: none !important;
+            }
+
+            /* Tighter node positions for small screens */
+            .node-gpt { top: 10px !important; left: 10px !important; }
+            .node-gemini { top: 10px !important; right: 10px !important; }
+            .node-claude { bottom: 30px !important; left: 10px !important; }
+            .node-grok { bottom: 30px !important; right: 10px !important; }
+
+            .arena-status {
+                margin-top: 10px !important;
+            }
+
+            .status-text {
+                font-size: 0.7rem !important;
+            }
+
+            .status-phase {
+                font-size: 0.55rem !important;
+            }
+
+            .omni-bar-container {
+                bottom: 40px !important;
+                padding: 0 8px !important;
+            }
+
+            .omni-bar {
+                padding: 5px 5px 5px 12px !important;
+                border-radius: 18px !important;
+            }
+
+            .omni-input {
+                font-size: 0.8rem !important;
+            }
+
+            .omni-submit {
+                width: 32px !important;
+                height: 32px !important;
             }
 
             .verdict-decision {
-                font-size: 1.5rem;
+                font-size: 1.3rem !important;
+            }
+
+            .site-footer {
+                font-size: 0.5rem !important;
+                padding: 8px 10px !important;
             }
         }
     </style>
