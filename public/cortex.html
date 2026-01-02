@@ -1095,6 +1095,205 @@
         }
 
         /* ============================================
+           CINEMATIC LIVE TRANSITION
+           ============================================ */
+
+        .live-transition-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .live-transition-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border-radius: 8px;
+            animation: livePulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(220, 38, 38, 0.5),
+                        0 0 80px rgba(220, 38, 38, 0.3);
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            animation: liveDot 1s ease-in-out infinite;
+        }
+
+        .live-badge-text {
+            font-family: var(--font-hero);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes liveDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .live-question {
+            margin-top: 40px;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: questionFadeIn 0.6s cubic-bezier(0.2, 0, 0, 1) 0.3s forwards;
+        }
+
+        .live-question-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .live-question-text {
+            font-family: var(--font-hero);
+            font-size: 1.4rem;
+            color: #fff;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        @keyframes questionFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Debate stage - the actual live view */
+        .debate-stage {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-deep);
+            z-index: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .debate-stage.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .debate-stage-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(0,0,0,0.5);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .debate-stage-live {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            border-radius: 20px;
+        }
+
+        .debate-stage-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: liveDot 1s ease-in-out infinite;
+            box-shadow: 0 0 8px #ef4444;
+        }
+
+        .debate-stage-live-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #ef4444;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .debate-stage-question {
+            flex: 1;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            padding: 0 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .debate-stage-close {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .debate-stage-close:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .debate-stage-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .debate-stage-arena {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .debate-stage-stream {
+            width: 400px;
+            background: rgba(0,0,0,0.3);
+            border-left: 1px solid rgba(255,255,255,0.06);
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* ============================================
            THE OMNI-BAR (Input)
            ============================================ */
 
@@ -4789,6 +4988,42 @@
                 color: rgba(255,255,255,0.4) !important;
             }
 
+            /* === CINEMATIC LIVE TRANSITION - Mobile === */
+            .live-badge {
+                padding: 10px 22px !important;
+            }
+
+            .live-badge-text {
+                font-size: 1.2rem !important;
+                letter-spacing: 3px !important;
+            }
+
+            .live-question {
+                margin-top: 30px !important;
+                padding: 0 24px !important;
+            }
+
+            .live-question-text {
+                font-size: 1.1rem !important;
+            }
+
+            /* Mobile debate stage */
+            .debate-stage-header {
+                padding: 12px 16px !important;
+            }
+
+            .debate-stage-question {
+                display: none !important;
+            }
+
+            .debate-stage-stream {
+                display: none !important;
+            }
+
+            .debate-stage-arena {
+                padding: 10px !important;
+            }
+
             /* === FOOTER === */
             .site-footer {
                 display: none !important;
@@ -5017,6 +5252,17 @@
     </style>
 </head>
 <body>
+    <!-- Cinematic Live Transition Overlay -->
+    <div class="live-transition-overlay" id="liveTransitionOverlay">
+        <div class="live-badge">
+            <span class="live-badge-text">LIVE</span>
+        </div>
+        <div class="live-question">
+            <div class="live-question-label">Now Debating</div>
+            <div class="live-question-text" id="liveQuestionText"></div>
+        </div>
+    </div>
+
     <!-- Nebula Background -->
     <div class="nebula-bg">
         <div class="nebula-cloud cloud-1"></div>
@@ -6549,6 +6795,45 @@
         // FORM SUBMIT
         // ============================================
 
+        // Cinematic live transition
+        const liveTransitionOverlay = document.getElementById('liveTransitionOverlay');
+        const liveQuestionText = document.getElementById('liveQuestionText');
+        const omniBarContainer = document.querySelector('.omni-bar-container');
+
+        async function showLiveTransition(question) {
+            // Set the question text
+            liveQuestionText.textContent = question;
+
+            // Fade out the input bar
+            if (omniBarContainer) {
+                omniBarContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                omniBarContainer.style.opacity = '0';
+                omniBarContainer.style.transform = 'translateY(20px)';
+            }
+
+            // Wait a moment, then show LIVE overlay
+            await new Promise(r => setTimeout(r, 300));
+            liveTransitionOverlay.classList.add('active');
+
+            // Hold the LIVE screen for dramatic effect
+            await new Promise(r => setTimeout(r, 1800));
+
+            // Fade out the overlay
+            liveTransitionOverlay.classList.remove('active');
+
+            // Wait for overlay fade
+            await new Promise(r => setTimeout(r, 500));
+        }
+
+        function hideLiveTransition() {
+            liveTransitionOverlay.classList.remove('active');
+            // Restore input bar
+            if (omniBarContainer) {
+                omniBarContainer.style.opacity = '1';
+                omniBarContainer.style.transform = '';
+            }
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -6560,6 +6845,11 @@
 
             // Reset UI
             submitBtn.disabled = true;
+
+            // === CINEMATIC LIVE TRANSITION ===
+            await showLiveTransition(question);
+
+            // Now show the debate
             setLightsActive(true);
             clearStream();
             showStream();
@@ -6625,6 +6915,8 @@
                 closeSSE();
                 setCoreState('ready');
                 showToast(err.message || 'Debate failed', 'error');
+                // Restore input bar on error
+                hideLiveTransition();
             } finally {
                 submitBtn.disabled = false;
                 setLightsActive(false);
@@ -6934,6 +7226,12 @@
             document.getElementById('devilToggle').style.opacity = '1';
             document.getElementById('devilToggle').style.pointerEvents = 'auto';
             document.getElementById('contextToggle').style.display = 'flex';
+            // Restore input bar after cinematic transition
+            const omniBar = document.querySelector('.omni-bar-container');
+            if (omniBar) {
+                omniBar.style.opacity = '1';
+                omniBar.style.transform = '';
+            }
         }
 
         function newDebate() {
