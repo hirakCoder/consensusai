@@ -4179,16 +4179,43 @@
                 overflow: visible !important; /* CRITICAL: Don't clip content */
             }
 
-            /* Hide heavy effects */
+            /* Hide heavy effects on mobile */
             .neural-bg,
             .particle-field,
             .energy-ring,
-            .debate-stats,
-            .debate-stream,
-            .thought-card,
             .conflict-laser,
             .conflict-lines-svg {
                 display: none !important;
+            }
+
+            /* Show debate stream on mobile */
+            .debate-stream {
+                display: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: 250px !important;
+                margin-top: 15px !important;
+                padding: 10px !important;
+                border-radius: 12px !important;
+            }
+
+            .debate-stream.active {
+                display: flex !important;
+            }
+
+            /* Compact thought cards on mobile */
+            .thought-card {
+                padding: 8px 10px !important;
+                font-size: 0.8rem !important;
+                margin-bottom: 6px !important;
+            }
+
+            /* Show debate stats compact */
+            .debate-stats {
+                display: flex !important;
+                transform: scale(0.8) !important;
+                margin: 5px auto !important;
             }
 
             /* === CORE CONTAINER - The orb + nodes === */
@@ -4317,9 +4344,15 @@
                 padding-bottom: 100px !important;
             }
 
-            /* === DEVIL'S ADVOCATE - Hidden on mobile === */
+            /* === DEVIL'S ADVOCATE - Compact on mobile === */
             .devil-toggle {
-                display: none !important;
+                display: flex !important;
+                transform: scale(0.85) !important;
+                margin: 10px auto !important;
+            }
+
+            .devil-toggle label {
+                font-size: 0.75rem !important;
             }
 
             /* === INPUT BAR - Fixed bottom === */
@@ -4448,9 +4481,24 @@
                 font-size: 0.75rem !important;
             }
 
-            .context-toggle,
+            /* === CONTEXT/CONSTRAINTS - Show on mobile === */
+            .context-toggle {
+                display: flex !important;
+                width: 36px !important;
+                height: 36px !important;
+                padding: 8px !important;
+            }
+
+            .context-input-container {
+                width: 100% !important;
+                padding: 0 12px !important;
+            }
+
             .context-input {
-                display: none !important;
+                display: block !important;
+                width: 100% !important;
+                font-size: 14px !important;
+                padding: 10px 12px !important;
             }
 
             /* === FOOTER === */
