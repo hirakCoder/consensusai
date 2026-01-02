@@ -1189,268 +1189,6 @@
             }
         }
 
-        /* Debate stage - response-focused live view */
-        .debate-stage {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(180deg, #0a0a12 0%, #030308 50%, #000 100%);
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .debate-stage.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .debate-stage-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            background: rgba(0,0,0,0.4);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .debate-stage-live {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            background: rgba(220, 38, 38, 0.15);
-            border: 1px solid rgba(220, 38, 38, 0.4);
-            border-radius: 20px;
-            animation: stageLivePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes stageLivePulse {
-            0%, 100% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(220, 38, 38, 0.5); }
-        }
-
-        .debate-stage-live::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: #ef4444;
-            border-radius: 50%;
-            animation: liveDot 1s ease-in-out infinite;
-            box-shadow: 0 0 8px #ef4444;
-        }
-
-        .debate-stage-live-text {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #ef4444;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .debate-stage-question-mini {
-            flex: 1;
-            text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-            padding: 0 20px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .debate-stage-round {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            font-weight: 500;
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-        }
-
-        /* Compact Arena - shrunk to give space to responses */
-        .debate-stage-arena-compact {
-            height: 180px;
-            min-height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            transform: scale(0.55);
-            transform-origin: center center;
-            margin: -40px 0;
-        }
-
-        /* Main Response Area - THE SPOTLIGHT */
-        .debate-stage-responses {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 0 24px;
-            overflow: hidden;
-        }
-
-        .stage-current-response {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            overflow: hidden;
-            animation: responseEnter 0.4s cubic-bezier(0.2, 0, 0, 1);
-        }
-
-        @keyframes responseEnter {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .stage-response-waiting {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stage-waiting-text {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        /* Active Response Card */
-        .stage-response-card-main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 24px;
-            animation: responseEnter 0.4s cubic-bezier(0.2, 0, 0, 1);
-        }
-
-        .stage-response-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .stage-response-ai-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .stage-response-ai-badge.gpt {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #10b981;
-        }
-        .stage-response-ai-badge.gemini {
-            background: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            color: #3b82f6;
-        }
-        .stage-response-ai-badge.claude {
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.4);
-            color: #f59e0b;
-        }
-        .stage-response-ai-badge.grok {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            color: #ef4444;
-        }
-
-        .stage-response-decision {
-            padding: 6px 14px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stage-response-decision.yes {
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-        }
-        .stage-response-decision.no {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-        }
-        .stage-response-decision.conditional {
-            background: rgba(245, 158, 11, 0.2);
-            color: #f59e0b;
-        }
-
-        .stage-response-card-body {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .stage-response-text-main {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: rgba(255,255,255,0.9);
-        }
-
-        /* Response History Pills at bottom */
-        .debate-stage-history {
-            display: flex;
-            gap: 8px;
-            padding: 16px 24px;
-            overflow-x: auto;
-            justify-content: center;
-        }
-
-        .stage-history-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .stage-history-pill:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .stage-history-pill.active {
-            background: rgba(139, 92, 246, 0.2);
-            border-color: rgba(139, 92, 246, 0.4);
-        }
-
-        .stage-history-pill-name {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .stage-history-pill-decision {
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6);
-        }
 
         /* ============================================
            THE OMNI-BAR (Input)
@@ -5166,77 +4904,6 @@
                 font-size: 1.1rem !important;
             }
 
-            /* Mobile debate stage - response focused */
-            .debate-stage-header {
-                padding: 12px 16px !important;
-            }
-
-            .debate-stage-live {
-                padding: 5px 10px !important;
-            }
-
-            .debate-stage-live-text {
-                font-size: 0.6rem !important;
-            }
-
-            .debate-stage-question-mini {
-                font-size: 0.75rem !important;
-                padding: 0 12px !important;
-            }
-
-            .debate-stage-round {
-                font-size: 0.65rem !important;
-                padding: 4px 8px !important;
-            }
-
-            .debate-stage-arena-compact {
-                height: 140px !important;
-                min-height: 140px !important;
-                transform: scale(0.45) !important;
-                margin: -50px 0 !important;
-            }
-
-            .debate-stage-responses {
-                padding: 0 16px !important;
-            }
-
-            .stage-current-response {
-                border-radius: 12px !important;
-            }
-
-            .stage-response-card-main {
-                padding: 16px !important;
-            }
-
-            .stage-response-card-header {
-                margin-bottom: 12px !important;
-                flex-wrap: wrap !important;
-                gap: 8px !important;
-            }
-
-            .stage-response-ai-badge {
-                padding: 6px 12px !important;
-                font-size: 0.75rem !important;
-            }
-
-            .stage-response-text-main {
-                font-size: 0.95rem !important;
-                line-height: 1.6 !important;
-            }
-
-            .debate-stage-history {
-                padding: 12px 16px !important;
-                gap: 6px !important;
-            }
-
-            .stage-history-pill {
-                padding: 6px 10px !important;
-            }
-
-            .stage-history-pill-name {
-                font-size: 0.7rem !important;
-            }
-
             /* === FOOTER === */
             .site-footer {
                 display: none !important;
@@ -5476,32 +5143,6 @@
         </div>
     </div>
 
-    <!-- Fullscreen Debate Stage - Response-Focused Layout -->
-    <div class="debate-stage" id="debateStage">
-        <!-- Header with LIVE badge -->
-        <div class="debate-stage-header">
-            <div class="debate-stage-live">
-                <span class="debate-stage-live-text">Live</span>
-            </div>
-            <div class="debate-stage-question-mini" id="stageQuestionMini"></div>
-            <div class="debate-stage-round" id="stageRoundDisplay">Round 1 of 3</div>
-        </div>
-
-        <!-- Compact Arena at top -->
-        <div class="debate-stage-arena-compact" id="stageArenaContainer"></div>
-
-        <!-- Main Response Area - The Spotlight -->
-        <div class="debate-stage-responses" id="stageResponses">
-            <div class="stage-current-response" id="stageCurrentResponse">
-                <div class="stage-response-waiting">
-                    <div class="stage-waiting-text">Waiting for AI responses...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Response History Pills -->
-        <div class="debate-stage-history" id="stageHistory"></div>
-    </div>
 
     <!-- Nebula Background -->
     <div class="nebula-bg">
@@ -6971,19 +6612,13 @@
                     const progress = Math.round((data.round / data.totalRounds) * 100);
                     updateDebateStats(data.round, 0, 4, progress);
 
-                    // Update stage round display
-                    updateStageRound(data.round, data.totalRounds);
-
                     // Add system message for round
                     if (data.round === 1) {
                         addSystemMessage('ROUND 1: Initial Analysis');
-                        showStageWaiting('Round 1: Initial analysis...');
                     } else if (data.round === 2) {
                         addSystemMessage('ROUND 2: Rebuttal Phase');
-                        showStageWaiting('Round 2: Rebuttals...');
                     } else {
                         addSystemMessage(`ROUND ${data.round}: Seeking Consensus`);
-                        showStageWaiting(`Round ${data.round}: Seeking consensus...`);
                     }
                 });
 
@@ -6991,9 +6626,6 @@
                     const data = JSON.parse(e.data);
                     setNodeActive(data.llmId, true);
                     setNodeSpeaking(data.llmId);
-                    // Show thinking state
-                    const modelName = modelNames[data.llmId] || data.llmId;
-                    showStageWaiting(`${modelName} is thinking...`);
                 });
 
                 sseConnection.addEventListener('llm_complete', (e) => {
@@ -7005,36 +6637,27 @@
                     // Add to live debate stream
                     if (data.result) {
                         addStreamEntry(data.llmId, data.result, currentRound);
-                        // Show in spotlight area
-                        showStageResponse(data.llmId, data.result, currentRound);
                     }
                 });
 
                 sseConnection.addEventListener('round_complete', (e) => {
                     const data = JSON.parse(e.data);
                     updateRoundDot(data.round - 1, 'completed');
-                    // Update stage round
-                    updateStageRound(data.round + 1);
 
                     if (data.consensus?.reached) {
                         setCoreState('merging');
                         statusText.textContent = 'Consensus Forming';
-                        showStageWaiting('Consensus forming...');
-                    } else {
-                        showStageWaiting('Moving to next round...');
                     }
                 });
 
                 sseConnection.addEventListener('synthesis_start', () => {
                     statusText.textContent = 'Synthesizing Verdict';
                     statusPhase.textContent = 'Generating action plan...';
-                    showStageWaiting('Synthesizing final verdict...');
                 });
 
                 sseConnection.addEventListener('debate_complete', () => {
                     setCoreState('consensus');
                     statusText.textContent = 'Complete';
-                    showStageWaiting('Debate complete! Preparing verdict...');
                 });
 
                 sseConnection.onerror = () => resolve(false);
@@ -7053,100 +6676,16 @@
         // FORM SUBMIT
         // ============================================
 
-        // Cinematic live transition and debate stage
+        // Cinematic LIVE transition overlay
         const liveTransitionOverlay = document.getElementById('liveTransitionOverlay');
         const liveQuestionText = document.getElementById('liveQuestionText');
         const omniBarContainer = document.querySelector('.omni-bar-container');
-        const debateStage = document.getElementById('debateStage');
-        const stageQuestionMini = document.getElementById('stageQuestionMini');
-        const stageArenaContainer = document.getElementById('stageArenaContainer');
-        const stageRoundDisplay = document.getElementById('stageRoundDisplay');
-        const stageCurrentResponse = document.getElementById('stageCurrentResponse');
-        const stageHistory = document.getElementById('stageHistory');
-        let originalArenaParent = null;
-        let stageResponses = []; // Store all responses for history
-
-        function updateStageRound(round, total = 3) {
-            if (stageRoundDisplay) {
-                stageRoundDisplay.textContent = `Round ${round} of ${total}`;
-            }
-        }
-
-        // Show a response in the spotlight area
-        function showStageResponse(llmId, data, round) {
-            const aiClass = llmId === 'openai' ? 'gpt' : llmId;
-            const modelName = modelNames[llmId] || llmId.toUpperCase();
-            const decision = data.decision || 'ANALYZING';
-            const decisionClass = decision.toLowerCase().replace(/\s+/g, '-');
-            const keyArg = data.key_argument || data.position || 'Analyzing...';
-
-            // Store for history
-            stageResponses.push({ llmId, modelName, decision, keyArg, aiClass });
-
-            // Update main response area
-            stageCurrentResponse.innerHTML = `
-                <div class="stage-response-card-main">
-                    <div class="stage-response-card-header">
-                        <div class="stage-response-ai-badge ${aiClass}">${modelName}</div>
-                        <div class="stage-response-decision ${decisionClass}">${decision}</div>
-                    </div>
-                    <div class="stage-response-card-body">
-                        <div class="stage-response-text-main">${keyArg}</div>
-                    </div>
-                </div>
-            `;
-
-            // Update history pills
-            updateStageHistory();
-        }
-
-        function updateStageHistory() {
-            stageHistory.innerHTML = stageResponses.map((r, i) => `
-                <div class="stage-history-pill ${i === stageResponses.length - 1 ? 'active' : ''}" onclick="showHistoryResponse(${i})">
-                    <span class="stage-history-pill-name">${r.modelName}</span>
-                    <span class="stage-history-pill-decision">${r.decision}</span>
-                </div>
-            `).join('');
-        }
-
-        // Click on history pill to show that response
-        window.showHistoryResponse = function(index) {
-            const r = stageResponses[index];
-            if (!r) return;
-
-            stageCurrentResponse.innerHTML = `
-                <div class="stage-response-card-main">
-                    <div class="stage-response-card-header">
-                        <div class="stage-response-ai-badge ${r.aiClass}">${r.modelName}</div>
-                        <div class="stage-response-decision ${r.decision.toLowerCase()}">${r.decision}</div>
-                    </div>
-                    <div class="stage-response-card-body">
-                        <div class="stage-response-text-main">${r.keyArg}</div>
-                    </div>
-                </div>
-            `;
-
-            // Update active state on pills
-            document.querySelectorAll('.stage-history-pill').forEach((pill, i) => {
-                pill.classList.toggle('active', i === index);
-            });
-        };
-
-        // Show waiting state
-        function showStageWaiting(text = 'Waiting for AI responses...') {
-            stageCurrentResponse.innerHTML = `
-                <div class="stage-response-waiting">
-                    <div class="stage-waiting-text">${text}</div>
-                </div>
-            `;
-        }
 
         async function showLiveTransition(question) {
             // Set the question text
             liveQuestionText.textContent = question;
-            if (stageQuestionMini) stageQuestionMini.textContent = question;
 
-            // Fade out the input bar and main content
+            // Fade out the input bar
             if (omniBarContainer) {
                 omniBarContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
                 omniBarContainer.style.opacity = '0';
@@ -7160,51 +6699,15 @@
             // Hold the LIVE screen for dramatic effect
             await new Promise(r => setTimeout(r, 1800));
 
-            // Fade out the overlay and show debate stage
+            // Fade out the overlay
             liveTransitionOverlay.classList.remove('active');
 
-            // Wait for overlay fade, then show debate stage
+            // Wait for overlay fade, then continue to debate view
             await new Promise(r => setTimeout(r, 400));
-
-            // Move arena into stage
-            originalArenaParent = arena.parentElement;
-            stageArenaContainer.appendChild(arena);
-
-            // Reset stage UI
-            updateStageRound(1);
-            stageResponses = []; // Clear previous responses
-            stageHistory.innerHTML = '';
-            showStageWaiting('AIs are analyzing your question...');
-
-            // Show the debate stage
-            debateStage.classList.add('active');
         }
-
-        function hideDebateStage() {
-            debateStage.classList.remove('active');
-
-            // Move arena back to original position
-            if (originalArenaParent && arena) {
-                originalArenaParent.appendChild(arena);
-            }
-
-            // Restore input bar
-            if (omniBarContainer) {
-                omniBarContainer.style.opacity = '1';
-                omniBarContainer.style.transform = '';
-            }
-        }
-
-        // Exit debate stage (user clicked Exit button)
-        window.exitDebateStage = function() {
-            hideDebateStage();
-            // Note: This doesn't cancel the debate, it just hides the stage
-            // The verdict will still appear when ready
-        };
 
         function hideLiveTransition() {
             liveTransitionOverlay.classList.remove('active');
-            hideDebateStage();
             // Restore input bar
             if (omniBarContainer) {
                 omniBarContainer.style.opacity = '1';
@@ -7383,8 +6886,8 @@
         }
 
         function showVerdict(result) {
-            // Hide the debate stage when showing verdict
-            hideDebateStage();
+            // Hide the live transition overlay when showing verdict
+            hideLiveTransition();
 
             // Reset followup section when showing new verdict
             document.getElementById('followupSection').classList.remove('active');
