@@ -60,14 +60,14 @@ const cspDirectives = [
   "font-src 'self' https://fonts.gstatic.com",
   // Images: self, data URIs (inline SVGs), and HTTPS sources
   "img-src 'self' data: https: blob:",
-  // API connections: self, AI providers, Clerk auth
-  "connect-src 'self' https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.x.ai https://*.clerk.accounts.dev https://*.clerk.com https://api.clerk.com https://api.clerk.dev wss://*.clerk.accounts.dev wss://*.clerk.com",
+  // API connections: self, AI providers, Clerk auth (including custom domain)
+  "connect-src 'self' https://api.openai.com https://api.anthropic.com https://generativelanguage.googleapis.com https://api.x.ai https://*.clerk.accounts.dev https://*.clerk.com https://api.clerk.com https://api.clerk.dev https://clerk.consensusai.live wss://*.clerk.accounts.dev wss://*.clerk.com",
   // Workers: Clerk uses web workers
   "worker-src 'self' blob:",
   // Forms can only submit to self
   "form-action 'self'",
-  // Frames: Clerk uses iframes for auth
-  "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com",
+  // Frames: Clerk uses iframes for auth (including custom domain)
+  "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.consensusai.live",
   // Block all plugins
   "object-src 'none'",
   // Base URI restriction
