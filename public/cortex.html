@@ -4541,25 +4541,36 @@
             .mobile-options-row {
                 display: flex !important;
                 justify-content: center !important;
-                align-items: center !important;
-                gap: 12px !important;
-                padding: 10px 0 !important;
+                align-items: flex-start !important;
+                gap: 10px !important;
+                padding: 12px 0 !important;
                 margin-top: 8px !important;
+            }
+
+            .mobile-devil-section {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 4px !important;
             }
 
             .mobile-devil-toggle {
                 display: flex !important;
                 align-items: center !important;
                 gap: 8px !important;
-                padding: 8px 14px !important;
+                padding: 10px 14px !important;
                 background: rgba(255,255,255,0.05) !important;
                 border: 1px solid rgba(255,255,255,0.1) !important;
                 border-radius: 20px !important;
                 cursor: pointer !important;
-                transition: all 0.2s ease !important;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
 
-            .mobile-devil-toggle:has(input:checked) {
+            .mobile-devil-toggle:active {
+                transform: scale(0.97) !important;
+            }
+
+            .mobile-devil-section:has(input:checked) .mobile-devil-toggle {
                 background: rgba(239, 68, 68, 0.15) !important;
                 border-color: rgba(239, 68, 68, 0.4) !important;
             }
@@ -4569,24 +4580,25 @@
             }
 
             .mobile-toggle-switch {
-                width: 28px !important;
-                height: 16px !important;
+                width: 32px !important;
+                height: 18px !important;
                 background: rgba(255,255,255,0.2) !important;
-                border-radius: 10px !important;
+                border-radius: 12px !important;
                 position: relative !important;
-                transition: background 0.2s ease !important;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
 
             .mobile-toggle-switch::after {
                 content: '' !important;
                 position: absolute !important;
-                width: 12px !important;
-                height: 12px !important;
+                width: 14px !important;
+                height: 14px !important;
                 background: #fff !important;
                 border-radius: 50% !important;
                 top: 2px !important;
                 left: 2px !important;
-                transition: transform 0.2s ease !important;
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
             }
 
             .mobile-devil-toggle input:checked + .mobile-toggle-switch {
@@ -4594,36 +4606,76 @@
             }
 
             .mobile-devil-toggle input:checked + .mobile-toggle-switch::after {
-                transform: translateX(12px) !important;
+                transform: translateX(14px) !important;
             }
 
             .mobile-toggle-label {
+                font-size: 0.8rem !important;
+                color: rgba(255,255,255,0.9) !important;
+                font-weight: 600 !important;
+            }
+
+            .mobile-devil-hint {
+                font-size: 0.65rem !important;
+                color: rgba(255,255,255,0.5) !important;
+                text-align: center !important;
+                max-width: 120px !important;
+                line-height: 1.3 !important;
+                display: block !important;
+            }
+
+            .mobile-devil-ai-select {
+                display: none !important;
+                margin-top: 6px !important;
+                padding: 8px 12px !important;
+                background: rgba(40,40,60,0.95) !important;
+                border: 1px solid rgba(255,255,255,0.15) !important;
+                border-radius: 10px !important;
+                color: #fff !important;
                 font-size: 0.75rem !important;
-                color: rgba(255,255,255,0.8) !important;
-                font-weight: 500 !important;
+                cursor: pointer !important;
+                animation: slideDown 0.2s ease !important;
+            }
+
+            .mobile-devil-section:has(input:checked) .mobile-devil-ai-select {
+                display: block !important;
+            }
+
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-8px); }
+                to { opacity: 1; transform: translateY(0); }
             }
 
             .mobile-context-btn {
                 display: flex !important;
+                flex-direction: column !important;
                 align-items: center !important;
-                gap: 6px !important;
-                padding: 8px 14px !important;
+                gap: 4px !important;
+                padding: 10px 16px !important;
                 background: rgba(255,255,255,0.05) !important;
                 border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 20px !important;
-                color: rgba(255,255,255,0.8) !important;
+                border-radius: 16px !important;
+                color: rgba(255,255,255,0.9) !important;
                 font-size: 0.75rem !important;
                 font-weight: 500 !important;
                 cursor: pointer !important;
-                transition: all 0.2s ease !important;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                min-height: 60px !important;
+                justify-content: center !important;
             }
 
             .mobile-context-btn:active {
-                transform: scale(0.97) !important;
+                transform: scale(0.95) !important;
+                background: rgba(255,255,255,0.1) !important;
             }
 
             .mobile-context-btn svg {
-                opacity: 0.7 !important;
+                opacity: 0.8 !important;
+                transition: transform 0.2s ease !important;
+            }
+
+            .mobile-context-btn.open svg {
+                transform: rotate(45deg) !important;
             }
 
             /* Hide desktop context toggle on mobile */
@@ -4631,13 +4683,22 @@
                 display: none !important;
             }
 
+            /* === CONTEXT INPUT - Smooth animation === */
             .context-input-container {
                 width: 100% !important;
-                padding: 8px 0 0 0 !important;
+                max-height: 0 !important;
+                overflow: hidden !important;
+                transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                            padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                            opacity 0.3s ease !important;
+                opacity: 0 !important;
+                padding: 0 !important;
             }
 
             .context-input-container.open {
-                display: block !important;
+                max-height: 150px !important;
+                padding: 10px 0 0 0 !important;
+                opacity: 1 !important;
             }
 
             .context-input {
@@ -4645,10 +4706,21 @@
                 width: 100% !important;
                 font-size: 14px !important;
                 padding: 12px 16px !important;
-                background: rgba(30,30,40,0.9) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 12px !important;
+                background: rgba(30,30,40,0.95) !important;
+                border: 1px solid rgba(255,255,255,0.15) !important;
+                border-radius: 14px !important;
                 color: #fff !important;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+            }
+
+            .context-input:focus {
+                border-color: rgba(139, 92, 246, 0.5) !important;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+                outline: none !important;
+            }
+
+            .context-input::placeholder {
+                color: rgba(255,255,255,0.4) !important;
             }
 
             /* === FOOTER === */
@@ -5360,16 +5432,26 @@
             </div>
             <!-- Mobile Options Row -->
             <div class="mobile-options-row">
-                <label class="mobile-devil-toggle">
-                    <input type="checkbox" id="mobileDevilAdvocate">
-                    <span class="mobile-toggle-switch"></span>
-                    <span class="mobile-toggle-label">😈 Challenge mode</span>
-                </label>
+                <div class="mobile-devil-section">
+                    <label class="mobile-devil-toggle">
+                        <input type="checkbox" id="mobileDevilAdvocate">
+                        <span class="mobile-toggle-switch"></span>
+                        <span class="mobile-toggle-label">😈 Devil's Advocate</span>
+                    </label>
+                    <span class="mobile-devil-hint">One AI challenges the group</span>
+                    <select class="mobile-devil-ai-select" id="mobileDevilAI">
+                        <option value="random">Random AI</option>
+                        <option value="openai">GPT</option>
+                        <option value="gemini">Gemini</option>
+                        <option value="claude">Claude</option>
+                        <option value="grok">Grok</option>
+                    </select>
+                </div>
                 <button class="mobile-context-btn" id="mobileContextToggle" onclick="toggleContext()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        <path d="M12 5v14M5 12h14"/>
                     </svg>
-                    <span>Add constraints</span>
+                    <span>Constraints</span>
                 </button>
             </div>
             <!-- Context Input (Expandable - Hidden by default) -->
@@ -5759,6 +5841,9 @@
         // MOBILE DEVIL'S ADVOCATE SYNC
         // ============================================
         const mobileDevilAdvocate = document.getElementById('mobileDevilAdvocate');
+        const mobileDevilAI = document.getElementById('mobileDevilAI');
+        const mobileContextBtn = document.getElementById('mobileContextToggle');
+
         if (mobileDevilAdvocate) {
             // Sync mobile toggle with desktop toggle
             mobileDevilAdvocate.addEventListener('change', () => {
@@ -5771,37 +5856,24 @@
             });
         }
 
-        // ============================================
-        // MOBILE TOOLTIPS - DISABLED (use inline hints)
-        // ============================================
-        if ('ontouchstart' in window) {
-            let activeTooltip = null;
-            document.querySelectorAll('[data-tooltip]').forEach(el => {
-                el.addEventListener('touchstart', (e) => {
-                    // Remove active class from previous tooltip
-                    if (activeTooltip && activeTooltip !== el) {
-                        activeTooltip.classList.remove('tooltip-active');
-                    }
-                    // Toggle this tooltip
-                    el.classList.toggle('tooltip-active');
-                    activeTooltip = el.classList.contains('tooltip-active') ? el : null;
+        // Sync mobile AI selector with desktop
+        if (mobileDevilAI && devilAdvocateAI) {
+            mobileDevilAI.addEventListener('change', () => {
+                devilAdvocateAI.value = mobileDevilAI.value;
+            });
+            devilAdvocateAI.addEventListener('change', () => {
+                mobileDevilAI.value = devilAdvocateAI.value;
+            });
+        }
 
-                    // Auto-dismiss after 3 seconds
-                    if (activeTooltip) {
-                        setTimeout(() => {
-                            el.classList.remove('tooltip-active');
-                            if (activeTooltip === el) activeTooltip = null;
-                        }, 3000);
-                    }
-                });
-            });
-            // Dismiss on tap anywhere else
-            document.addEventListener('touchstart', (e) => {
-                if (activeTooltip && !activeTooltip.contains(e.target)) {
-                    activeTooltip.classList.remove('tooltip-active');
-                    activeTooltip = null;
-                }
-            });
+        // Toggle open class on mobile context button
+        if (mobileContextBtn) {
+            const contextContainer = document.getElementById('contextContainer');
+            const originalToggleContext = window.toggleContext;
+            window.toggleContext = function() {
+                if (originalToggleContext) originalToggleContext();
+                mobileContextBtn.classList.toggle('open', contextContainer.classList.contains('open'));
+            };
         }
 
         // ============================================
