@@ -1958,6 +1958,11 @@
             color: var(--text-muted);
         }
 
+        /* Mobile options row - hidden on desktop */
+        .mobile-options-row {
+            display: none;
+        }
+
         /* ============================================
            SITE FOOTER
            ============================================ */
@@ -4344,99 +4349,27 @@
                 padding-bottom: 100px !important;
             }
 
-            /* === DEVIL'S ADVOCATE - Positioned in input area on mobile === */
+            /* === DEVIL'S ADVOCATE - Clean inline design === */
             .devil-toggle {
-                position: fixed !important;
-                bottom: calc(200px + env(safe-area-inset-bottom, 10px)) !important;
-                left: 50% !important;
-                transform: translateX(-50%) scale(0.9) !important;
-                display: flex !important;
-                align-items: center !important;
-                gap: 8px !important;
-                padding: 8px 14px !important;
-                background: rgba(20,20,30,0.95) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 20px !important;
-                z-index: 901 !important;
-            }
-
-            .devil-toggle label {
-                font-size: 0.7rem !important;
-                gap: 6px !important;
-            }
-
-            .devil-toggle .devil-icon {
-                font-size: 1rem !important;
-            }
-
-            .devil-toggle .devil-switch {
-                width: 32px !important;
-                height: 18px !important;
-            }
-
-            .devil-toggle .devil-switch::after {
-                width: 14px !important;
-                height: 14px !important;
+                display: none !important; /* Hidden - moved to options row */
             }
 
             .devil-ai-selector {
                 display: none !important;
-                position: absolute !important;
-                top: 100% !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                margin-top: 8px !important;
-                background: rgba(20,20,30,0.98) !important;
-                border: 1px solid rgba(255,255,255,0.15) !important;
-                border-radius: 12px !important;
-                padding: 8px !important;
             }
 
-            .devil-ai-selector.active {
-                display: block !important;
-            }
-
-            .devil-ai-selector select {
-                background: rgba(40,40,60,1) !important;
-                border: 1px solid rgba(255,255,255,0.2) !important;
-                border-radius: 8px !important;
-                color: #fff !important;
-                padding: 8px 12px !important;
-                font-size: 0.8rem !important;
-                min-width: 120px !important;
-            }
-
-            /* === MOBILE TOOLTIPS - Tap to show, auto-dismiss === */
+            /* === MOBILE TOOLTIPS - Disabled (use inline hints per best practices) === */
             [data-tooltip]::after,
-            [data-tooltip]::before {
-                display: none !important;
-            }
-
-            [data-tooltip].tooltip-active::after {
-                display: block !important;
-                position: absolute !important;
-                bottom: calc(100% + 8px) !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
-                background: rgba(20,20,30,0.98) !important;
-                color: #fff !important;
-                padding: 10px 14px !important;
-                border-radius: 10px !important;
-                font-size: 0.75rem !important;
-                max-width: 250px !important;
-                white-space: normal !important;
-                z-index: 9999 !important;
-                animation: tooltipFadeIn 0.2s ease !important;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-            }
-
+            [data-tooltip]::before,
+            [data-tooltip]:hover::after,
+            [data-tooltip]:hover::before,
+            [data-tooltip].tooltip-active::after,
             [data-tooltip].tooltip-active::before {
                 display: none !important;
-            }
-
-            @keyframes tooltipFadeIn {
-                from { opacity: 0; transform: translateX(-50%) translateY(5px); }
-                to { opacity: 1; transform: translateX(-50%) translateY(0); }
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                content: none !important;
             }
 
             /* === MICROANIMATIONS === */
@@ -4604,26 +4537,98 @@
                 font-size: 0.75rem !important;
             }
 
-            /* === CONTEXT/CONSTRAINTS - Centered on mobile === */
-            .context-toggle {
+            /* === MOBILE OPTIONS ROW - Clean inline layout === */
+            .mobile-options-row {
                 display: flex !important;
-                width: auto !important;
-                height: auto !important;
-                padding: 10px 16px !important;
-                margin: 8px auto 0 auto !important;
                 justify-content: center !important;
                 align-items: center !important;
+                gap: 12px !important;
+                padding: 10px 0 !important;
+                margin-top: 8px !important;
+            }
+
+            .mobile-devil-toggle {
+                display: flex !important;
+                align-items: center !important;
                 gap: 8px !important;
+                padding: 8px 14px !important;
                 background: rgba(255,255,255,0.05) !important;
                 border: 1px solid rgba(255,255,255,0.1) !important;
                 border-radius: 20px !important;
-                font-size: 0.75rem !important;
-                color: rgba(255,255,255,0.7) !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
             }
 
-            .context-toggle svg {
-                width: 14px !important;
-                height: 14px !important;
+            .mobile-devil-toggle:has(input:checked) {
+                background: rgba(239, 68, 68, 0.15) !important;
+                border-color: rgba(239, 68, 68, 0.4) !important;
+            }
+
+            .mobile-devil-toggle input {
+                display: none !important;
+            }
+
+            .mobile-toggle-switch {
+                width: 28px !important;
+                height: 16px !important;
+                background: rgba(255,255,255,0.2) !important;
+                border-radius: 10px !important;
+                position: relative !important;
+                transition: background 0.2s ease !important;
+            }
+
+            .mobile-toggle-switch::after {
+                content: '' !important;
+                position: absolute !important;
+                width: 12px !important;
+                height: 12px !important;
+                background: #fff !important;
+                border-radius: 50% !important;
+                top: 2px !important;
+                left: 2px !important;
+                transition: transform 0.2s ease !important;
+            }
+
+            .mobile-devil-toggle input:checked + .mobile-toggle-switch {
+                background: #ef4444 !important;
+            }
+
+            .mobile-devil-toggle input:checked + .mobile-toggle-switch::after {
+                transform: translateX(12px) !important;
+            }
+
+            .mobile-toggle-label {
+                font-size: 0.75rem !important;
+                color: rgba(255,255,255,0.8) !important;
+                font-weight: 500 !important;
+            }
+
+            .mobile-context-btn {
+                display: flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+                padding: 8px 14px !important;
+                background: rgba(255,255,255,0.05) !important;
+                border: 1px solid rgba(255,255,255,0.1) !important;
+                border-radius: 20px !important;
+                color: rgba(255,255,255,0.8) !important;
+                font-size: 0.75rem !important;
+                font-weight: 500 !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+            }
+
+            .mobile-context-btn:active {
+                transform: scale(0.97) !important;
+            }
+
+            .mobile-context-btn svg {
+                opacity: 0.7 !important;
+            }
+
+            /* Hide desktop context toggle on mobile */
+            .context-toggle.desktop-only {
+                display: none !important;
             }
 
             .context-input-container {
@@ -5353,8 +5358,22 @@
                     <span>&#9992;</span> Travel Plan
                 </div>
             </div>
-            <!-- Context Input (Expandable) -->
-            <button class="context-toggle" id="contextToggle" onclick="toggleContext()" data-tooltip="Add Context: Budget, timeline, or constraints to get more tailored advice from the AI council" data-tooltip-pos="bottom" data-tooltip-indicator="none">
+            <!-- Mobile Options Row -->
+            <div class="mobile-options-row">
+                <label class="mobile-devil-toggle">
+                    <input type="checkbox" id="mobileDevilAdvocate">
+                    <span class="mobile-toggle-switch"></span>
+                    <span class="mobile-toggle-label">😈 Challenge mode</span>
+                </label>
+                <button class="mobile-context-btn" id="mobileContextToggle" onclick="toggleContext()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <span>Add constraints</span>
+                </button>
+            </div>
+            <!-- Context Input (Expandable - Hidden by default) -->
+            <button class="context-toggle desktop-only" id="contextToggle" onclick="toggleContext()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M6 9l6 6 6-6"/>
                 </svg>
@@ -5737,7 +5756,23 @@
         });
 
         // ============================================
-        // MOBILE TOOLTIP AUTO-DISMISS
+        // MOBILE DEVIL'S ADVOCATE SYNC
+        // ============================================
+        const mobileDevilAdvocate = document.getElementById('mobileDevilAdvocate');
+        if (mobileDevilAdvocate) {
+            // Sync mobile toggle with desktop toggle
+            mobileDevilAdvocate.addEventListener('change', () => {
+                devilAdvocate.checked = mobileDevilAdvocate.checked;
+                devilAdvocate.dispatchEvent(new Event('change'));
+            });
+            // Keep them in sync if desktop changes
+            devilAdvocate.addEventListener('change', () => {
+                mobileDevilAdvocate.checked = devilAdvocate.checked;
+            });
+        }
+
+        // ============================================
+        // MOBILE TOOLTIPS - DISABLED (use inline hints)
         // ============================================
         if ('ontouchstart' in window) {
             let activeTooltip = null;
