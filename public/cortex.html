@@ -4228,11 +4228,21 @@
             }
 
             .node-name {
-                font-size: 0.5rem !important;
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
                 position: absolute !important;
-                bottom: -12px !important;
+                bottom: -16px !important;
                 left: 50% !important;
-                transform: translateX(-50%) !important;
+                transform: translateX(-50%) scale(1) !important;
+                font-size: 0.55rem !important;
+                font-weight: 600 !important;
+                color: rgba(255,255,255,0.8) !important;
+                background: transparent !important;
+                padding: 0 !important;
+                white-space: nowrap !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.5px !important;
             }
 
             /* Position nodes at corners */
@@ -4320,44 +4330,54 @@
                 width: 100% !important;
                 max-width: 100% !important;
                 display: flex !important;
+                flex-direction: row !important;
                 align-items: center !important;
-                gap: 10px !important;
-                padding: 8px 8px 8px 16px !important;
+                gap: 12px !important;
+                padding: 10px 10px 10px 20px !important;
                 border-radius: 28px !important;
-                background: rgba(30, 30, 40, 0.95) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
+                background: rgba(25, 25, 35, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.15) !important;
                 box-sizing: border-box !important;
             }
 
             .omni-input {
-                flex: 1 !important;
-                min-width: 0 !important;
+                flex: 1 1 auto !important;
+                width: 100% !important;
+                min-width: 50px !important;
                 font-size: 16px !important; /* Prevents iOS zoom */
-                padding: 10px 0 !important;
+                padding: 12px 0 !important;
                 background: transparent !important;
                 border: none !important;
-                color: white !important;
+                outline: none !important;
+                color: #ffffff !important;
+                -webkit-appearance: none !important;
+                appearance: none !important;
             }
 
             .omni-input::placeholder {
-                color: rgba(255,255,255,0.5) !important;
+                color: rgba(255,255,255,0.6) !important;
+                opacity: 1 !important;
             }
 
+            /* Hide status lights completely */
             .status-lights {
                 display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
             }
 
             .omni-submit {
-                width: 44px !important;
-                height: 44px !important;
-                min-width: 44px !important;
-                flex-shrink: 0 !important;
-                border-radius: 22px !important;
+                width: 48px !important;
+                height: 48px !important;
+                min-width: 48px !important;
+                flex: 0 0 48px !important;
+                border-radius: 24px !important;
             }
 
             .omni-submit svg {
-                width: 18px !important;
-                height: 18px !important;
+                width: 20px !important;
+                height: 20px !important;
             }
 
             .char-counter {
@@ -4478,8 +4498,9 @@
                 height: 42px !important;
             }
 
+            /* Keep node names visible on small screens */
             .node-name {
-                display: none !important;
+                font-size: 0.5rem !important;
             }
         }
 
@@ -4501,6 +4522,11 @@
                 height: 180px;
             }
 
+            /* Keep names visible in landscape */
+            .node-name {
+                font-size: 0.45rem !important;
+            }
+
             .core-orb {
                 width: 60px;
                 height: 60px;
@@ -4509,10 +4535,6 @@
             .ai-node {
                 width: 40px;
                 height: 40px;
-            }
-
-            .node-name {
-                display: none;
             }
 
             .arena-status {
