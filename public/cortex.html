@@ -4537,145 +4537,56 @@
                 font-size: 0.75rem !important;
             }
 
-            /* === MOBILE OPTIONS ROW - Clean inline layout === */
+            /* === MOBILE OPTIONS ROW - Clean symmetrical layout === */
             .mobile-options-row {
                 display: flex !important;
                 justify-content: center !important;
-                align-items: flex-start !important;
-                gap: 10px !important;
-                padding: 12px 0 !important;
-                margin-top: 8px !important;
+                align-items: center !important;
+                gap: 12px !important;
+                padding: 12px 16px !important;
             }
 
-            .mobile-devil-section {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                gap: 4px !important;
-            }
-
-            .mobile-devil-toggle {
+            .mobile-option-btn {
                 display: flex !important;
                 align-items: center !important;
-                gap: 8px !important;
-                padding: 10px 14px !important;
+                justify-content: center !important;
+                gap: 6px !important;
+                flex: 1 !important;
+                max-width: 140px !important;
+                height: 44px !important;
+                padding: 0 16px !important;
                 background: rgba(255,255,255,0.05) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 20px !important;
-                cursor: pointer !important;
-                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
-
-            .mobile-devil-toggle:active {
-                transform: scale(0.97) !important;
-            }
-
-            .mobile-devil-section:has(input:checked) .mobile-devil-toggle {
-                background: rgba(239, 68, 68, 0.15) !important;
-                border-color: rgba(239, 68, 68, 0.4) !important;
-            }
-
-            .mobile-devil-toggle input {
-                display: none !important;
-            }
-
-            .mobile-toggle-switch {
-                width: 32px !important;
-                height: 18px !important;
-                background: rgba(255,255,255,0.2) !important;
-                border-radius: 12px !important;
-                position: relative !important;
-                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
-
-            .mobile-toggle-switch::after {
-                content: '' !important;
-                position: absolute !important;
-                width: 14px !important;
-                height: 14px !important;
-                background: #fff !important;
-                border-radius: 50% !important;
-                top: 2px !important;
-                left: 2px !important;
-                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
-            }
-
-            .mobile-devil-toggle input:checked + .mobile-toggle-switch {
-                background: #ef4444 !important;
-            }
-
-            .mobile-devil-toggle input:checked + .mobile-toggle-switch::after {
-                transform: translateX(14px) !important;
-            }
-
-            .mobile-toggle-label {
+                border: 1px solid rgba(255,255,255,0.12) !important;
+                border-radius: 22px !important;
+                color: rgba(255,255,255,0.85) !important;
                 font-size: 0.8rem !important;
-                color: rgba(255,255,255,0.9) !important;
-                font-weight: 600 !important;
-            }
-
-            .mobile-devil-hint {
-                font-size: 0.65rem !important;
-                color: rgba(255,255,255,0.5) !important;
-                text-align: center !important;
-                max-width: 120px !important;
-                line-height: 1.3 !important;
-                display: block !important;
-            }
-
-            .mobile-devil-ai-select {
-                display: none !important;
-                margin-top: 6px !important;
-                padding: 8px 12px !important;
-                background: rgba(40,40,60,0.95) !important;
-                border: 1px solid rgba(255,255,255,0.15) !important;
-                border-radius: 10px !important;
-                color: #fff !important;
-                font-size: 0.75rem !important;
-                cursor: pointer !important;
-                animation: slideDown 0.2s ease !important;
-            }
-
-            .mobile-devil-section:has(input:checked) .mobile-devil-ai-select {
-                display: block !important;
-            }
-
-            @keyframes slideDown {
-                from { opacity: 0; transform: translateY(-8px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-
-            .mobile-context-btn {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                gap: 4px !important;
-                padding: 10px 16px !important;
-                background: rgba(255,255,255,0.05) !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                border-radius: 16px !important;
-                color: rgba(255,255,255,0.9) !important;
-                font-size: 0.75rem !important;
                 font-weight: 500 !important;
                 cursor: pointer !important;
-                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                min-height: 60px !important;
-                justify-content: center !important;
+                transition: all 0.2s ease !important;
+                -webkit-tap-highlight-color: transparent !important;
             }
 
-            .mobile-context-btn:active {
-                transform: scale(0.95) !important;
-                background: rgba(255,255,255,0.1) !important;
+            .mobile-option-btn input {
+                display: none !important;
             }
 
-            .mobile-context-btn svg {
-                opacity: 0.8 !important;
-                transition: transform 0.2s ease !important;
+            .mobile-option-btn:active {
+                transform: scale(0.96) !important;
             }
 
-            .mobile-context-btn.open svg {
-                transform: rotate(45deg) !important;
+            .mobile-option-btn:has(input:checked) {
+                background: rgba(239, 68, 68, 0.15) !important;
+                border-color: rgba(239, 68, 68, 0.4) !important;
+                color: #fff !important;
+            }
+
+            .mobile-option-icon {
+                font-size: 1rem !important;
+            }
+
+            .mobile-option-text {
+                font-size: 0.8rem !important;
+                font-weight: 500 !important;
             }
 
             /* Hide desktop context toggle on mobile */
@@ -5430,28 +5341,16 @@
                     <span>&#9992;</span> Travel Plan
                 </div>
             </div>
-            <!-- Mobile Options Row -->
+            <!-- Mobile Options Row - Simple symmetrical buttons -->
             <div class="mobile-options-row">
-                <div class="mobile-devil-section">
-                    <label class="mobile-devil-toggle">
-                        <input type="checkbox" id="mobileDevilAdvocate">
-                        <span class="mobile-toggle-switch"></span>
-                        <span class="mobile-toggle-label">😈 Devil's Advocate</span>
-                    </label>
-                    <span class="mobile-devil-hint">One AI challenges the group</span>
-                    <select class="mobile-devil-ai-select" id="mobileDevilAI">
-                        <option value="random">Random AI</option>
-                        <option value="openai">GPT</option>
-                        <option value="gemini">Gemini</option>
-                        <option value="claude">Claude</option>
-                        <option value="grok">Grok</option>
-                    </select>
-                </div>
-                <button class="mobile-context-btn" id="mobileContextToggle" onclick="toggleContext()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <path d="M12 5v14M5 12h14"/>
-                    </svg>
-                    <span>Constraints</span>
+                <label class="mobile-option-btn">
+                    <input type="checkbox" id="mobileDevilAdvocate">
+                    <span class="mobile-option-icon">😈</span>
+                    <span class="mobile-option-text">Challenger</span>
+                </label>
+                <button class="mobile-option-btn" id="mobileContextToggle" onclick="toggleContext()">
+                    <span class="mobile-option-icon">⚙️</span>
+                    <span class="mobile-option-text">Constraints</span>
                 </button>
             </div>
             <!-- Context Input (Expandable - Hidden by default) -->
