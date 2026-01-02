@@ -4227,22 +4227,32 @@
                 height: 20px !important;
             }
 
+            .ai-node .node-name,
+            .node-gpt .node-name,
+            .node-gemini .node-name,
+            .node-claude .node-name,
+            .node-grok .node-name,
             .node-name {
                 display: block !important;
                 opacity: 1 !important;
                 visibility: visible !important;
                 position: absolute !important;
-                bottom: -16px !important;
+                bottom: -20px !important;
                 left: 50% !important;
                 transform: translateX(-50%) scale(1) !important;
-                font-size: 0.55rem !important;
-                font-weight: 600 !important;
-                color: rgba(255,255,255,0.8) !important;
-                background: transparent !important;
-                padding: 0 !important;
+                font-size: 0.6rem !important;
+                font-weight: 700 !important;
+                color: #ffffff !important;
+                background: rgba(0,0,0,0.6) !important;
+                padding: 2px 6px !important;
+                border-radius: 4px !important;
                 white-space: nowrap !important;
                 text-transform: uppercase !important;
                 letter-spacing: 0.5px !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                top: auto !important;
+                right: auto !important;
             }
 
             /* Position nodes at corners */
@@ -4342,20 +4352,31 @@
 
             .omni-input {
                 flex: 1 1 auto !important;
-                width: 100% !important;
-                min-width: 50px !important;
+                width: calc(100% - 70px) !important;
+                min-width: 200px !important;
+                max-width: none !important;
+                height: 44px !important;
                 font-size: 16px !important; /* Prevents iOS zoom */
-                padding: 12px 0 !important;
-                background: transparent !important;
-                border: none !important;
+                padding: 0 12px !important;
+                background: rgba(255,255,255,0.05) !important;
+                border: 1px solid rgba(255,255,255,0.1) !important;
+                border-radius: 12px !important;
                 outline: none !important;
                 color: #ffffff !important;
                 -webkit-appearance: none !important;
                 appearance: none !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            .omni-input:focus {
+                background: rgba(255,255,255,0.08) !important;
+                border-color: rgba(139, 92, 246, 0.5) !important;
             }
 
             .omni-input::placeholder {
-                color: rgba(255,255,255,0.6) !important;
+                color: rgba(255,255,255,0.5) !important;
                 opacity: 1 !important;
             }
 
@@ -4499,8 +4520,11 @@
             }
 
             /* Keep node names visible on small screens */
+            .ai-node .node-name,
             .node-name {
                 font-size: 0.5rem !important;
+                opacity: 1 !important;
+                display: block !important;
             }
         }
 
@@ -4523,8 +4547,11 @@
             }
 
             /* Keep names visible in landscape */
+            .ai-node .node-name,
             .node-name {
                 font-size: 0.45rem !important;
+                opacity: 1 !important;
+                display: block !important;
             }
 
             .core-orb {
