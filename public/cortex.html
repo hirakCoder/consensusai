@@ -5022,7 +5022,7 @@
 
         <!-- Omni-Bar Input -->
         <div class="omni-bar-container">
-            <form class="omni-bar" id="debateForm">
+            <form class="omni-bar" id="debateForm" style="display:flex;flex-direction:row;align-items:center;gap:10px;width:100%;padding:8px;">
                 <input
                     type="text"
                     class="omni-input"
@@ -5031,8 +5031,9 @@
                     maxlength="500"
                     autocomplete="off"
                     required
+                    style="flex:1 1 auto;min-width:200px;height:48px;background:rgba(50,50,70,1);border:2px solid #8b5cf6;border-radius:24px;padding:0 16px;color:#fff;font-size:16px;display:block;visibility:visible;opacity:1;"
                 >
-                <div class="status-lights">
+                <div class="status-lights" style="display:none;">
                     <div class="status-light gpt" id="lightGpt"></div>
                     <div class="status-light gemini" id="lightGemini"></div>
                     <div class="status-light grok" id="lightGrok"></div>
