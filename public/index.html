@@ -861,6 +861,57 @@
         /* ============================================
            RESPONSIVE
            ============================================ */
+
+        /* Tablet Styles (768px - 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.2rem;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+
+            .hero {
+                padding: 120px 30px 80px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-sub {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 80px 30px;
+            }
+
+            .steps, .pricing-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ai-orbs {
+                gap: 20px;
+            }
+
+            .ai-orb {
+                width: 56px;
+                height: 56px;
+                font-size: 0.65rem;
+            }
+        }
+
         @media (max-width: 900px) {
             .steps, .pricing-cards {
                 grid-template-columns: 1fr;
@@ -874,7 +925,7 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             .nav {
                 padding: 1rem;
             }

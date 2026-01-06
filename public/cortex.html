@@ -2054,8 +2054,13 @@
             color: var(--text-muted);
         }
 
-        /* Mobile options row - hidden on desktop */
+        /* Mobile options row - hidden on desktop/tablet */
         .mobile-options-row {
+            display: none;
+        }
+
+        /* Mobile AI selector - hidden on desktop/tablet */
+        .mobile-ai-selector {
             display: none;
         }
 
@@ -2824,7 +2829,7 @@
             letter-spacing: 0.01em;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             .insights-grid {
                 grid-template-columns: 1fr;
             }
@@ -4192,10 +4197,311 @@
            ============================================ */
 
         /* ============================================
+           TABLET STYLES - iPad Portrait & Landscape
+           Breakpoint: 768px - 1199px
+           ============================================ */
+        @media (min-width: 768px) and (max-width: 1199px) {
+            /* === HEADER ADJUSTMENTS === */
+            .auth-container {
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1000;
+            }
+
+            .auth-btn {
+                padding: 10px 18px;
+                font-size: 0.8rem;
+            }
+
+            .user-menu {
+                padding: 6px 12px 6px 6px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .top-bar-right {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                z-index: 1000;
+                gap: 10px;
+            }
+
+            /* Show essential controls on tablet */
+            .tier-selector {
+                display: flex;
+            }
+
+            .usage-indicator {
+                display: flex;
+                font-size: 0.75rem;
+            }
+
+            .upgrade-btn {
+                padding: 10px 16px;
+                font-size: 0.75rem;
+            }
+
+            .history-toggle {
+                width: 40px;
+                height: 40px;
+            }
+
+            /* === MAIN CONTAINER === */
+            .cortex-app {
+                padding: 80px 20px 200px 20px;
+            }
+
+            /* === ARENA === */
+            .cortex-arena {
+                width: 100%;
+                max-width: 900px;
+                min-height: 450px;
+                padding: 20px;
+                gap: 30px;
+            }
+
+            /* === CORE CONTAINER === */
+            .core-container {
+                position: relative;
+                width: 350px;
+                height: 350px;
+            }
+
+            .core-orb {
+                width: 120px;
+                height: 120px;
+            }
+
+            .core-text {
+                font-size: 0.8rem;
+            }
+
+            /* === AI NODES === */
+            .ai-node {
+                width: 52px;
+                height: 52px;
+            }
+
+            .ai-node svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .node-name {
+                font-size: 0.65rem;
+            }
+
+            /* === DEBATE STREAM === */
+            .debate-stream {
+                max-width: 400px;
+                max-height: 350px;
+            }
+
+            .thought-card {
+                padding: 12px 14px;
+                font-size: 0.85rem;
+            }
+
+            /* === ARENA STATUS === */
+            .arena-status {
+                margin-top: 20px;
+            }
+
+            .status-text {
+                font-size: 1.1rem;
+            }
+
+            /* === DEBATE STATS BAR - Repositioned to left side on tablet === */
+            .debate-stats {
+                position: fixed;
+                top: 50%;
+                left: 20px;
+                right: auto;
+                transform: translateY(-50%);
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px 14px;
+                border-radius: 14px;
+                font-size: 0.8rem;
+            }
+
+            .debate-stats .stat-item {
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .debate-stats .stat-value {
+                font-size: 0.9rem;
+                min-width: 24px;
+            }
+
+            .debate-stats .stat-label {
+                font-size: 0.65rem;
+            }
+
+            /* === INPUT CONTAINER === */
+            .context-input-container {
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .context-input-container.open {
+                height: 120px;
+            }
+
+            .context-input {
+                font-size: 1rem;
+            }
+
+            /* === TEMPLATE CHIPS === */
+            .template-chips {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .template-chip {
+                padding: 8px 14px;
+                font-size: 0.75rem;
+            }
+
+            /* === VERDICT & RESULTS === */
+            .verdict-container {
+                max-width: 800px;
+                padding: 30px;
+            }
+
+            .verdict-title {
+                font-size: 1.3rem;
+            }
+
+            /* === LIVE TRANSITION === */
+            .live-badge {
+                padding: 12px 28px;
+                font-size: 1.1rem;
+            }
+
+            .live-question-text {
+                font-size: 1.3rem;
+            }
+
+            /* === HISTORY DRAWER === */
+            .history-drawer {
+                width: 380px;
+            }
+
+            /* === MODALS === */
+            .upgrade-modal {
+                max-width: 450px;
+                padding: 30px;
+            }
+
+            /* === TACTICAL DRAWER === */
+            .tactical-drawer {
+                padding: 30px;
+            }
+
+            .drawer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            /* === DEVIL'S ADVOCATE === */
+            .devil-toggle {
+                display: flex;
+            }
+
+            /* === HIDE MOBILE-ONLY ELEMENTS ON TABLET === */
+            .mobile-options-row,
+            .mobile-ai-selector {
+                display: none !important;
+            }
+
+            /* === INSIGHTS GRID === */
+            .insights-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            /* === TOOLTIPS - Keep enabled on tablet === */
+            [data-tooltip]::after,
+            [data-tooltip]::before {
+                display: block;
+            }
+        }
+
+        /* ============================================
+           TABLET LANDSCAPE SPECIFIC
+           iPad Landscape optimization
+           ============================================ */
+        @media (min-width: 1024px) and (max-width: 1199px) and (orientation: landscape) {
+            .cortex-arena {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .core-container {
+                width: 380px;
+                height: 380px;
+            }
+
+            .debate-stream {
+                max-width: 450px;
+            }
+        }
+
+        /* ============================================
+           SMALL TABLET / iPad Mini Portrait
+           Breakpoint: 768px - 834px
+           ============================================ */
+        @media (min-width: 768px) and (max-width: 834px) {
+            .cortex-app {
+                padding: 70px 15px 180px 15px;
+            }
+
+            .core-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .core-orb {
+                width: 100px;
+                height: 100px;
+            }
+
+            .ai-node {
+                width: 48px;
+                height: 48px;
+            }
+
+            .debate-stream {
+                max-width: 350px;
+            }
+
+            /* Simplify header on small tablets */
+            .user-name {
+                display: none;
+            }
+
+            .tier-selector {
+                display: none;
+            }
+        }
+
+        /* ============================================
            MOBILE STYLES - Simple & Bulletproof
+           Changed breakpoint to 767px to exclude tablets
            ============================================ */
 
-        @media (max-width: 768px) {
+        @media (max-width: 767px) {
             /* === RESET FOR MOBILE === */
             body {
                 overflow-x: hidden;
@@ -5084,7 +5390,7 @@
         /* ============================================
            LANDSCAPE MOBILE - Optimize for horizontal
            ============================================ */
-        @media (max-width: 768px) and (orientation: landscape) {
+        @media (max-width: 767px) and (orientation: landscape) {
             .cortex-app {
                 padding-top: 50px;
             }
