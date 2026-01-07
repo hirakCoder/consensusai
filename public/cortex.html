@@ -5509,10 +5509,10 @@
         </button>
 
         <!-- Usage Indicator -->
-        <div class="usage-indicator" id="usageIndicator" data-tooltip="Daily Limit: Free users get 3 debates per day. Upgrade to Pro for unlimited debates and premium AI models." data-tooltip-pos="bottom" data-tooltip-indicator="none">
-            <span>Free tier:</span>
+        <div class="usage-indicator" id="usageIndicator" data-tooltip="Free: 3 debates/day | Pro: Unlimited debates + Premium AI models" data-tooltip-pos="bottom" data-tooltip-indicator="none">
+            <span id="tierLabel">Free tier:</span>
             <span class="usage-count" id="usageCount">3/3</span>
-            <span>debates left</span>
+            <span id="debatesLeftText">debates left</span>
         </div>
 
         <!-- Model Tier Selector -->
@@ -7816,20 +7816,76 @@
         // USAGE STATS
         // ============================================
 
+        // Verify subscription status on login (catches missed webhooks)
+        async function verifySubscriptionStatus() {
+            try {
+                const res = await fetch('/api/subscription/verify', { method: 'POST' });
+                if (!res.ok) return;
+
+                const data = await res.json();
+                console.log(`[Subscription] Status: ${data.action}, Tier: ${data.tier}`);
+
+                // Always update UI with current tier from verification
+                const userTier = document.getElementById('userTier');
+                if (userTier) {
+                    userTier.textContent = data.tier.toUpperCase();
+                    userTier.className = `user-tier user-tier-${data.tier}`;
+                }
+
+                // Update usage indicator
+                const isPro = data.tier === 'pro' || data.tier === 'enterprise' || data.tier === 'owner';
+                const usageIndicator = document.getElementById('usageIndicator');
+                const usageCount = document.getElementById('usageCount');
+                const tierLabel = document.getElementById('tierLabel');
+
+                if (tierLabel) {
+                    tierLabel.textContent = isPro ? 'Pro:' : 'Free tier:';
+                    tierLabel.style.color = isPro ? 'var(--success)' : '';
+                }
+
+                if (usageCount && isPro) {
+                    usageCount.textContent = 'Unlimited';
+                    usageCount.style.color = 'var(--success)';
+                }
+
+                // Hide "debates left" for Pro users
+                const debatesLeftText = document.getElementById('debatesLeftText');
+                if (debatesLeftText) {
+                    debatesLeftText.style.display = isPro ? 'none' : '';
+                }
+
+                // Refresh full usage stats
+                fetchUsageStats();
+            } catch (error) {
+                console.error('Subscription verification failed:', error);
+            }
+        }
+
         async function fetchUsageStats() {
             try {
                 const res = await fetch('/api/config');
                 const data = await res.json();
 
                 const usageCount = document.getElementById('usageCount');
+                const usageIndicator = document.getElementById('usageIndicator');
 
                 // Update usage display
                 if (data.user) {
                     const remaining = data.user.remaining;
                     const limit = data.user.dailyLimit;
+                    const userTier = data.user.tier;
+                    const isPro = userTier === 'pro' || userTier === 'enterprise' || userTier === 'owner';
+
+                    // Update the tier label text
+                    const tierLabel = document.getElementById('tierLabel');
+                    if (tierLabel) {
+                        tierLabel.textContent = isPro ? 'Pro:' : 'Free tier:';
+                        tierLabel.style.color = isPro ? 'var(--success)' : '';
+                    }
 
                     if (remaining !== undefined && remaining !== 'unlimited') {
                         usageCount.textContent = `${remaining}/${limit}`;
+                        usageCount.style.color = '';
 
                         // Visual feedback when low on debates
                         if (remaining <= 1 && remaining > 0) {
@@ -7837,18 +7893,26 @@
                         } else if (remaining === 0) {
                             usageCount.style.color = 'var(--error)';
                         }
-                    } else if (remaining === 'unlimited') {
-                        usageCount.textContent = '∞';
+                    } else if (remaining === 'unlimited' || isPro) {
+                        usageCount.textContent = 'Unlimited';
                         usageCount.style.color = 'var(--success)';
                     }
 
+                    // Hide "debates left" for Pro users
+                    const debatesLeftText = document.getElementById('debatesLeftText');
+                    if (debatesLeftText) {
+                        debatesLeftText.style.display = isPro ? 'none' : '';
+                    }
+
                     // Update tier selector based on user tier
-                    const userTier = data.user.tier;
-                    const canUsePremium = userTier === 'pro' || userTier === 'enterprise' || userTier === 'owner';
+                    const canUsePremium = isPro;
                     updateTierSelectorAccess(canUsePremium);
 
-                    // Set initial tier selector to match server's active tier
-                    if (data.activeTier) {
+                    // Auto-select premium tier for Pro users
+                    if (isPro && data.activeTier !== 'premium') {
+                        selectedTier = 'premium';
+                        updateTierSelectorUI('premium');
+                    } else if (data.activeTier) {
                         selectedTier = data.activeTier;
                         updateTierSelectorUI(data.activeTier);
                     }
@@ -7967,6 +8031,9 @@
                 const tier = user.publicMetadata?.tier || 'free';
                 userTier.textContent = tier.toUpperCase();
                 userTier.className = `user-tier user-tier-${tier}`;
+
+                // Verify subscription with Stripe (catches missed webhooks)
+                verifySubscriptionStatus();
 
                 // Refresh usage stats when logged in
                 fetchUsageStats();

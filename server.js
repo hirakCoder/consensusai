@@ -284,6 +284,55 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Verify subscription status (sync check to catch missed webhooks)
+  if (pathname === '/api/subscription/verify' && req.method === 'POST') {
+    if (!stripe.isConfigured()) {
+      sendJson(res, { error: 'Stripe is not configured' }, 400);
+      return;
+    }
+
+    try {
+      const session = await auth.verifySession(req);
+      if (!session) {
+        sendJson(res, { error: 'Authentication required' }, 401);
+        return;
+      }
+
+      const userStats = usage.getUserStats(session.userId);
+      const currentTier = userStats.tier || 'free';
+      const stripeCustomerId = userStats.stripeCustomerId;
+
+      // Sync subscription status with Stripe
+      const syncResult = await stripe.syncSubscriptionStatus(
+        session.userId,
+        stripeCustomerId,
+        currentTier,
+        async (userId, newTier) => {
+          // Update tier callback
+          usage.setUserTier(userId, newTier);
+          await auth.updateUserTier(userId, newTier);
+          console.log(`[Subscription Sync] User ${userId} tier updated to ${newTier}`);
+        }
+      );
+
+      console.log(`[Subscription Verify] User ${session.userId}: ${syncResult.action}`);
+
+      sendJson(res, {
+        success: true,
+        synced: syncResult.synced,
+        action: syncResult.action,
+        tier: syncResult.tier,
+        subscription: syncResult.subscription || null
+      });
+    } catch (error) {
+      console.error('Subscription verify error:', error);
+      const admin = require('./admin');
+      admin.logError(error, { endpoint: '/api/subscription/verify', method: 'POST', userId });
+      sendJson(res, { error: 'Failed to verify subscription' }, 500);
+    }
+    return;
+  }
+
   // Stripe webhook handler
   if (pathname === '/api/stripe/webhook' && req.method === 'POST') {
     if (!stripe.isConfigured()) {

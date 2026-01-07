@@ -221,11 +221,84 @@ function processWebhookEvent(event) {
   }
 }
 
+/**
+ * Sync subscription status between Stripe and local database
+ * Call this on login or periodically to catch missed webhooks
+ * @param {string} userId - User ID in your system
+ * @param {string} stripeCustomerId - Stripe customer ID
+ * @param {string} currentTier - Current tier in your database
+ * @param {Function} updateTierCallback - Callback to update tier: (userId, newTier) => Promise
+ * @returns {Object} - { synced: boolean, action: string, tier: string }
+ */
+async function syncSubscriptionStatus(userId, stripeCustomerId, currentTier, updateTierCallback) {
+  if (!stripe) {
+    return { synced: false, action: 'STRIPE_NOT_CONFIGURED', tier: currentTier };
+  }
+
+  if (!stripeCustomerId) {
+    // No Stripe customer ID - user should be free tier
+    if (currentTier === 'pro') {
+      console.log(`[Stripe Sync] User ${userId} has no Stripe ID but is pro - downgrading`);
+      await updateTierCallback(userId, 'free');
+      return { synced: true, action: 'DOWNGRADED_NO_CUSTOMER', tier: 'free' };
+    }
+    return { synced: false, action: 'NO_CUSTOMER_ID', tier: currentTier };
+  }
+
+  try {
+    // Check Stripe for active subscriptions
+    const subscriptions = await stripe.subscriptions.list({
+      customer: stripeCustomerId,
+      limit: 1,
+    });
+
+    const hasActiveSubscription = subscriptions.data.some(
+      sub => sub.status === 'active' || sub.status === 'trialing'
+    );
+
+    const stripeTier = hasActiveSubscription ? 'pro' : 'free';
+
+    // Check if sync is needed
+    if (stripeTier !== currentTier) {
+      console.log(`[Stripe Sync] User ${userId}: DB says "${currentTier}", Stripe says "${stripeTier}" - syncing`);
+      await updateTierCallback(userId, stripeTier);
+
+      return {
+        synced: true,
+        action: stripeTier === 'pro' ? 'UPGRADED' : 'DOWNGRADED',
+        tier: stripeTier,
+        subscription: hasActiveSubscription ? {
+          id: subscriptions.data[0].id,
+          status: subscriptions.data[0].status,
+          currentPeriodEnd: new Date(subscriptions.data[0].current_period_end * 1000),
+          cancelAtPeriodEnd: subscriptions.data[0].cancel_at_period_end
+        } : null
+      };
+    }
+
+    return {
+      synced: false,
+      action: 'ALREADY_IN_SYNC',
+      tier: currentTier,
+      subscription: hasActiveSubscription ? {
+        id: subscriptions.data[0].id,
+        status: subscriptions.data[0].status,
+        currentPeriodEnd: new Date(subscriptions.data[0].current_period_end * 1000),
+        cancelAtPeriodEnd: subscriptions.data[0].cancel_at_period_end
+      } : null
+    };
+  } catch (error) {
+    console.error('[Stripe Sync] Error:', error.message);
+    return { synced: false, action: 'ERROR', error: error.message, tier: currentTier };
+  }
+}
+
 module.exports = {
   isConfigured,
   createCheckoutSession,
   createPortalSession,
   getSubscriptionStatus,
+  syncSubscriptionStatus,
   constructWebhookEvent,
   processWebhookEvent,
   PRICES,
