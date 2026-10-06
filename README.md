@@ -1,13 +1,14 @@
 # ConsensusAI
 
+> **Status: archived (January 2026).** A multi-LLM debate engine I built solo between December 2025 and January 2026 and shelved before launch to focus on other products. The code, the Playwright/Puppeteer UAT suite and the CI runner are kept as-is as a reference; the hosted app and consensusai.live are no longer online.
+
 **4 AI Models Debate Your Decisions**
 
-[![CI/CD](https://github.com/YOUR_USERNAME/consensus-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/consensus-platform/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > Don't just ask one AI. Let GPT-4, Claude, Gemini, and Grok debate your question and reach consensus.
 
-![ConsensusAI Demo](https://consensusai.app/og-image.png)
+![ConsensusAI](public/og-image.png)
 
 ## What is ConsensusAI?
 
@@ -47,8 +48,8 @@ ConsensusAI is a multi-AI debate platform that helps you make better decisions. 
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/consensus-platform.git
-cd consensus-platform
+git clone https://github.com/hirakCoder/consensusai.git
+cd consensusai
 
 # Install dependencies
 npm install
@@ -100,7 +101,7 @@ POSTHOG_API_KEY=phc_...
 ## Project Structure
 
 ```
-consensus-platform/
+consensusai/
 ├── server.js           # HTTP server & API routes
 ├── debate-engine.js    # Multi-round debate orchestration
 ├── prompts.js          # AI personas & prompt templates
@@ -128,6 +129,21 @@ consensus-platform/
 | `/api/tier` | GET/POST | Model tier selection |
 | `/api/history` | GET | Decision history |
 | `/api/stripe/checkout` | POST | Create checkout session |
+
+## Testing
+
+The part of this repo most worth reading if you care about quality engineering:
+
+- `tests/` — unit tests for content moderation and API resilience (no LLM calls).
+- `test-uat-desktop.js`, `test-uat-mobile.js` — Playwright end-to-end UAT flows (home, debate, verdict, follow-up, history, settings).
+- `test-mobile-viewports.js`, `test-galaxy-fold-debate.js` — viewport checks on iPhone SE / 14 / 14 Pro Max, Pixel 7 and Galaxy Fold.
+- `test-ci-runner.js` — one runner with `smoke`, `mobile`, `desktop`, `security` and `full` modes; `test-results/` holds the screenshots it produced.
+
+```bash
+npm run test:unit     # offline
+npm run test:smoke    # needs a running server
+npm run test:uat      # desktop + mobile UAT
+```
 
 ## Development
 
@@ -171,7 +187,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Links
 
-- **Website**: https://consensusai.app
+- **Author**: Hirak Banerjee — [hirakcoder.github.io](https://hirakcoder.github.io)
 - **Documentation**: [BUSINESS-DOCUMENT.md](BUSINESS-DOCUMENT.md)
 - **Deploy Guide**: [DEPLOY-GUIDE.md](DEPLOY-GUIDE.md)
 
