@@ -39,6 +39,21 @@ ConsensusAI is a multi-AI debate platform that helps you make better decisions. 
 
 ## Quick Start
 
+### Bring your own keys
+
+This repository ships **no API keys, no database and no hosted service**. Everything that talks to a third party is read from environment variables at start-up (see `config.js`):
+
+| Variable | Used by | Required? |
+|---|---|---|
+| `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_AI_API_KEY`, `XAI_API_KEY` | `llm-clients/` — the four debaters | Yes, at least one; the debate runs with whichever models have keys |
+| `DATABASE_URL` | `db.js` — Postgres for users and debate history | Optional; without it history is in-memory |
+| `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` | `auth.js` | Optional; auth is skipped when unset |
+| `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_ID_MONTHLY`, `STRIPE_WEBHOOK_SECRET` | `stripe.js` — Pro tier | Optional |
+| `SENTRY_DSN`, `POSTHOG_API_KEY` | `sentry.js`, `analytics.js` | Optional |
+| `ADMIN_SECRET` (or `OWNER_SECRET`), `ADMIN_EMAILS`, `OWNER_IPS` | `server.js`, `usage.js` — admin endpoints and unlimited usage for the owner | Optional; admin routes are disabled when unset |
+
+Create your own accounts with each provider, put the keys in a local `.env` (copy `.env.example`), and never commit that file — `.gitignore` already excludes it. Any key, price ID or project reference that appears in the docs is a placeholder or an example from the original deployment, which has been shut down and whose credentials were revoked; none of them will work.
+
 ### Prerequisites
 
 - Node.js 18+
@@ -56,7 +71,7 @@ npm install
 
 # Configure environment
 cp .env.example .env
-# Edit .env with your API keys
+# Edit .env with YOUR OWN API keys (see 'Bring your own keys' above)
 
 # Start the server
 npm start
