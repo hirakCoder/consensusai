@@ -1290,6 +1290,13 @@ async function startServer() {
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
     `);
+    const configuredLLMs = Object.entries(config.llms || {}).filter(([, c]) => c.apiKey).map(([id]) => id);
+    if (configuredLLMs.length === 0) {
+      console.warn('[Setup] No LLM API keys found. The UI will load but debates will fail.');
+      console.warn('[Setup] Copy .env.example to .env and set at least one of OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_AI_API_KEY, XAI_API_KEY.');
+    } else {
+      console.log(`[Setup] LLM clients with keys: ${configuredLLMs.join(', ')}`);
+    }
   });
 }
 

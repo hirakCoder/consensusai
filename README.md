@@ -99,10 +99,12 @@ POSTHOG_API_KEY=phc_...
 
 ### Usage
 
-1. Open http://localhost:3000/cortex.html
+1. Open http://localhost:3000 (the UI is `public/cortex.html`)
 2. Enter your decision question
-3. Watch 4 AIs debate
+3. Watch the configured models debate (one key is enough; with one key you get a single-model "debate")
 4. Get your consensus verdict
+
+Verified on a fresh clone (Node 22, October 2026): `npm ci` → `npm run test:unit` (33/33 pass, no network) → `npm start` with an empty `.env` boots, serves the UI and returns a clear "no API keys" message; with a single `XAI_API_KEY` a full debate completes end to end.
 
 ## Tech Stack
 
@@ -166,8 +168,14 @@ npm run test:uat      # desktop + mobile UAT
 # Run in development
 npm run dev
 
-# Run tests
+# Unit tests (offline)
+npm run test:unit
+
+# API tests (need the server running on :3000, or set TEST_URL)
 npm test
+
+# Browser UAT (needs the server running and Playwright browsers: npx playwright install)
+npm run test:uat
 
 # Setup Stripe products
 npm run setup-stripe

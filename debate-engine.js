@@ -510,7 +510,7 @@ class DebateEngine {
     };
 
     if (this.clients.length === 0) {
-      throw new Error('No LLM clients configured. Please add API keys to config.js');
+      throw new Error('No LLM API keys found. Copy .env.example to .env and set at least one of OPENAI_API_KEY, ANTHROPIC_API_KEY, GOOGLE_AI_API_KEY or XAI_API_KEY, then restart.');
     }
 
     if (this.clients.length < 2) {
